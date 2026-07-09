@@ -17,7 +17,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-gray-400">
               <a href="#demo" className="hover:text-white transition-colors">Demo</a>
               <a href="#install" className="hover:text-white transition-colors">Install</a>
-              <a href="#also-by-jeremy" className="hover:text-white transition-colors">Also by Jeremy</a>
+              <a href="#also-by-jeremy" className="hover:text-white transition-colors">Also by the Builder</a>
             </div>
           </nav>
 
