@@ -25,7 +25,7 @@ const projectLinks = [
   {
     href: 'https://bleepthat.sh/',
     label: 'Bleep That',
-    description: 'A current media workflow from Jeremy Watt.',
+    description: 'A current media workflow from Jeremy.',
     icon: Scissors,
   },
   {
@@ -62,11 +62,15 @@ export default function CreatorBrandSection() {
           <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-[#E91E8C]/20 to-[#7B2FBE]/20 border border-[#E91E8C]/30 flex items-center justify-center">
             <UserRound className="w-5 h-5 text-[#E91E8C]" />
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">Also by Jeremy</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white">Also by the Builder</h2>
         </div>
 
         <p className="text-lg text-gray-300 leading-relaxed mb-6">
-          YTgify is one of Jeremy Watt&apos;s small media and automation projects. For the full context, read the launch notes or browse the source.
+          YTgify is one of{' '}
+          <a href="https://neonwatty.com/" target="_blank" rel="noopener noreferrer" className="text-white underline decoration-[#E91E8C] decoration-2 underline-offset-4 hover:text-[#E91E8C] transition-colors">
+            Jeremy&apos;s
+          </a>{' '}
+          small media and automation projects. For the full context, read the launch notes or browse the source.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
