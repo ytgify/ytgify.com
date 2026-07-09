@@ -65,9 +65,9 @@ export default function Home() {
             <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900/80 to-gray-950/80 p-4 sm:p-5 shadow-2xl">
               <ExampleGifsGallery />
               <div className="mt-5 border-t border-gray-800 pt-4">
-                <p className="text-sm font-semibold text-white">Still useful as a case study.</p>
+                <p className="text-sm font-semibold text-white">Open source and still usable locally.</p>
                 <p className="text-sm text-gray-400 mt-1">
-                  A small media utility that found real search demand, then became a public build note and source archive.
+                  A small media utility that found real search demand, with public build notes, source code, and a local install.
                 </p>
               </div>
             </div>
@@ -79,7 +79,7 @@ export default function Home() {
             <div className="lg:sticky lg:top-8">
               <h2 className="text-3xl font-bold mb-4 text-white">See it in action</h2>
               <p className="text-gray-400 leading-relaxed mb-6">
-                YTgify added lightweight controls directly inside YouTube, with GIF settings designed for fast sharing.
+                YTgify adds lightweight controls directly inside YouTube, with GIF settings designed for fast sharing.
               </p>
               <FeatureChecklist />
             </div>

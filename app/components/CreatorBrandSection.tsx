@@ -31,7 +31,7 @@ const projectLinks = [
   {
     href: 'https://seatify.app/',
     label: 'Seatify',
-    description: 'Another live app from the same builder bench.',
+    description: 'Another live app from the same builder.',
     icon: TicketCheck,
   },
   {

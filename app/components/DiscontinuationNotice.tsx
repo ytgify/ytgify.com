@@ -14,7 +14,7 @@ export default function DiscontinuationNotice() {
               After 8 months in the Chrome Web Store and being a featured extension for 4 months, Google informed us that YTgify violates their terms of service regarding the transformation of YouTube video frames into GIFs.
             </p>
             <p>
-              You can still use YTgify by installing it locally. The source, build notes, and last local install remain available below.
+              You can still use YTgify by installing it locally. The source, build notes, and latest local install remain available below.
             </p>
           </div>
         </div>
