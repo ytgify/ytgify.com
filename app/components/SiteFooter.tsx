@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Github, BookOpen } from 'lucide-react';
+import { Github, BookOpen, Scissors, TicketCheck } from 'lucide-react';
 // Extension is no longer in stores - using local download instead
 
 export default function SiteFooter() {
@@ -56,6 +56,24 @@ export default function SiteFooter() {
           >
             Blog
           </Link>
+          <a
+            href="https://bleepthat.sh/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[#a0a0a0] hover:text-white transition-colors"
+          >
+            <Scissors size={16} />
+            Bleep That
+          </a>
+          <a
+            href="https://seatify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[#a0a0a0] hover:text-white transition-colors"
+          >
+            <TicketCheck size={16} />
+            Seatify
+          </a>
           <a
             href="/downloads/ytgify-v1.0.19-chrome.zip"
             download

@@ -32,5 +32,5 @@ export const MOBILE_REMINDER_EMAIL = {
 // Site metadata constants
 export const SITE_URL = 'https://ytgify.com';
 export const SITE_NAME = 'YTgify';
-export const SITE_TITLE = 'YTgify - Free YouTube to GIF Converter | No Watermark';
-export const SITE_DESCRIPTION = 'Free YouTube to GIF converter Chrome extension. Create animated GIFs from any YouTube video in seconds - no watermark, no uploads. Convert video to GIF with custom text, FPS control, and multiple resolutions. Perfect for memes and social sharing.';
+export const SITE_TITLE = 'YTgify - Free YouTube to GIF Converter by Jeremy Watt';
+export const SITE_DESCRIPTION = 'YTgify is a YouTube to GIF converter Chrome extension by Jeremy Watt. Explore the source, build notes, and other work.';

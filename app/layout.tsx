@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
-  keywords: "youtube to gif, youtube to gif converter, youtube to gif no watermark, youtube to gif chrome extension, gif maker from youtube video, animated gif maker from video, create gif from youtube, convert youtube video to gif, gif meme maker",
+  keywords: "youtube to gif, youtube to gif converter, youtube to gif no watermark, youtube to gif chrome extension, ytgify, Jeremy Watt, neonwatty, open source Chrome extension",
   authors: [{ name: "Jeremy Watt" }],
   creator: "Jeremy Watt",
   publisher: SITE_NAME,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: SITE_TITLE,
-    description: "Free YouTube to GIF converter. Create animated GIFs from any YouTube video - no watermark, no uploads. Perfect for memes and social sharing.",
+    description: "Free YouTube to GIF converter by Jeremy Watt. Explore the extension, open-source code, build notes, and other work.",
     type: "website",
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "YTgify - Free YouTube to GIF Converter | No Watermark",
-    description: "Free YouTube to GIF converter. Create animated GIFs from any video - no watermark, no uploads. Perfect for memes.",
+    description: "Open-source YouTube to GIF converter by Jeremy Watt, with source code, build notes, and other work.",
     images: [`${SITE_URL}/twitter-image.png`],
   },
 };

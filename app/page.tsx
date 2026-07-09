@@ -4,74 +4,107 @@ import FeatureChecklist from './components/FeatureChecklist';
 import DemoVideo from './components/DemoVideo';
 import ExampleGifsGallery from './components/ExampleGifsGallery';
 import SiteFooter from './components/SiteFooter';
-import DiscontinuationNotice from './components/DiscontinuationNotice';
+import DiscontinuationNotice, { LegacyInstallSection } from './components/DiscontinuationNotice';
+import CreatorBrandSection from './components/CreatorBrandSection';
+import { BookOpen, Github } from 'lucide-react';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] grid-pattern">
       <main>
-        {/* Ultra Narrow Blog Style - Max 800px */}
-        <article className="max-w-[800px] mx-auto px-12 sm:px-6 pt-12 pb-16">
-          {/* Logo */}
-          <div className="flex items-center justify-center gap-3 mt-2 mb-8">
-            <Logo />
-            <h2 className="text-4xl sm:text-5xl font-bold text-white">YTgify</h2>
-          </div>
+        <article className="max-w-[1080px] mx-auto px-5 sm:px-8 pt-10 pb-16">
+          <nav aria-label="Page sections" className="mb-10 flex justify-center sm:justify-end">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-gray-400">
+              <a href="#demo" className="hover:text-white transition-colors">Demo</a>
+              <a href="#install" className="hover:text-white transition-colors">Install</a>
+              <a href="#also-by-jeremy" className="hover:text-white transition-colors">Also by Jeremy</a>
+            </div>
+          </nav>
 
-          {/* Discontinuation Notice and Local Install Instructions */}
+          <section className="grid grid-cols-1 lg:grid-cols-[1.02fr_0.98fr] gap-10 lg:gap-14 items-center mb-10">
+            <div>
+              <div className="flex items-center gap-4 mb-8">
+                <Logo />
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E91E8C]">Open-source Chrome extension</p>
+                  <p className="text-4xl sm:text-5xl font-bold text-white leading-none mt-2">YTgify</p>
+                </div>
+              </div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-[1.02] text-white tracking-tight">
+                YouTube to GIF Converter - Free, No Watermark
+              </h1>
+
+              <div className="max-w-2xl mb-8">
+                <HeroDescription />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 mb-8">
+                <a
+                  href="https://neonwatty.com/posts/ytgify-launch/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#E91E8C] px-5 py-3 text-sm font-semibold text-white hover:bg-[#d51a80] transition-colors"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Read the build notes
+                </a>
+                <a
+                  href="https://github.com/neonwatty/ytgify"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-950/70 px-5 py-3 text-sm font-semibold text-white hover:border-[#E91E8C]/70 hover:bg-gray-900 transition-colors"
+                >
+                  <Github className="w-4 h-4" />
+                  View the source
+                </a>
+              </div>
+
+            </div>
+
+            <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900/80 to-gray-950/80 p-4 sm:p-5 shadow-2xl">
+              <ExampleGifsGallery />
+              <div className="mt-5 border-t border-gray-800 pt-4">
+                <p className="text-sm font-semibold text-white">Still useful as a case study.</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  A small media utility that found real search demand, then became a public build note and source archive.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <DiscontinuationNotice />
 
-          {/* Large headline */}
-          <h1 className="text-3xl sm:text-4xl font-bold mb-8 leading-tight text-white tracking-tight">
-            YouTube to GIF Converter - Free, No Watermark
-          </h1>
-
-          {/* Description and Example GIFs - Two Column Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-10">
-            {/* Left: Description */}
-            <div>
-              <HeroDescription />
-            </div>
-
-            {/* Right: GIF Gallery */}
-            <div className="flex items-center">
-              <ExampleGifsGallery />
-            </div>
-          </div>
-
-          {/* Benefit Callout */}
-          <div className="text-center mb-16 py-6 px-4 rounded-lg bg-gray-900/50 border border-gray-800">
-            <p className="text-lg text-white font-semibold mb-1">Your first GIF in under 30 seconds.</p>
-            <p className="text-gray-400">No account needed. No software to download. Works right inside YouTube.</p>
-          </div>
-
-          {/* Features and Video - Single Section */}
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold mb-6 text-white">See it in action</h2>
-            {/* Features above video */}
-            <div className="mb-6">
+          <section id="demo" className="scroll-mt-8 grid grid-cols-1 lg:grid-cols-[0.78fr_1.22fr] gap-8 lg:gap-10 items-start mb-16">
+            <div className="lg:sticky lg:top-8">
+              <h2 className="text-3xl font-bold mb-4 text-white">See it in action</h2>
+              <p className="text-gray-400 leading-relaxed mb-6">
+                YTgify added lightweight controls directly inside YouTube, with GIF settings designed for fast sharing.
+              </p>
               <FeatureChecklist />
             </div>
-            {/* Video */}
-            <DemoVideo />
-
-            {/* CTA after video */}
-            <div className="mt-12 text-center">
-              <p className="text-xl text-white mb-6 font-semibold">Ready to create your first GIF?</p>
-              <a
-                href="/downloads/ytgify-v1.0.19-chrome.zip"
-                download
-                className="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Download YTgify for Chrome
-              </a>
-              <p className="text-gray-400 text-sm mt-4">100% free. No watermark. No tracking. Ever.</p>
-              <p className="text-gray-500 text-xs mt-2">See installation instructions above</p>
+            <div>
+              <DemoVideo />
+              <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-gray-800 bg-gray-900/40 p-5">
+                <p className="text-white font-semibold">Want the source and build story?</p>
+                <a
+                  href="https://github.com/neonwatty/ytgify"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+                >
+                  <Github className="w-4 h-4" />
+                  Open the GitHub repo
+                </a>
+              </div>
             </div>
+          </section>
+
+          <div id="install" className="scroll-mt-8">
+            <LegacyInstallSection />
           </div>
+
+          <CreatorBrandSection />
         </article>
 
         <SiteFooter />

@@ -23,8 +23,8 @@ test.describe('Landing Page Smoke Tests', () => {
     await page.goto('/');
     const downloadLinks = page.locator('a[href*="/downloads/ytgify"]');
     await expect(downloadLinks.first()).toBeVisible();
-    // Download links in discontinuation notice, after video CTA, and footer
-    await expect(downloadLinks).toHaveCount(3);
+    // Download links in legacy install section and footer
+    await expect(downloadLinks).toHaveCount(2);
   });
 
   test('demo video iframe is present', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('Landing Page Smoke Tests', () => {
 
   test('GitHub social link is visible and correct', async ({ page }) => {
     await page.goto('/');
-    const githubLink = page.getByRole('link', { name: /GitHub/i });
+    const githubLink = page.locator('footer').getByRole('link', { name: 'GitHub' });
     await expect(githubLink).toBeVisible();
     await expect(githubLink).toHaveAttribute('href', 'https://github.com/neonwatty');
     await expect(githubLink).toHaveAttribute('target', '_blank');
@@ -57,7 +57,7 @@ test.describe('Landing Page Smoke Tests', () => {
 
   test('X (Twitter) social link is visible and correct', async ({ page }) => {
     await page.goto('/');
-    const xLink = page.getByRole('link', { name: /X \(Twitter\)/i });
+    const xLink = page.locator('footer').getByRole('link', { name: /X \(Twitter\)/i });
     await expect(xLink).toBeVisible();
     await expect(xLink).toHaveAttribute('href', 'https://x.com/neonwatty');
     await expect(xLink).toHaveAttribute('target', '_blank');
@@ -81,6 +81,6 @@ test.describe('Landing Page Smoke Tests', () => {
     const socialLinks = page.locator('footer a[target="_blank"][rel="noopener noreferrer"]').filter({
       has: page.locator('svg')
     });
-    await expect(socialLinks).toHaveCount(3);
+    await expect(socialLinks).toHaveCount(5);
   });
 });

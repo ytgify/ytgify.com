@@ -16,7 +16,7 @@ test.describe('Welcome Page Tests', () => {
   test('page has noindex meta tag', async ({ page }) => {
     await page.goto('/welcome');
     const robotsMeta = page.locator('meta[name="robots"]');
-    await expect(robotsMeta).toHaveAttribute('content', /noindex/);
+    await expect(robotsMeta.first()).toHaveAttribute('content', /noindex/);
   });
 
   test('demo video iframe is present', async ({ page }) => {
