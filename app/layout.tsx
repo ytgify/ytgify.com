@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
-  keywords: "youtube to gif, youtube to gif converter, youtube to gif no watermark, youtube to gif chrome extension, ytgify, Jeremy Watt, neonwatty, open source Chrome extension",
+  keywords: "video to gif, mp4 to gif, gif maker no watermark, private video to gif, youtube to gif, youtube to gif converter, ytgify, Jeremy Watt, neonwatty",
   authors: [{ name: "Jeremy Watt" }],
   creator: "Jeremy Watt",
   publisher: SITE_NAME,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: SITE_TITLE,
-    description: "Free YouTube to GIF converter by Jeremy Watt. Explore the extension, open-source code, build notes, and other work.",
+    description: "Install the YTgify Chrome extension manually and create no-watermark GIFs from YouTube videos right inside the player.",
     type: "website",
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YTgify - Free YouTube to GIF Converter | No Watermark",
-    description: "Open-source YouTube to GIF converter by Jeremy Watt, with source code, build notes, and other work.",
+    title: "YTgify - Free YouTube to GIF Chrome Extension",
+    description: "Install YTgify manually in Chrome and create no-watermark GIFs from YouTube videos.",
     images: [`${SITE_URL}/twitter-image.png`],
   },
 };
@@ -68,6 +68,10 @@ export default function RootLayout({
       "priceCurrency": "USD"
     },
     "featureList": [
+      "Convert local videos to GIF",
+      "Browser-only media processing",
+      "No-watermark GIF export",
+      "Manual Chrome extension install",
       "Convert YouTube videos to GIF",
       "Custom text overlay",
       "FPS control",

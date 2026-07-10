@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Github, BookOpen, Scissors, TicketCheck } from 'lucide-react';
-// Extension is no longer in stores - using local download instead
 
 export default function SiteFooter() {
   const [currentYear, setCurrentYear] = useState(2025);
@@ -13,8 +12,8 @@ export default function SiteFooter() {
   }, []);
 
   return (
-    <footer className="max-w-[800px] mx-auto px-12 sm:px-6 py-16 border-t border-[#2a2a2a]">
-      <div className="flex flex-col items-center gap-6">
+    <footer className="border-t border-[#2a2a2a] bg-gray-950/70">
+      <div className="mx-auto flex max-w-[1080px] flex-col items-center gap-6 px-5 py-12 sm:px-8">
         <p className="text-sm text-[#a0a0a0]">
           © {currentYear} YTgify. All rights reserved.
         </p>
@@ -74,13 +73,12 @@ export default function SiteFooter() {
             <TicketCheck size={16} />
             Seatify
           </a>
-          <a
-            href="/downloads/ytgify-v1.0.19-chrome.zip"
-            download
+          <Link
+            href="/#install"
             className="text-[#a0a0a0] hover:text-white transition-colors"
           >
-            Download Extension
-          </a>
+            Install Extension
+          </Link>
           <Link
             href="/privacy-policy"
             className="text-[#a0a0a0] hover:text-white transition-colors"
