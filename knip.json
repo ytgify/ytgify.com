@@ -4,6 +4,7 @@
   "project": ["**/*.{ts,tsx,js,mjs}"],
   "ignore": [
     "content/**/*",
+    "docs/goals/**/.goalbuddy-board/**/*",
     "scripts/**/*"
   ],
   "ignoreDependencies": [

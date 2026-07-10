@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 const testPort = 3217;
 const testUrl = `http://localhost:${testPort}`;
+const externalBaseUrl = process.env.PLAYWRIGHT_BASE_URL;
 
 export default defineConfig({
   testDir: './tests',
@@ -11,7 +12,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: testUrl,
+    baseURL: externalBaseUrl || testUrl,
     trace: 'on-first-retry',
   },
   projects: [
@@ -20,10 +21,12 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: `npm run build && npx serve out -l ${testPort}`,
-    url: testUrl,
-    reuseExistingServer: false,
-    timeout: 120000,
-  },
+  webServer: externalBaseUrl
+    ? undefined
+    : {
+        command: `npm run build && npx serve out -l ${testPort}`,
+        url: testUrl,
+        reuseExistingServer: false,
+        timeout: 120000,
+      },
 });
