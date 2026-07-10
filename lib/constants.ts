@@ -1,5 +1,8 @@
 export const CHROME_EXTENSION_URL = 'https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje';
 export const FIREFOX_ADDON_URL = 'https://addons.mozilla.org/en-US/firefox/addon/ytgify-for-firefox/';
+export const GITHUB_ORG_URL = 'https://github.com/ytgify';
+export const GITHUB_REPO_URL = 'https://github.com/ytgify/ytgify';
+export const GITHUB_ISSUES_URL = `${GITHUB_REPO_URL}/issues`;
 export const DEMO_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/hBBr8SluoQ8';
 
 // Formspree email capture

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { SITE_URL, SITE_NAME } from '@/lib/constants';
+import { GITHUB_ISSUES_URL, SITE_URL, SITE_NAME } from '@/lib/constants';
 import SiteFooter from '@/app/components/SiteFooter';
 
 export const metadata: Metadata = {
@@ -136,12 +136,12 @@ export default function TermsOfServicePage() {
               <li>
                 GitHub Issues:{' '}
                 <a
-                  href="https://github.com/neonwatty/ytgify/issues"
+                  href={GITHUB_ISSUES_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-ytg-pink hover:underline"
                 >
-                  github.com/neonwatty/ytgify/issues
+                  github.com/ytgify/ytgify/issues
                 </a>
               </li>
               <li>

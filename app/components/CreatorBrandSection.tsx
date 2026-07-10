@@ -1,4 +1,5 @@
 import { BookOpen, ClipboardCheck, Github, Mic2, Scissors, TicketCheck, UserRound } from 'lucide-react';
+import { GITHUB_REPO_URL } from '@/lib/constants';
 
 const primaryLinks = [
   {
@@ -8,7 +9,7 @@ const primaryLinks = [
     icon: BookOpen,
   },
   {
-    href: 'https://github.com/neonwatty/ytgify',
+    href: GITHUB_REPO_URL,
     label: 'View the source',
     description: 'Open-source extension code, tests, and architecture.',
     icon: Github,

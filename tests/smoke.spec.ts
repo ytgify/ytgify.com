@@ -120,7 +120,7 @@ test.describe('Landing Page Smoke Tests', () => {
     await page.goto('/');
     const githubLink = page.locator('footer').getByRole('link', { name: 'GitHub' });
     await expect(githubLink).toBeVisible();
-    await expect(githubLink).toHaveAttribute('href', 'https://github.com/neonwatty');
+    await expect(githubLink).toHaveAttribute('href', 'https://github.com/ytgify');
     await expect(githubLink).toHaveAttribute('target', '_blank');
   });
 

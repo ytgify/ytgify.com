@@ -151,7 +151,7 @@ The result panel should show:
 
 ## Extension Reuse Map
 
-The extension repo `neonwatty/ytgify` contains several reusable components and concepts.
+The extension repo `ytgify/ytgify` contains several reusable components and concepts.
 
 ### Reuse Directly Or With Light Adaptation
 

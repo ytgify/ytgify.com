@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Github, BookOpen, Scissors, TicketCheck } from 'lucide-react';
+import { GITHUB_ORG_URL } from '@/lib/constants';
 
 export default function SiteFooter() {
   const [currentYear, setCurrentYear] = useState(2025);
@@ -20,7 +21,7 @@ export default function SiteFooter() {
         <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
           <div className="flex gap-4">
             <a
-              href="https://github.com/neonwatty"
+              href={GITHUB_ORG_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#a0a0a0] hover:text-white transition-colors"
