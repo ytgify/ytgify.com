@@ -95,7 +95,7 @@ export default function Home() {
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#E91E8C] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#d51a80] sm:px-4"
               >
                 <Download className="h-4 w-4" />
-                <span className="hidden sm:inline">Install</span>
+                <span>Install</span>
               </TrackedExtensionLink>
             </div>
           </nav>
@@ -119,11 +119,11 @@ export default function Home() {
                   <HeroDescription />
                 </div>
 
-                <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="mb-8 grid grid-cols-3 gap-2 sm:gap-3">
                   {heroProofPoints.map((point) => (
-                    <div key={point.label} className="border border-gray-800 bg-gray-900/35 p-3">
-                      <p className="text-sm font-semibold text-white">{point.label}</p>
-                      <p className="mt-1 text-xs leading-relaxed text-gray-400">{point.value}</p>
+                    <div key={point.label} className="border border-gray-800 bg-gray-900/35 p-2.5 sm:p-3">
+                      <p className="text-xs font-semibold text-white sm:text-sm">{point.label}</p>
+                      <p className="mt-1 text-[11px] leading-relaxed text-gray-400 sm:text-xs">{point.value}</p>
                     </div>
                   ))}
                 </div>

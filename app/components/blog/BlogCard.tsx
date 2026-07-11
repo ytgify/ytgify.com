@@ -1,21 +1,26 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { BlogPostMeta, formatDate } from '@/lib/blog';
 import TagBadge from './TagBadge';
 import { Clock } from 'lucide-react';
 
 interface BlogCardProps {
   post: BlogPostMeta;
+  priority?: boolean;
 }
 
-export default function BlogCard({ post }: BlogCardProps) {
+export default function BlogCard({ post, priority = false }: BlogCardProps) {
   return (
     <article className="group bg-[#111111] rounded-lg overflow-hidden border border-[#2a2a2a] hover:border-ytg-pink/50 transition-all duration-300">
       <Link href={`/blog/${post.slug}`}>
-        <div className="aspect-video overflow-hidden">
-          <img
+        <div className="relative aspect-[1200/630] overflow-hidden">
+          <Image
             src={post.thumbnail}
             alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            priority={priority}
+            sizes="(max-width: 768px) 100vw, 384px"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
       </Link>

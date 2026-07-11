@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const blogPosts = posts.map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.updated || post.date),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
@@ -23,7 +23,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}/blog`,
-      lastModified: posts[0]?.date ? new Date(posts[0].date) : new Date('2026-07-11'),
+      lastModified: posts[0]?.updated || posts[0]?.date
+        ? new Date(posts[0].updated || posts[0].date)
+        : new Date('2026-07-11'),
       changeFrequency: 'weekly',
       priority: 0.8,
     },

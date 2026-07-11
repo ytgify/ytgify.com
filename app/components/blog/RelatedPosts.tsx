@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { BlogPostMeta, formatDate } from '@/lib/blog';
 import TagBadge from './TagBadge';
 
@@ -21,11 +22,13 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
             href={`/blog/${post.slug}`}
             className="group block bg-[#111111] rounded-lg overflow-hidden border border-[#2a2a2a] hover:border-ytg-pink/50 transition-all"
           >
-            <div className="aspect-video overflow-hidden">
-              <img
+            <div className="relative aspect-[1200/630] overflow-hidden">
+              <Image
                 src={post.thumbnail}
                 alt={post.title}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                fill
+                sizes="(max-width: 640px) 100vw, 220px"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
             </div>
             <div className="p-3">

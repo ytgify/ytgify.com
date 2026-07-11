@@ -73,6 +73,19 @@ test.describe('Landing Page Smoke Tests', () => {
     await expect(page.getByRole('img', { name: /YTgify extension card loaded/i })).toBeVisible();
   });
 
+  test('desktop install introduction stays left of the walkthrough', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/#install');
+
+    const introduction = await page.getByRole('heading', { name: 'Install the YTgify extension', exact: true }).boundingBox();
+    const walkthrough = await page.getByRole('heading', { name: 'Chrome install walkthrough', exact: true }).boundingBox();
+
+    expect(introduction).not.toBeNull();
+    expect(walkthrough).not.toBeNull();
+    expect(introduction!.x).toBeLessThan(walkthrough!.x);
+    expect(Math.abs(introduction!.y - walkthrough!.y)).toBeLessThan(80);
+  });
+
   test('landing install screenshots expand into a guided carousel', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Expand screenshot for Open Chrome extensions/i }).dblclick();
@@ -103,6 +116,25 @@ test.describe('Landing Page Smoke Tests', () => {
     expect(before).not.toBeNull();
     expect(after).not.toBeNull();
     expect(after!.y).toBeLessThanOrEqual(1);
+  });
+
+  test('mobile hero keeps the primary install action above the fold without horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+
+    const navInstall = page.getByRole('navigation', { name: /Page sections/i }).getByRole('link', { name: 'Install', exact: true });
+    await expect(navInstall).toBeVisible();
+
+    const heroInstall = page.getByRole('link', { name: /Install Chrome Extension/i }).first();
+    const heroInstallBox = await heroInstall.boundingBox();
+    expect(heroInstallBox).not.toBeNull();
+    expect(heroInstallBox!.y + heroInstallBox!.height).toBeLessThan(844);
+
+    const widths = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(widths.scrollWidth).toBe(widths.clientWidth);
   });
 
   test('demo video iframe is present', async ({ page }) => {

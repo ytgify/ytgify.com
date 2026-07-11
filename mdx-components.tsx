@@ -1,4 +1,5 @@
 import type { MDXComponents } from 'mdx/types';
+import Image from 'next/image';
 import ImageCarousel from '@/app/components/blog/ImageCarousel';
 import DemoVideo from '@/app/components/DemoVideo';
 
@@ -55,10 +56,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </pre>
     ),
     img: ({ src, alt }) => (
-      <img
-        src={src}
+      <Image
+        src={typeof src === 'string' ? src : ''}
         alt={alt || ''}
-        className="rounded-lg my-6 max-w-full h-auto"
+        width={1200}
+        height={675}
+        sizes="(max-width: 800px) 100vw, 704px"
+        className="my-6 h-auto max-w-full rounded-lg"
       />
     ),
     hr: () => <hr className="border-[#2a2a2a] my-8" />,
