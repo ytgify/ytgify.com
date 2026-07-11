@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Clock, Calendar } from 'lucide-react';
-import { getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from '@/lib/blog';
+import { ArrowLeft, Clock, Calendar, BadgeCheck, UserRound } from 'lucide-react';
+import { DEFAULT_BLOG_AUTHOR_URL, getAllPosts, getPostBySlug, getRelatedPosts, formatDate } from '@/lib/blog';
 import { generateArticleSchema, generateBreadcrumbSchema } from '@/lib/schema';
 import { SITE_URL, SITE_NAME } from '@/lib/constants';
 import TagBadge from '@/app/components/blog/TagBadge';
@@ -46,7 +46,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `${SITE_URL}/blog/${post.slug}`,
       siteName: SITE_NAME,
       publishedTime: post.date,
-      authors: [SITE_NAME],
+      modifiedTime: post.updated || post.date,
+      authors: [post.author],
       tags: post.tags,
       images: [
         {
@@ -96,6 +97,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
+        data-schema="article"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <script
@@ -121,15 +123,31 @@ export default async function BlogPostPage({ params }: PageProps) {
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               {post.title}
             </h1>
-            <div className="flex items-center gap-4 text-sm text-[#606060]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#808080]" data-testid="article-evidence">
+              <a
+                href={DEFAULT_BLOG_AUTHOR_URL}
+                target="_blank"
+                rel="author noopener noreferrer"
+                className="flex items-center gap-1 text-[#a0a0a0] transition-colors hover:text-white"
+              >
+                <UserRound size={14} />
+                By {post.author}
+              </a>
               <span className="flex items-center gap-1">
                 <Clock size={14} />
                 {post.readTime} min read
               </span>
               <span className="flex items-center gap-1">
                 <Calendar size={14} />
-                {formatDate(post.date)}
+                Published {formatDate(post.date)}
               </span>
+              {post.updated && <span>Updated {formatDate(post.updated)}</span>}
+              {post.testedVersion && (
+                <span className="flex items-center gap-1 text-[#E91E8C]">
+                  <BadgeCheck size={14} />
+                  Tested with YTgify v{post.testedVersion}
+                </span>
+              )}
             </div>
           </header>
 
@@ -146,6 +164,21 @@ export default async function BlogPostPage({ params }: PageProps) {
           <div className="prose prose-invert max-w-none">
             <Content />
           </div>
+
+          <aside className="mt-10 border border-[#2a2a2a] bg-[#111111] p-5" aria-label="About the author">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">About the author</p>
+            <p className="mt-2 text-sm leading-relaxed text-[#a0a0a0]">
+              <a
+                href={DEFAULT_BLOG_AUTHOR_URL}
+                target="_blank"
+                rel="author noopener noreferrer"
+                className="font-semibold text-white underline decoration-[#E91E8C] underline-offset-4"
+              >
+                {post.author}
+              </a>{' '}
+              builds YTgify and documents the product behavior used in these guides. Product details on this page were checked against the version shown above.
+            </p>
+          </aside>
 
           <RelatedPosts posts={relatedPosts} />
         </article>

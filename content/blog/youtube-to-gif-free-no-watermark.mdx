@@ -1,47 +1,73 @@
 ---
-title: "How to Make a GIF from YouTube in Seconds (Free, No Watermark)"
-description: "Convert any YouTube video to GIF instantly with the YTgify Chrome extension. Free, no watermark, no signup required."
+title: "YouTube to GIF Without a Watermark: What Stays Local"
+description: "An evidence-backed look at YTgify's free, no-watermark workflow, local processing, manual Chrome install, and current practical limits."
 date: "2025-12-20"
+updated: "2026-07-11"
+author: "Jeremy Watt"
+testedVersion: "1.0.19"
 tags: ["tutorial", "gif", "youtube", "free"]
 thumbnail: "/ytgify-demo-2.png"
-readTime: 3
+readTime: 5
 ---
 
-Most YouTube to GIF converters slap watermarks on your creations or require signups. YTgify is free, has no watermark, and takes seconds.
+YTgify creates GIFs without adding a watermark and does not require a YTgify account. Its main difference from an upload-based converter is architectural: the extension's published privacy policy says GIF processing happens locally, captured frames are held in memory, and GIFs and settings stay on your device.
 
-## How to Make a GIF from YouTube
+This guide explains what those claims mean in **YTgify v1.0.19**, along with the limits you should know before installing it.
 
-1. Install YTgify from the [Chrome Web Store](https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje)
-2. Go to any YouTube video
-3. Click the YTgify icon in your toolbar
-4. Set start and end times using the timeline controls
-5. Click "Create GIF" and download
+## What “local” means here
 
-That's it. Under 30 seconds once you get the hang of it.
+With YTgify, you choose a moment while watching YouTube and the extension captures that selection in your browser. According to the project's privacy policy, it does not send GIF data to an external conversion server and does not collect personal information, browsing history, or analytics.
 
-## YTgify vs Other Tools
+That privacy boundary is specific to YTgify. You are still using YouTube and Chrome, which have their own services and policies.
 
-| Tool | Free | No Watermark | No Signup |
-|------|------|--------------|-----------|
-| YTgify | ✓ | ✓ | ✓ |
-| Giphy | ✓ | ✗ | ✗ |
-| EZGIF | ✓ | ✓ | ✓ (but requires downloading video first) |
-| Kapwing | Limited | ✗ | ✗ |
+## What “no watermark” means
 
-## Tips for Better GIFs
+YTgify exports the generated animation without placing a YTgify logo or branded overlay on it. You can add your own optional text before creating the GIF, but the product does not require an attribution mark in the image.
 
-- **Keep it under 5 seconds** for smaller file sizes
-- **Choose moments with movement**—static shots don't work well as GIFs
-- **Use high-res source videos** for sharper output
+“No watermark” does not change copyright or permission rules. Use video material you have the right to transform and share.
 
-## FAQ
+## How to make a no-watermark GIF
 
-**Works with YouTube Shorts?** Yes.
+1. Use the [manual Chrome install walkthrough](/#install) to download and load the v1.0.19 folder.
+2. Open a YouTube video and use the GIF control inside the player.
+3. Select a clip from 1 to 20 seconds.
+4. Choose 144p, 240p, 360p, or 480p and 5, 10, or 15 FPS.
+5. Add optional text, or skip it.
+6. Create the GIF, then download, copy, or keep it in the local library.
 
-**Maximum length?** No hard limit, but under 10 seconds works best.
+For screenshots and troubleshooting, use the [full step-by-step YouTube-to-GIF guide](/blog/how-to-create-gif-from-youtube-video).
 
-**Need to download the video first?** No—YTgify handles it directly.
+## Current practical limits
 
----
+Transparency is more useful than an unlimited claim. In v1.0.19:
 
-**[Try YTgify Free →](/)** — No watermarks, no signups.
+- **Chrome installation is manual.** The project is not currently available through the Chrome Web Store, and unpacked installs do not auto-update.
+- **The current documented install is Chrome-only.** Do not rely on an old Firefox add-on link.
+- **Clip selection tops out at 20 seconds.** Shorter clips are generally easier to share.
+- **Quick Capture tops out at 480p and 15 FPS.** Those are the largest options visible in the current capture UI.
+- **Source quality and buffering matter.** A poorly buffered or low-quality source can affect capture.
+
+These constraints are why this page does not promise “any length,” every browser, or every kind of YouTube page.
+
+## A privacy-minded checklist
+
+Before using any converter, ask:
+
+| Question | YTgify v1.0.19 answer |
+|---|---|
+| Is the GIF branded? | No YTgify watermark is added. |
+| Is a YTgify account required? | No. |
+| Is the clip uploaded to a YTgify conversion server? | The published privacy policy says processing is local and data is not sent to external servers. |
+| Where are saved GIFs kept? | The privacy policy says GIFs and settings are stored locally. |
+| Does the extension collect analytics? | The privacy policy says no analytics are collected. |
+| Can the implementation be inspected? | Yes. The extension source is public on GitHub. |
+
+## Choose settings without oversharing file size
+
+Local processing does not make large GIFs easier to post. For most reactions, begin with 360p, 10 FPS, and three to five seconds. Use [the GIF settings guide](/blog/best-gif-settings-for-social-media) to adjust for compact chat, faster motion, or readable interface detail.
+
+## Product sources
+
+The claims on this page were checked against the public v1.0.19 [YTgify README](https://github.com/ytgify/ytgify/blob/main/README.md), [manifest](https://github.com/ytgify/ytgify/blob/main/manifest.json), and [privacy policy](https://github.com/ytgify/ytgify/blob/main/docs/privacy-policy.md). Those project sources are the authority for the product behavior described here.
+
+[Review the install steps and download YTgify v1.0.19](/#install).

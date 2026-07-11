@@ -43,6 +43,24 @@ const demoWorkflow = [
   },
 ];
 
+const guideLinks = [
+  {
+    href: '/blog/how-to-create-gif-from-youtube-video',
+    title: 'Create a GIF step by step',
+    description: 'Install v1.0.19, select a YouTube moment, tune it, and save the result.',
+  },
+  {
+    href: '/blog/best-gif-settings-for-social-media',
+    title: 'Choose resolution, FPS, and length',
+    description: 'Use practical starting points for smaller files, smoother motion, or clearer detail.',
+  },
+  {
+    href: '/blog/youtube-to-gif-free-no-watermark',
+    title: 'Understand local, no-watermark processing',
+    description: 'See what stays on your device and which current product limits apply.',
+  },
+];
+
 export default function Home() {
   const faqSchema = generateFAQSchema(homeFAQItems);
 
@@ -243,6 +261,33 @@ export default function Home() {
 
           <section id="install" className="-mx-5 flex scroll-mt-24 flex-col justify-center border-b border-gray-800 bg-gray-950/75 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[86svh] lg:py-16">
             <LegacyInstallSection />
+          </section>
+
+          <section aria-labelledby="guide-heading" className="-mx-5 border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14">
+            <div className="mb-8 max-w-2xl">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">Verified guides</p>
+              <h2 id="guide-heading" className="text-3xl font-bold text-white">Get a better GIF on the first export</h2>
+              <p className="mt-3 leading-relaxed text-gray-400">
+                These guides are checked against YTgify v{CHROME_EXTENSION_VERSION} and cover the workflow, settings tradeoffs, and local-processing boundary.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {guideLinks.map((guide) => (
+                <Link
+                  key={guide.href}
+                  href={guide.href}
+                  className="group border border-gray-800 bg-gray-950/45 p-5 transition-colors hover:border-[#E91E8C]/60"
+                >
+                  <h3 className="font-semibold text-white transition-colors group-hover:text-[#E91E8C]">{guide.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-400">{guide.description}</p>
+                  <span className="mt-4 inline-block text-sm font-semibold text-[#E91E8C]">Read guide →</span>
+                </Link>
+              ))}
+            </div>
+            <Link href="/blog" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-300 transition-colors hover:text-white">
+              <BookOpen className="h-4 w-4" />
+              Browse all YouTube-to-GIF guides
+            </Link>
           </section>
 
           <HomeFAQ />

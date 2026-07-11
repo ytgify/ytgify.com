@@ -38,7 +38,7 @@ export default function BlogCard({ post }: BlogCardProps) {
             <Clock size={12} />
             {post.readTime} min read
           </span>
-          <span>{formatDate(post.date)}</span>
+          <span>{post.updated ? `Updated ${formatDate(post.updated)}` : formatDate(post.date)}</span>
         </div>
       </div>
     </article>

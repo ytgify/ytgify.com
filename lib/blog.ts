@@ -2,11 +2,17 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
+export const DEFAULT_BLOG_AUTHOR = 'Jeremy Watt';
+export const DEFAULT_BLOG_AUTHOR_URL = 'https://neonwatty.com/';
+
 interface BlogPost {
   slug: string;
   title: string;
   description: string;
   date: string;
+  updated?: string;
+  author: string;
+  testedVersion?: string;
   tags: string[];
   thumbnail: string;
   readTime: number;
@@ -18,6 +24,9 @@ export interface BlogPostMeta {
   title: string;
   description: string;
   date: string;
+  updated?: string;
+  author: string;
+  testedVersion?: string;
   tags: string[];
   thumbnail: string;
   readTime: number;
@@ -55,6 +64,9 @@ export function getAllPosts(): BlogPostMeta[] {
         title: data.title || '',
         description: data.description || '',
         date: data.date || '',
+        updated: data.updated || undefined,
+        author: data.author || DEFAULT_BLOG_AUTHOR,
+        testedVersion: data.testedVersion || undefined,
         tags: data.tags || [],
         thumbnail: data.thumbnail || '/blog/images/default-thumb.png',
         readTime: data.readTime || calculateReadTime(fileContent),
@@ -84,6 +96,9 @@ export function getPostBySlug(slug: string): BlogPost | null {
     title: data.title || '',
     description: data.description || '',
     date: data.date || '',
+    updated: data.updated || undefined,
+    author: data.author || DEFAULT_BLOG_AUTHOR,
+    testedVersion: data.testedVersion || undefined,
     tags: data.tags || [],
     thumbnail: data.thumbnail || '/blog/images/default-thumb.png',
     readTime: data.readTime || calculateReadTime(content),
@@ -143,5 +158,6 @@ export function formatDate(dateString: string): string {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   });
 }

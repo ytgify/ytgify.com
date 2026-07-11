@@ -2,6 +2,9 @@
 User-agent: *
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
 # Sitemap location
 Sitemap: https://ytgify.com/sitemap.xml
 

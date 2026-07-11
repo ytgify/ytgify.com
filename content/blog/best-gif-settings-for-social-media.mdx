@@ -1,45 +1,82 @@
 ---
-title: "Best GIF Settings for Social Media"
-description: "Optimal GIF resolution, frame rate, and file size for Twitter, Discord, Reddit, and more."
+title: "Best GIF Settings for Sharing: Resolution, FPS, and Length"
+description: "Choose YTgify resolution, frame rate, and clip length for chat, social posts, reactions, and clearer detail without oversized GIFs."
 date: "2025-01-10"
+updated: "2026-07-11"
+author: "Jeremy Watt"
+testedVersion: "1.0.19"
 tags: ["tips", "gif", "meme"]
 thumbnail: "/ytgify-demo-5.png"
-readTime: 2
+readTime: 5
 ---
 
-Each platform handles GIFs differently. Use these settings for best results.
+The best GIF setting is a tradeoff: more frames, pixels, and seconds can improve detail, but each one increases file size. In YTgify v1.0.19, you can choose **144p, 240p, 360p, or 480p**, **5, 10, or 15 FPS**, and a clip from **1 to 20 seconds**.
 
-## Platform Quick Reference
+The recommendations below are practical **YTgify starting points**, not official upload limits. Platforms change their limits, and workspaces or account tiers can differ.
 
-| Platform | Resolution | FPS | Max Size | Duration |
-|----------|------------|-----|----------|----------|
-| Twitter/X | 360p | 15 | 15 MB | 6 sec |
-| Discord | 360p | 12 | 8 MB* | 10 sec |
-| Reddit | 480p | 15 | 20 MB | 15 sec |
-| Slack | 240p | 10 | 16 MB | 5 sec |
-| Facebook | 480p | 15 | — | 6 sec |
+## Quick settings by sharing goal
 
-*Discord Nitro: 50 MB
+| Sharing goal | Resolution | FPS | Clip length | Why start here |
+|---|---:|---:|---:|---|
+| Lightweight chat reaction | 240p | 5 FPS | 2–3 sec | Prioritizes a small, quick-loading file. |
+| Everyday social reaction | 360p | 10 FPS | 3–5 sec | A useful balance for motion and readable detail. |
+| Fast motion or gesture | 360p | 15 FPS | 2–4 sec | More frames help motion, while short length controls size. |
+| Text or interface detail | 480p | 10 FPS | 2–4 sec | More pixels help small visual details without maximizing FPS too. |
+| Tiny sticker-like loop | 144p | 5 FPS | 1–2 sec | Uses the lowest-cost combination available. |
 
-## General Guidelines
+If a destination rejects the file, shorten it first. Duration usually gives you the biggest reduction without making each frame less legible.
 
 <DemoVideo />
 
-**Resolution**: 360p balances quality and file size for most platforms.
+## Resolution: choose only the detail you need
 
-**Frame rate**:
-- 10 FPS: Small files, slightly choppy
-- 15 FPS: Smooth, good file size (recommended)
-- 20 FPS: Very smooth, large files
+- **144p** is useful for tiny loops where detail is not important.
+- **240p** suits compact chat reactions and simple expressions.
+- **360p** is the best general starting point for faces, gestures, and most social sharing.
+- **480p** preserves more text and interface detail, but costs more bytes per frame.
 
-**Duration**: Shorter is better. 2-5 seconds works for most use cases.
+Higher resolution does not improve a blurry source. Choose the lowest setting that keeps the subject understandable at the size people will actually view it.
 
-## Common Mistakes
+## Frame rate: spend frames on motion
 
-- GIF too long (every second adds file size)
-- Resolution too high (480p max is enough)
-- Poor loop timing (ensure smooth start/end transition)
+- **5 FPS** keeps files small and works for slower reactions or sticker-like loops.
+- **10 FPS** is a dependable default for ordinary movement.
+- **15 FPS** looks smoother during quick gestures, camera movement, or action.
 
----
+Increasing FPS from 5 to 15 roughly triples the number of captured frames for the same duration. Use 15 FPS when the motion benefits—not simply because it is the largest option.
 
-[Create optimized GIFs with YTgify](https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje)
+## Duration: the strongest file-size control
+
+YTgify v1.0.19 accepts a selection from 1 to 20 seconds, but the maximum is rarely the best sharing choice. Trim the setup and aftermath, and keep only the beat that makes the loop work.
+
+A clean loop often follows this pattern:
+
+1. Start just before the recognizable action or expression.
+2. End as soon as that action resolves.
+3. Preview the transition from the final frame back to the first.
+4. Shorten again if a pause makes the loop feel sluggish.
+
+## A simple tuning order
+
+When the first export is too large, change one control at a time:
+
+1. **Shorten duration.** Remove every fraction of a second that does not add meaning.
+2. **Lower resolution.** Try 480p to 360p, or 360p to 240p.
+3. **Lower FPS.** Try 15 to 10 FPS, then 10 to 5 FPS.
+4. **Recheck legibility and motion.** Stop as soon as the GIF is clear enough for its destination.
+
+This order preserves clarity better than immediately dropping every setting to its minimum.
+
+## Three common mistakes
+
+- **Treating recommendations as platform rules.** Check the destination's current upload message or help page when an exact limit matters.
+- **Using 480p and 15 FPS for a long clip.** That combines all three file-size multipliers.
+- **Leaving dead time around the moment.** Extra seconds add frames without improving the loop.
+
+## Put the settings into practice
+
+Follow the [complete YouTube-to-GIF workflow](/blog/how-to-create-gif-from-youtube-video) for installation and capture steps. If privacy and clean export matter most, read [how YTgify's local, no-watermark workflow works](/blog/youtube-to-gif-free-no-watermark). You can also [install YTgify from the homepage walkthrough](/#install).
+
+## Product sources
+
+The available controls and ranges on this page were checked against the v1.0.19 [Quick Capture screen](https://github.com/ytgify/ytgify/blob/main/src/content/overlay-wizard/screens/QuickCaptureScreen.tsx) and [timeline control](https://github.com/ytgify/ytgify/blob/main/src/content/overlay-wizard/components/TimelineScrubber.tsx). The suggested combinations are editorial starting points, not official platform limits.
