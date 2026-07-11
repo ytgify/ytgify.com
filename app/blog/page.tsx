@@ -8,17 +8,17 @@ import BlogCard from '@/app/components/blog/BlogCard';
 import SiteFooter from '@/app/components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: `Blog | ${SITE_NAME} - GIF Creation Tips & Tutorials`,
+  title: `YouTube to GIF Guides, Tips & Tutorials | ${SITE_NAME}`,
   description:
-    'Learn how to create GIFs from YouTube videos. Tips, tutorials, and guides for the YTgify Chrome extension.',
+    'Learn how to turn YouTube videos into GIFs, choose the best GIF settings, reduce file size, and export without a watermark.',
   alternates: {
     canonical: `${SITE_URL}/blog`,
   },
   openGraph: {
     type: 'website',
-    title: `${SITE_NAME} Blog - GIF Creation Tips & Tutorials`,
+    title: `YouTube to GIF Guides, Tips & Tutorials | ${SITE_NAME}`,
     description:
-      'Learn how to create GIFs from YouTube videos. Tips, tutorials, and guides.',
+      'Practical guides for turning YouTube videos into shareable, no-watermark GIFs.',
     url: `${SITE_URL}/blog`,
     siteName: SITE_NAME,
     images: [
@@ -52,9 +52,9 @@ export default function BlogPage() {
           </Link>
 
           <header className="mb-12">
-            <h1 className="text-4xl font-bold text-white mb-4">Blog</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">YouTube to GIF Guides</h1>
             <p className="text-[#a0a0a0] text-lg">
-              Tips, tutorials, and guides for creating GIFs from YouTube videos.
+              Step-by-step tutorials and practical settings for creating smaller, smoother, no-watermark GIFs from YouTube videos.
             </p>
           </header>
 

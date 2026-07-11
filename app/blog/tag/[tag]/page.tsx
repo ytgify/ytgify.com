@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: SITE_NAME,
     },
     robots: {
-      index: true,
+      index: false,
       follow: true,
     },
   };

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { submitEmail } from '@/lib/formspree';
+import { trackExtensionEvent, trackExtensionException } from '@/lib/extensionAnalytics';
 
 interface EmailCaptureFormProps {
   source?: string;
@@ -40,14 +41,18 @@ export default function EmailCaptureForm({
 
     setFormState('loading');
     setErrorMessage('');
+    trackExtensionEvent('email_subscription_started', { source });
 
     try {
       await submitEmail(email, { source });
       setFormState('success');
       setEmail('');
-    } catch {
+      trackExtensionEvent('email_subscription_succeeded', { source });
+    } catch (error) {
       setFormState('error');
       setErrorMessage('Failed to subscribe. Please try again.');
+      trackExtensionEvent('email_subscription_failed', { source });
+      trackExtensionException(error, { source, workflow: 'email_subscription' });
     }
   };
 

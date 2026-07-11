@@ -1,5 +1,83 @@
 import { BlogPostMeta } from './blog';
-import { SITE_URL, SITE_NAME } from './constants';
+import { GITHUB_ORG_URL, GITHUB_REPO_URL, SITE_DESCRIPTION, SITE_URL, SITE_NAME } from './constants';
+
+export type FAQItem = {
+  question: string;
+  answer: string;
+};
+
+export function generateSiteSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': `${SITE_URL}/#organization`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: `${SITE_URL}/ytgify-logo.svg`,
+        sameAs: [GITHUB_ORG_URL, GITHUB_REPO_URL, 'https://x.com/neonwatty'],
+        founder: {
+          '@type': 'Person',
+          name: 'Jeremy Watt',
+          url: 'https://neonwatty.com/',
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: SITE_DESCRIPTION,
+        publisher: { '@id': `${SITE_URL}/#organization` },
+        inLanguage: 'en-US',
+      },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${SITE_URL}/#software`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: SITE_DESCRIPTION,
+        applicationCategory: 'MultimediaApplication',
+        applicationSubCategory: 'GIF maker',
+        operatingSystem: 'Google Chrome',
+        browserRequirements: 'Requires Google Chrome with support for unpacked extensions',
+        isAccessibleForFree: true,
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        screenshot: `${SITE_URL}/og-image.png`,
+        downloadUrl: `${SITE_URL}/downloads/ytgify-v1.0.19-chrome.zip`,
+        softwareVersion: '1.0.19',
+        author: { '@id': `${SITE_URL}/#organization` },
+        featureList: [
+          'Convert YouTube videos to GIF',
+          'No-watermark GIF export',
+          'Browser-only media processing',
+          'Custom text overlays',
+          'Frame rate and resolution controls',
+        ],
+      },
+    ],
+  };
+}
+
+export function generateFAQSchema(items: FAQItem[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+}
 
 export function generateArticleSchema(post: BlogPostMeta & { content?: string }) {
   return {
@@ -13,9 +91,9 @@ export function generateArticleSchema(post: BlogPostMeta & { content?: string })
     datePublished: post.date,
     dateModified: post.date,
     author: {
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: SITE_URL,
+      '@type': 'Person',
+      name: 'Jeremy Watt',
+      url: 'https://neonwatty.com/',
     },
     publisher: {
       '@type': 'Organization',

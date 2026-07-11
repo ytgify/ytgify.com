@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState, type AnchorHTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type AnchorHTMLAttributes, type ReactNode } from 'react';
 import { Check, Copy } from 'lucide-react';
 import {
   trackExtensionEvent,
   trackExtensionException,
   CHROME_EXTENSION_DOWNLOAD_PATH,
+  analyticsDestination,
 } from '@/lib/extensionAnalytics';
 
 type Surface =
@@ -14,25 +15,54 @@ type Surface =
   | 'home_install_callout'
   | 'home_install_steps'
   | 'home_sticky_nav'
-  | 'footer';
+  | 'footer'
+  | 'welcome_desktop'
+  | 'welcome_mobile';
 
 type ExtensionFunnelViewProps = {
   surface: Surface;
   funnelStep?: string;
+  eventName?: string;
 };
 
 export function ExtensionFunnelView({
   surface,
   funnelStep = 'viewed',
+  eventName = 'extension_install_funnel_viewed',
 }: ExtensionFunnelViewProps) {
-  useEffect(() => {
-    trackExtensionEvent('extension_install_funnel_viewed', {
-      surface,
-      funnel_step: funnelStep,
-    });
-  }, [surface, funnelStep]);
+  const markerRef = useRef<HTMLSpanElement>(null);
 
-  return null;
+  useEffect(() => {
+    const marker = markerRef.current;
+    if (!marker) return;
+
+    let captured = false;
+    const captureView = () => {
+      if (captured) return;
+      captured = true;
+      trackExtensionEvent(eventName, {
+        surface,
+        funnel_step: funnelStep,
+      });
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      captureView();
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        captureView();
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+
+    observer.observe(marker);
+    return () => observer.disconnect();
+  }, [eventName, surface, funnelStep]);
+
+  return <span ref={markerRef} className="block h-px w-px" aria-hidden="true" />;
 }
 
 type TrackedLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -58,7 +88,7 @@ export function TrackedExtensionLink({
         trackExtensionEvent(eventName, {
           surface,
           cta,
-          href: href?.toString(),
+          destination: analyticsDestination(href?.toString()),
           is_download: href === CHROME_EXTENSION_DOWNLOAD_PATH,
         });
         onClick?.(event);

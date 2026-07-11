@@ -13,6 +13,15 @@ test.describe('Landing Page Smoke Tests', () => {
     await expect(headline).toBeVisible();
   });
 
+  test('homepage exposes search-focused metadata and FAQ content', async ({ page }) => {
+    await page.goto('/');
+    await expect(page).toHaveTitle('YouTube to GIF Converter - Free, No Watermark | YTgify');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Turn YouTube videos into GIFs for free/i);
+    await expect(page.getByRole('heading', { name: /Common questions, answered/i })).toBeVisible();
+    await expect(page.getByText(/How do I turn a YouTube video into a GIF/i)).toBeVisible();
+    await expect(page.locator('script[type="application/ld+json"][data-schema="faq"]')).toHaveCount(1);
+  });
+
   test('demo section follows the hero narrative', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByText(/See YTgify in live action/i)).toBeVisible();
