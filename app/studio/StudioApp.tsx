@@ -1196,6 +1196,8 @@ function SuccessScreen({
       <WizardHeader eyebrow="Success" title="GIF Created Successfully!" helper="Your GIF is ready!" />
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
+          {/* The final animated GIF is already encoded in a local blob URL; image optimization cannot improve it. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={result.url} alt="Generated GIF preview" className="w-full border border-gray-800 bg-black" />
           <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <MetadataItem label="Size" value={formatFileSize(result.fileSize)} />
