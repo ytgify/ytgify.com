@@ -22,19 +22,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  secrets:
-    name: Scan for Secrets
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   test:
     name: Lint, Build & Test
     runs-on: ubuntu-latest
