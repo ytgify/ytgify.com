@@ -143,8 +143,10 @@ export function LegacyInstallSection() {
   }, [expandedStepIndex, moveExpandedStep]);
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-10">
-      <ExtensionFunnelView surface="home_install_steps" funnelStep="install_steps_viewed" />
+    <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-10">
+      <div className="absolute left-0 top-0">
+        <ExtensionFunnelView surface="home_install_steps" funnelStep="install_steps_viewed" />
+      </div>
       <div>
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">
           Manual Chrome install

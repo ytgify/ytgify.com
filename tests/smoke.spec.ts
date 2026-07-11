@@ -73,6 +73,19 @@ test.describe('Landing Page Smoke Tests', () => {
     await expect(page.getByRole('img', { name: /YTgify extension card loaded/i })).toBeVisible();
   });
 
+  test('desktop install introduction stays left of the walkthrough', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/#install');
+
+    const introduction = await page.getByRole('heading', { name: 'Install the YTgify extension', exact: true }).boundingBox();
+    const walkthrough = await page.getByRole('heading', { name: 'Chrome install walkthrough', exact: true }).boundingBox();
+
+    expect(introduction).not.toBeNull();
+    expect(walkthrough).not.toBeNull();
+    expect(introduction!.x).toBeLessThan(walkthrough!.x);
+    expect(Math.abs(introduction!.y - walkthrough!.y)).toBeLessThan(80);
+  });
+
   test('landing install screenshots expand into a guided carousel', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Expand screenshot for Open Chrome extensions/i }).dblclick();
