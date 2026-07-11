@@ -10,6 +10,7 @@ import CreatorBrandSection from './components/CreatorBrandSection';
 import { BookOpen, ChevronDown, Download, Github, MessageSquareText, Share2, SlidersHorizontal, Sparkles, Timer } from 'lucide-react';
 import { ExtensionFunnelView, TrackedExtensionLink } from './components/ExtensionAnalytics';
 import { CHROME_EXTENSION_VERSION } from '@/lib/extensionAnalytics';
+import { GITHUB_REPO_URL } from '@/lib/constants';
 
 const heroProofPoints = [
   { label: 'No watermark', value: 'Clean GIF export' },
@@ -207,7 +208,7 @@ export default function Home() {
                   <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-gray-800 pt-4 text-xs font-semibold text-gray-500">
                     <span>Open source</span>
                     <a
-                      href="https://github.com/neonwatty/ytgify"
+                      href={GITHUB_REPO_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 transition-colors hover:text-gray-300"
