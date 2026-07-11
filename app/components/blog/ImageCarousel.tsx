@@ -1,11 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CarouselImage {
   src: string;
   caption: string;
+  width: number;
+  height: number;
 }
 
 interface ImageCarouselProps {
@@ -36,11 +39,14 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
           >
             {images.map((image, index) => (
               <div key={index} className="w-full flex-shrink-0">
-                <img
+                <Image
                   src={image.src}
                   alt={image.caption}
-                  className="w-full h-auto"
-                  loading={index === 0 ? 'eager' : 'lazy'}
+                  width={image.width}
+                  height={image.height}
+                  priority={index === 0}
+                  sizes="(max-width: 520px) 100vw, 520px"
+                  className="h-auto w-full"
                 />
               </div>
             ))}

@@ -105,6 +105,25 @@ test.describe('Landing Page Smoke Tests', () => {
     expect(after!.y).toBeLessThanOrEqual(1);
   });
 
+  test('mobile hero keeps the primary install action above the fold without horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+
+    const navInstall = page.getByRole('navigation', { name: /Page sections/i }).getByRole('link', { name: 'Install', exact: true });
+    await expect(navInstall).toBeVisible();
+
+    const heroInstall = page.getByRole('link', { name: /Install Chrome Extension/i }).first();
+    const heroInstallBox = await heroInstall.boundingBox();
+    expect(heroInstallBox).not.toBeNull();
+    expect(heroInstallBox!.y + heroInstallBox!.height).toBeLessThan(844);
+
+    const widths = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(widths.scrollWidth).toBe(widths.clientWidth);
+  });
+
   test('demo video iframe is present', async ({ page }) => {
     await page.goto('/');
     const iframe = page.locator('iframe[src*="youtube.com/embed"]');

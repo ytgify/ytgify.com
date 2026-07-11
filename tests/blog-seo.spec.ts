@@ -61,11 +61,34 @@ test.describe('evidence-backed guide cluster', () => {
     }
   });
 
+  test('blog index preloads its above-the-fold guide cover', async ({ page }) => {
+    await page.goto('/blog');
+    await expect(page.locator('link[rel="preload"][as="image"]')).toHaveAttribute(
+      'href',
+      '/blog/images/youtube-to-gif-no-watermark-local.png',
+    );
+  });
+
   test('robots policy explicitly permits OAI-SearchBot', async ({ request }) => {
     const response = await request.get('/robots.txt');
     expect(response.ok()).toBeTruthy();
     const robots = await response.text();
     expect(robots).toMatch(/User-agent: OAI-SearchBot\s+Allow: \//);
     expect(robots).toContain('Sitemap: https://ytgify.com/sitemap.xml');
+  });
+
+  test('sitemap exposes refreshed guide dates and the IndexNow key is public', async ({ request }) => {
+    const sitemapResponse = await request.get('/sitemap.xml');
+    expect(sitemapResponse.ok()).toBeTruthy();
+    const sitemap = await sitemapResponse.text();
+
+    for (const guide of guides) {
+      expect(sitemap).toContain(`<loc>https://ytgify.com/blog/${guide.slug}</loc>`);
+    }
+    expect(sitemap.match(/<lastmod>2026-07-11/g)).toHaveLength(5);
+
+    const keyResponse = await request.get('/d1fc505c0bd2b087bc463a1b955f0f13.txt');
+    expect(keyResponse.ok()).toBeTruthy();
+    expect((await keyResponse.text()).trim()).toBe('d1fc505c0bd2b087bc463a1b955f0f13');
   });
 });

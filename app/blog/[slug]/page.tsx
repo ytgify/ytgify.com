@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Clock, Calendar, BadgeCheck, UserRound } from 'lucide-react';
@@ -153,10 +154,14 @@ export default async function BlogPostPage({ params }: PageProps) {
 
           {post.thumbnail && (
             <div className="mb-8 rounded-lg overflow-hidden">
-              <img
+              <Image
                 src={post.thumbnail}
                 alt={post.title}
-                className="w-full h-auto"
+                width={1200}
+                height={630}
+                priority
+                sizes="(max-width: 800px) 100vw, 704px"
+                className="h-auto w-full"
               />
             </div>
           )}

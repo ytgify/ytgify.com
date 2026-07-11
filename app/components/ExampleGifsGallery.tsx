@@ -1,11 +1,12 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 const EXAMPLE_GIFS = [
-  'https://raw.githubusercontent.com/neonwatty/readme_gifs/main/free-gratis.gif',
-  'https://raw.githubusercontent.com/neonwatty/readme_gifs/main/boom-baby.gif',
-  'https://raw.githubusercontent.com/neonwatty/readme_gifs/main/witness-me.gif',
+  '/examples/free-gratis.gif',
+  '/examples/boom-baby.gif',
+  '/examples/witness-me.gif',
 ];
 
 export default function ExampleGifsGallery() {
@@ -49,11 +50,14 @@ export default function ExampleGifsGallery() {
             >
               {EXAMPLE_GIFS.map((gifUrl, index) => (
                 <div key={index} className="w-full flex-shrink-0">
-                  <img
+                  <Image
                     src={gifUrl}
                     alt={`Example GIF ${index + 1}`}
+                    width={256}
+                    height={144}
                     className="w-full h-auto"
                     loading={index === 0 ? 'eager' : 'lazy'}
+                    unoptimized
                   />
                 </div>
               ))}
