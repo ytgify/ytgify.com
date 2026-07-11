@@ -1,4 +1,4 @@
-import { BlogPostMeta } from './blog';
+import { BlogPostMeta, DEFAULT_BLOG_AUTHOR_URL } from './blog';
 import { GITHUB_ORG_URL, GITHUB_REPO_URL, SITE_DESCRIPTION, SITE_URL, SITE_NAME } from './constants';
 
 export type FAQItem = {
@@ -89,11 +89,11 @@ export function generateArticleSchema(post: BlogPostMeta & { content?: string })
       ? post.thumbnail
       : `${SITE_URL}${post.thumbnail}`,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated || post.date,
     author: {
       '@type': 'Person',
-      name: 'Jeremy Watt',
-      url: 'https://neonwatty.com/',
+      name: post.author,
+      url: DEFAULT_BLOG_AUTHOR_URL,
     },
     publisher: {
       '@type': 'Organization',

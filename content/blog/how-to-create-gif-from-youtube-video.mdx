@@ -1,47 +1,83 @@
 ---
-title: "How to Create a GIF from Any YouTube Video"
-description: "Step-by-step guide to creating animated GIFs from YouTube videos using the YTgify browser extension."
+title: "How to Create a GIF from a YouTube Video"
+description: "A current, step-by-step YTgify v1.0.19 guide: install the Chrome extension manually, choose a clip, tune it, and download a GIF."
 date: "2025-01-15"
+updated: "2026-07-11"
+author: "Jeremy Watt"
+testedVersion: "1.0.19"
 tags: ["tutorial", "gif", "youtube"]
 thumbnail: "/ytgify-demo-2.png"
-readTime: 2
+readTime: 5
 ---
 
-Create shareable GIFs from any YouTube video directly in your browser with YTgify.
+YTgify turns a moment in a YouTube video into a GIF without making you download the source video first. The current release is installed manually in Chrome, then appears inside the YouTube player.
 
-## Quick Start
+This walkthrough was checked against **YTgify v1.0.19**. If you already have an older unpacked copy, load the newer ZIP before following along.
 
-1. Install YTgify from the [Chrome Web Store](https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje) or [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/ytgify-for-firefox/)
-2. Open any YouTube video
-3. Click the YTgify button or press Ctrl+Shift+G
-4. Set your clip timing, resolution, and frame rate
-5. Add text overlay (optional)
-6. Wait for processing, then download
+## 1. Install YTgify in Chrome
+
+YTgify is not currently distributed through the Chrome Web Store, so use the manual install:
+
+1. Go to the [YTgify install walkthrough](/#install) and download the v1.0.19 Chrome ZIP.
+2. Extract the ZIP to a folder you will keep. Chrome loads the extension from that folder.
+3. Open `chrome://extensions` in Chrome.
+4. Turn on **Developer mode**.
+5. Choose **Load unpacked**, then select the extracted folder.
+
+Manual installations do not update automatically. When a newer release is available, download and load that version yourself.
+
+## 2. Open the moment on YouTube
+
+Open the YouTube video and play or seek near the moment you want. YTgify adds a GIF button to the YouTube player controls. You can also use **Ctrl+Shift+G** on Windows/Linux or **Command+Shift+G** on macOS.
+
+If the button does not appear immediately after installation, refresh the YouTube tab once.
 
 <DemoVideo />
 
-## Settings Overview
+## 3. Select a short clip
 
-- **Resolution**: 144p to 480p (lower = smaller files)
-- **Frame rate**: 10-20 FPS (15 is the sweet spot)
-- **Duration**: Up to 30 seconds
-- **Text overlay**: Optional custom text
+Use the timeline to set the start and end of the animation. In v1.0.19, the selectable duration is **1 to 20 seconds**, or less when the video ends sooner.
 
-## Tips
+Start with the shortest segment that communicates the moment. A three-to-five-second reaction is easier to share and usually loops more cleanly than a long excerpt.
 
-- Keep GIFs under 5 seconds for best sharing
-- Use 360p for balance of quality and file size
-- 10-15 FPS works for most content
-- Ensure video is fully loaded before setting start time
+## 4. Choose resolution and frame rate
+
+Quick Capture offers four resolutions and three frame rates:
+
+| Control | Available choices | Practical starting point |
+|---|---|---|
+| Resolution | 144p, 240p, 360p, 480p | 360p for a balance of detail and size |
+| Frame rate | 5, 10, 15 FPS | 10 FPS for most clips; 15 FPS for fast motion |
+| Duration | 1–20 seconds | 3–5 seconds for a shareable reaction |
+
+These are YTgify controls, not upload limits for a social platform. If the GIF is too large, shorten the clip first, then reduce resolution or FPS. For a deeper explanation, see [how to choose GIF settings for sharing](/blog/best-gif-settings-for-social-media).
+
+## 5. Add optional text
+
+Continue to the text screen if the moment needs context. Keep captions brief and leave important faces or actions unobstructed. You can also skip text and create the GIF directly.
+
+## 6. Create and save the GIF
+
+Start processing and keep the YouTube tab open while YTgify captures the selected frames. When the GIF is ready, you can download it, copy it, or keep it in YTgify's local library.
+
+YTgify's published privacy policy says frame capture and GIF creation happen locally, with captured frames held in memory rather than uploaded to an external conversion service.
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| Wrong start time | Wait for video to fully load |
-| File too large | Reduce duration, resolution, or FPS |
-| Button not showing | Refresh the YouTube page |
+| Problem | What to try |
+|---|---|
+| GIF button is missing | Refresh the YouTube page and confirm YTgify is enabled at `chrome://extensions`. |
+| Start time is wrong | Let the video buffer, seek near the moment, and reopen the capture controls. |
+| Processing struggles | Use a shorter duration or lower FPS and wait for more of the video to buffer. |
+| GIF is too large | Shorten duration, then step down from 480p or reduce 15 FPS to 10 or 5 FPS. |
+| Extension disappeared after moving files | Keep the extracted extension folder in place, or load it unpacked again from its new location. |
 
----
+## What to read next
 
-[Install YTgify](https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje) to start creating GIFs.
+- Use [practical GIF settings for different sharing situations](/blog/best-gif-settings-for-social-media) when size or smoothness matters.
+- Read the [free, no-watermark and local-processing guide](/blog/youtube-to-gif-free-no-watermark) to understand what stays on your device.
+- Return to the [YTgify homepage and install walkthrough](/#install) when you are ready to start.
+
+## Product sources
+
+Product behavior on this page was checked against the public [YTgify README](https://github.com/ytgify/ytgify/blob/main/README.md), [extension manifest](https://github.com/ytgify/ytgify/blob/main/manifest.json), and [privacy policy](https://github.com/ytgify/ytgify/blob/main/docs/privacy-policy.md) for v1.0.19.
