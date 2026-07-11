@@ -7,10 +7,12 @@ import ExampleGifsGallery from './components/ExampleGifsGallery';
 import SiteFooter from './components/SiteFooter';
 import { LegacyInstallSection } from './components/DiscontinuationNotice';
 import CreatorBrandSection from './components/CreatorBrandSection';
+import HomeFAQ, { homeFAQItems } from './components/HomeFAQ';
 import { BookOpen, ChevronDown, Download, Github, MessageSquareText, Share2, SlidersHorizontal, Sparkles, Timer } from 'lucide-react';
 import { ExtensionFunnelView, TrackedExtensionLink } from './components/ExtensionAnalytics';
 import { CHROME_EXTENSION_VERSION } from '@/lib/extensionAnalytics';
 import { GITHUB_REPO_URL } from '@/lib/constants';
+import { generateFAQSchema } from '@/lib/schema';
 
 const heroProofPoints = [
   { label: 'No watermark', value: 'Clean GIF export' },
@@ -42,8 +44,15 @@ const demoWorkflow = [
 ];
 
 export default function Home() {
+  const faqSchema = generateFAQSchema(homeFAQItems);
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] grid-pattern">
+      <script
+        type="application/ld+json"
+        data-schema="faq"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <main>
         <article className="max-w-[1080px] mx-auto px-5 sm:px-8 pb-16">
           <ExtensionFunnelView surface="home_hero" funnelStep="landing_page_viewed" />
@@ -58,6 +67,7 @@ export default function Home() {
               <div className="hidden items-center gap-x-5 text-sm font-semibold text-gray-400 md:flex">
                 <a href="#demo" className="hover:text-white transition-colors">Demo</a>
                 <a href="#install" className="hover:text-white transition-colors">Install</a>
+                <Link href="/blog" className="hover:text-white transition-colors">Guides</Link>
                 <a href="#also-by-jeremy" className="hover:text-white transition-colors">Builder</a>
               </div>
               <TrackedExtensionLink
@@ -234,6 +244,8 @@ export default function Home() {
           <section id="install" className="-mx-5 flex scroll-mt-24 flex-col justify-center border-b border-gray-800 bg-gray-950/75 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[86svh] lg:py-16">
             <LegacyInstallSection />
           </section>
+
+          <HomeFAQ />
 
           <CreatorBrandSection />
         </article>

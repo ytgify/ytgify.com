@@ -6,6 +6,8 @@ import DemoVideo from './DemoVideo';
 import SiteFooter from './SiteFooter';
 import EmailCaptureForm from './EmailCaptureForm';
 import { MOBILE_REMINDER, MOBILE_REMINDER_EMAIL } from '@/lib/constants';
+import { ExtensionFunnelView } from './ExtensionAnalytics';
+import { trackExtensionEvent, trackExtensionException } from '@/lib/extensionAnalytics';
 
 export default function MobileWelcome() {
   const [shareStatus, setShareStatus] = useState<'idle' | 'shared'>('idle');
@@ -20,14 +22,34 @@ export default function MobileWelcome() {
           url: MOBILE_REMINDER.url,
         });
         setShareStatus('shared');
+        trackExtensionEvent('mobile_install_reminder_shared', {
+          surface: 'welcome_mobile',
+          share_method: 'web_share',
+        });
       } catch (err) {
         // User cancelled or share failed - fall back to mailto
         if ((err as Error).name !== 'AbortError') {
+          trackExtensionException(err, {
+            surface: 'welcome_mobile',
+            workflow: 'mobile_install_reminder',
+          });
+          trackExtensionEvent('mobile_install_reminder_fallback_used', {
+            surface: 'welcome_mobile',
+            share_method: 'mailto',
+          });
           window.location.href = mailtoLink;
+        } else {
+          trackExtensionEvent('mobile_install_reminder_cancelled', {
+            surface: 'welcome_mobile',
+          });
         }
       }
     } else {
       // Share API not supported - fall back to mailto
+      trackExtensionEvent('mobile_install_reminder_fallback_used', {
+        surface: 'welcome_mobile',
+        share_method: 'mailto',
+      });
       window.location.href = mailtoLink;
     }
   };
@@ -36,6 +58,11 @@ export default function MobileWelcome() {
     <div className="min-h-screen bg-[#0a0a0a] grid-pattern">
       <main>
         <article className="max-w-[800px] mx-auto px-6 pt-12 pb-16">
+          <ExtensionFunnelView
+            surface="welcome_mobile"
+            funnelStep="mobile_reminder_viewed"
+            eventName="mobile_install_reminder_viewed"
+          />
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <Logo />

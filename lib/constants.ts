@@ -35,5 +35,5 @@ export const MOBILE_REMINDER_EMAIL = {
 // Site metadata constants
 export const SITE_URL = 'https://ytgify.com';
 export const SITE_NAME = 'YTgify';
-export const SITE_TITLE = 'YTgify - Free YouTube to GIF Chrome Extension';
-export const SITE_DESCRIPTION = 'Install YTgify manually in Chrome to create no-watermark GIFs from YouTube videos right inside the player.';
+export const SITE_TITLE = 'YouTube to GIF Converter - Free, No Watermark | YTgify';
+export const SITE_DESCRIPTION = 'Turn YouTube videos into GIFs for free with YTgify. Create, caption, and download no-watermark GIFs in your browser without uploading your video.';

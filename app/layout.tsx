@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/constants";
+import { generateSiteSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
-  keywords: "video to gif, mp4 to gif, gif maker no watermark, private video to gif, youtube to gif, youtube to gif converter, ytgify, Jeremy Watt, neonwatty",
+  keywords: ["youtube to gif", "youtube to gif converter", "youtube video to gif", "gif maker no watermark", "yt to gif", "YTgify"],
   authors: [{ name: "Jeremy Watt" }],
   creator: "Jeremy Watt",
   publisher: SITE_NAME,
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: SITE_TITLE,
-    description: "Install the YTgify Chrome extension manually and create no-watermark GIFs from YouTube videos right inside the player.",
+    description: SITE_DESCRIPTION,
     type: "website",
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -43,8 +44,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YTgify - Free YouTube to GIF Chrome Extension",
-    description: "Install YTgify manually in Chrome and create no-watermark GIFs from YouTube videos.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     images: [`${SITE_URL}/twitter-image.png`],
   },
 };
@@ -54,36 +55,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": SITE_NAME,
-    "url": SITE_URL,
-    "description": SITE_DESCRIPTION,
-    "applicationCategory": "MultimediaApplication",
-    "operatingSystem": "Chrome, Firefox",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "featureList": [
-      "Convert local videos to GIF",
-      "Browser-only media processing",
-      "No-watermark GIF export",
-      "Manual Chrome extension install",
-      "Convert YouTube videos to GIF",
-      "Custom text overlay",
-      "FPS control",
-      "Multiple resolutions",
-      "MP4 to GIF conversion"
-    ],
-    "screenshot": `${SITE_URL}/og-image.png`,
-    "creator": {
-      "@type": "Person",
-      "name": "Jeremy Watt"
-    }
-  };
+  const jsonLd = generateSiteSchema();
 
   return (
     <html lang="en" suppressHydrationWarning>

@@ -4,6 +4,7 @@ import Logo from './Logo';
 import DemoVideo from './DemoVideo';
 import SiteFooter from './SiteFooter';
 import { CHROME_EXTENSION_URL } from '@/lib/constants';
+import { ExtensionFunnelView, TrackedExtensionLink } from './ExtensionAnalytics';
 
 const quickTips = [
   'Look for the pink GIF button below any YouTube video',
@@ -17,6 +18,11 @@ export default function DesktopWelcome() {
     <div className="min-h-screen bg-[#0a0a0a] grid-pattern">
       <main>
         <article className="max-w-[800px] mx-auto px-12 sm:px-6 pt-12 pb-16">
+          <ExtensionFunnelView
+            surface="welcome_desktop"
+            funnelStep="extension_installed"
+            eventName="extension_install_confirmed"
+          />
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <Logo />
@@ -63,17 +69,20 @@ export default function DesktopWelcome() {
 
           {/* Try It Now CTA */}
           <div className="text-center mb-10">
-            <a
+            <TrackedExtensionLink
               href="https://www.youtube.com"
               target="_blank"
               rel="noopener noreferrer"
+              surface="welcome_desktop"
+              cta="try_on_youtube"
+              eventName="extension_activation_clicked"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#E91E8C] to-[#7B2FBE] text-white font-bold text-lg rounded-full hover:opacity-90 transition-opacity shadow-lg"
             >
               Try it now on YouTube
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
-            </a>
+            </TrackedExtensionLink>
           </div>
 
           {/* Quick Tips */}
@@ -100,17 +109,20 @@ export default function DesktopWelcome() {
             <p className="text-gray-400 mb-4">
               A quick review helps others discover the extension and keeps development going!
             </p>
-            <a
+            <TrackedExtensionLink
               href={`${CHROME_EXTENSION_URL}/reviews`}
               target="_blank"
               rel="noopener noreferrer"
+              surface="welcome_desktop"
+              cta="leave_review"
+              eventName="extension_review_clicked"
               className="inline-flex items-center gap-2 px-6 py-3 bg-yellow-500/20 border border-yellow-500/50 text-yellow-300 font-semibold rounded-full hover:bg-yellow-500/30 transition-colors"
             >
               Leave a review
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
-            </a>
+            </TrackedExtensionLink>
           </div>
         </article>
 

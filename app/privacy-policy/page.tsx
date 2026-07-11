@@ -72,6 +72,21 @@ export default function PrivacyPolicyPage() {
 
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">
+              Website Analytics
+            </h2>
+            <p className="text-[#a0a0a0] leading-relaxed">
+              The ytgify.com website uses Google Analytics and PostHog to measure
+              aggregate page visits and product actions such as install-button
+              clicks, extension ZIP downloads, install confirmation, and workflow
+              errors. Event data does not include video URLs, GIF contents,
+              captions, email addresses, or full referrer URLs. This website
+              measurement is separate from the extension&apos;s local media
+              processing.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-4">
               Data You Control
             </h2>
             <p className="text-[#a0a0a0] leading-relaxed mb-4">
