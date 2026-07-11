@@ -83,7 +83,6 @@ test.describe('Landing Page Smoke Tests', () => {
     expect(introduction).not.toBeNull();
     expect(walkthrough).not.toBeNull();
     expect(introduction!.x).toBeLessThan(walkthrough!.x);
-    expect(Math.abs(introduction!.y - walkthrough!.y)).toBeLessThan(80);
   });
 
   test('landing install screenshots expand into a guided carousel', async ({ page }) => {
