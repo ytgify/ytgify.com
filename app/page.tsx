@@ -8,7 +8,17 @@ import SiteFooter from './components/SiteFooter';
 import { LegacyInstallSection } from './components/DiscontinuationNotice';
 import CreatorBrandSection from './components/CreatorBrandSection';
 import HomeFAQ, { homeFAQItems } from './components/HomeFAQ';
-import { BookOpen, ChevronDown, Download, Github, MessageSquareText, Share2, SlidersHorizontal, Sparkles, Timer } from 'lucide-react';
+import {
+  BookOpen,
+  ChevronDown,
+  Download,
+  Github,
+  MessageSquareText,
+  Share2,
+  SlidersHorizontal,
+  Sparkles,
+  Timer,
+} from 'lucide-react';
 import { ExtensionFunnelView, TrackedExtensionLink } from './components/ExtensionAnalytics';
 import { CHROME_EXTENSION_VERSION } from '@/lib/extensionAnalytics';
 import { GITHUB_REPO_URL } from '@/lib/constants';
@@ -74,7 +84,10 @@ export default function Home() {
       <main>
         <article className="max-w-[1080px] mx-auto px-5 sm:px-8 pb-16">
           <ExtensionFunnelView surface="home_hero" funnelStep="landing_page_viewed" />
-          <nav aria-label="Page sections" className="sticky top-0 z-50 -mx-5 border-b border-gray-800 bg-[#0a0a0a]/88 px-5 py-3 backdrop-blur-md sm:-mx-8 sm:px-8">
+          <nav
+            aria-label="Page sections"
+            className="sticky top-0 z-50 -mx-5 border-b border-gray-800 bg-[#0a0a0a]/88 px-5 py-3 backdrop-blur-md sm:-mx-8 sm:px-8"
+          >
             <div className="flex items-center justify-between gap-4">
               <Link href="/" className="flex items-center gap-2 text-white" aria-label="YTgify home">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E91E8C]/35 bg-[#E91E8C]/10">
@@ -83,10 +96,18 @@ export default function Home() {
                 <span className="font-bold tracking-tight">YTgify</span>
               </Link>
               <div className="hidden items-center gap-x-5 text-sm font-semibold text-gray-400 md:flex">
-                <a href="#demo" className="hover:text-white transition-colors">Demo</a>
-                <a href="#install" className="hover:text-white transition-colors">Install</a>
-                <Link href="/blog" className="hover:text-white transition-colors">Guides</Link>
-                <a href="#also-by-jeremy" className="hover:text-white transition-colors">Builder</a>
+                <a href="#demo" className="hover:text-white transition-colors">
+                  Demo
+                </a>
+                <a href="#install" className="hover:text-white transition-colors">
+                  Install
+                </a>
+                <Link href="/blog" className="hover:text-white transition-colors">
+                  Guides
+                </Link>
+                <a href="#also-by-jeremy" className="hover:text-white transition-colors">
+                  Builder
+                </a>
               </div>
               <TrackedExtensionLink
                 href="#install"
@@ -106,7 +127,9 @@ export default function Home() {
                 <div className="mb-8 flex items-center gap-4">
                   <Logo />
                   <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E91E8C]">Open-source Chrome extension</p>
+                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E91E8C]">
+                      Open-source Chrome extension
+                    </p>
                     <p className="text-4xl sm:text-5xl font-bold text-white leading-none mt-2">YTgify</p>
                   </div>
                 </div>
@@ -173,9 +196,14 @@ export default function Home() {
             </a>
           </section>
 
-          <section id="demo" className="-mx-5 flex scroll-mt-24 flex-col justify-center border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[92svh] lg:py-16">
+          <section
+            id="demo"
+            className="-mx-5 flex scroll-mt-24 flex-col justify-center border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[92svh] lg:py-16"
+          >
             <div className="mb-8 border-b border-gray-800 pb-6">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">See YTgify in live action</p>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">
+                See YTgify in live action
+              </p>
               <h2 className="text-3xl font-bold text-white">See it in action</h2>
             </div>
             <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-10">
@@ -259,16 +287,25 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="install" className="-mx-5 flex scroll-mt-24 flex-col justify-center border-b border-gray-800 bg-gray-950/75 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[86svh] lg:py-16">
+          <section
+            id="install"
+            className="-mx-5 flex scroll-mt-24 flex-col justify-center border-b border-gray-800 bg-gray-950/75 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[86svh] lg:py-16"
+          >
             <LegacyInstallSection />
           </section>
 
-          <section aria-labelledby="guide-heading" className="-mx-5 border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14">
+          <section
+            aria-labelledby="guide-heading"
+            className="-mx-5 border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14"
+          >
             <div className="mb-8 max-w-2xl">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">Verified guides</p>
-              <h2 id="guide-heading" className="text-3xl font-bold text-white">Get a better GIF on the first export</h2>
+              <h2 id="guide-heading" className="text-3xl font-bold text-white">
+                Get a better GIF on the first export
+              </h2>
               <p className="mt-3 leading-relaxed text-gray-400">
-                These guides are checked against YTgify v{CHROME_EXTENSION_VERSION} and cover the workflow, settings tradeoffs, and local-processing boundary.
+                These guides are checked against YTgify v{CHROME_EXTENSION_VERSION} and cover the workflow, settings
+                tradeoffs, and local-processing boundary.
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
@@ -278,13 +315,18 @@ export default function Home() {
                   href={guide.href}
                   className="group border border-gray-800 bg-gray-950/45 p-5 transition-colors hover:border-[#E91E8C]/60"
                 >
-                  <h3 className="font-semibold text-white transition-colors group-hover:text-[#E91E8C]">{guide.title}</h3>
+                  <h3 className="font-semibold text-white transition-colors group-hover:text-[#E91E8C]">
+                    {guide.title}
+                  </h3>
                   <p className="mt-2 text-sm leading-relaxed text-gray-400">{guide.description}</p>
                   <span className="mt-4 inline-block text-sm font-semibold text-[#E91E8C]">Read guide →</span>
                 </Link>
               ))}
             </div>
-            <Link href="/blog" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-300 transition-colors hover:text-white">
+            <Link
+              href="/blog"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-300 transition-colors hover:text-white"
+            >
               <BookOpen className="h-4 w-4" />
               Browse all YouTube-to-GIF guides
             </Link>

@@ -7,7 +7,7 @@ function even(value: number): number {
 export function calculateOutputDimensions(
   sourceWidth: number,
   sourceHeight: number,
-  maxHeight: StudioResolution
+  maxHeight: StudioResolution,
 ): { width: number; height: number; scale: number } {
   if (sourceWidth <= 0 || sourceHeight <= 0) {
     throw new Error('Invalid source dimensions');

@@ -26,14 +26,7 @@ interface EncodeGifOptions {
   onProgress?: (progress: StudioExportProgress) => void;
 }
 
-export async function encodeGif({
-  frames,
-  width,
-  height,
-  fps,
-  signal,
-  onProgress,
-}: EncodeGifOptions): Promise<Blob> {
+export async function encodeGif({ frames, width, height, fps, signal, onProgress }: EncodeGifOptions): Promise<Blob> {
   if (frames.length === 0) {
     throw new Error('encoding_failed');
   }
@@ -115,14 +108,17 @@ function createFramePalette(pixels: Uint8ClampedArray): GifPalette {
     // Use fallback below.
   }
 
-  return [[pixels[0] || 0, pixels[1] || 0, pixels[2] || 0], [0, 0, 0]];
+  return [
+    [pixels[0] || 0, pixels[1] || 0, pixels[2] || 0],
+    [0, 0, 0],
+  ];
 }
 
 function applyPaletteWithStuckiDither(
   pixels: Uint8ClampedArray,
   palette: GifPalette,
   width: number,
-  height: number
+  height: number,
 ): Uint8Array {
   if (palette.length <= 2) {
     return applyPalette(pixels, palette, paletteFormat);
@@ -178,13 +174,7 @@ function applyPaletteWithStuckiDither(
   return indexed;
 }
 
-function nearestPaletteIndex(
-  red: number,
-  green: number,
-  blue: number,
-  palette: GifPalette,
-  cache: Int16Array
-): number {
+function nearestPaletteIndex(red: number, green: number, blue: number, palette: GifPalette, cache: Int16Array): number {
   const key = ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3);
   const cached = cache[key];
   if (cached >= 0) return cached;

@@ -150,7 +150,7 @@ async function seekOnce(
   seekTarget: number,
   desiredTime: number,
   timeoutMs: number,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<SeekResult> {
   const startedAt = performance.now();
 

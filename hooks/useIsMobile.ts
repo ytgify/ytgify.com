@@ -25,9 +25,5 @@ function getServerSnapshot() {
  * Returns null while detecting, true for mobile, false for desktop.
  */
 export function useIsMobile(): boolean | null {
-  return useSyncExternalStore<boolean | null>(
-    subscribe,
-    getMobileSnapshot,
-    getServerSnapshot,
-  );
+  return useSyncExternalStore<boolean | null>(subscribe, getMobileSnapshot, getServerSnapshot);
 }

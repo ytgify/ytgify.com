@@ -5,10 +5,7 @@ interface SubmitEmailOptions {
   [key: string]: string | undefined;
 }
 
-export async function submitEmail(
-  email: string,
-  options?: SubmitEmailOptions
-): Promise<{ ok: boolean }> {
+export async function submitEmail(email: string, options?: SubmitEmailOptions): Promise<{ ok: boolean }> {
   const response = await fetch(FORMSPREE_ENDPOINT, {
     method: 'POST',
     headers: {

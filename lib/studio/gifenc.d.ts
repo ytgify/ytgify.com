@@ -12,7 +12,7 @@ declare module 'gifenc' {
         dispose?: number;
         first?: boolean;
         repeat?: number;
-      }
+      },
     ): void;
     finish(): void;
     bytes(): Uint8Array;
@@ -22,11 +22,11 @@ declare module 'gifenc' {
   export function quantize(
     rgba: Uint8Array | Uint8ClampedArray,
     maxColors: number,
-    options?: { format?: 'rgb565' | 'rgb444' | 'rgba4444'; clearAlpha?: boolean }
+    options?: { format?: 'rgb565' | 'rgb444' | 'rgba4444'; clearAlpha?: boolean },
   ): GifPalette;
   export function applyPalette(
     rgba: Uint8Array | Uint8ClampedArray,
     palette: GifPalette,
-    format?: 'rgb565' | 'rgb444' | 'rgba4444'
+    format?: 'rgb565' | 'rgb444' | 'rgba4444',
   ): Uint8Array;
 }

@@ -17,8 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     title: `YouTube to GIF Guides, Tips & Tutorials | ${SITE_NAME}`,
-    description:
-      'Practical guides for turning YouTube videos into shareable, no-watermark GIFs.',
+    description: 'Practical guides for turning YouTube videos into shareable, no-watermark GIFs.',
     url: `${SITE_URL}/blog`,
     siteName: SITE_NAME,
     images: [
@@ -37,10 +36,7 @@ export default function BlogPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main className="min-h-screen bg-[#0a0a0a]">
         <div className="max-w-[800px] mx-auto px-6 sm:px-12 pt-12 pb-8">
           <Link
@@ -54,15 +50,14 @@ export default function BlogPage() {
           <header className="mb-12">
             <h1 className="text-4xl font-bold text-white mb-4">YouTube to GIF Guides</h1>
             <p className="text-[#a0a0a0] text-lg">
-              Step-by-step tutorials and practical settings for creating smaller, smoother, no-watermark GIFs from YouTube videos.
+              Step-by-step tutorials and practical settings for creating smaller, smoother, no-watermark GIFs from
+              YouTube videos.
             </p>
           </header>
 
           {posts.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-[#606060] text-lg">
-                No blog posts yet. Check back soon!
-              </p>
+              <p className="text-[#606060] text-lg">No blog posts yet. Check back soon!</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

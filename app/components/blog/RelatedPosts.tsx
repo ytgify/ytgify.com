@@ -40,9 +40,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
               <h3 className="text-sm font-medium text-white group-hover:text-ytg-pink transition-colors line-clamp-2">
                 {post.title}
               </h3>
-              <p className="text-xs text-[#606060] mt-1">
-                {formatDate(post.date)}
-              </p>
+              <p className="text-xs text-[#606060] mt-1">{formatDate(post.date)}</p>
             </div>
           </Link>
         ))}

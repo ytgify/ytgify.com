@@ -3,8 +3,8 @@ import SiteFooter from '../components/SiteFooter';
 import ShareContent from './ShareContent';
 
 export const metadata: Metadata = {
-  title: 'Your Corner of YouTube, All GIF\'d Up - YTgify',
-  description: 'GIFs you won\'t find anywhere else. Made by the YouTube-obsessed.',
+  title: "Your Corner of YouTube, All GIF'd Up - YTgify",
+  description: "GIFs you won't find anywhere else. Made by the YouTube-obsessed.",
 };
 
 export default function SharePage() {

@@ -7,10 +7,7 @@ const GA_MEASUREMENT_ID = 'G-VSY2S87253';
 export default function GoogleAnalytics() {
   return (
     <>
-      <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-      />
+      <Script strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
       <Script
         id="google-analytics"
         strategy="afterInteractive"

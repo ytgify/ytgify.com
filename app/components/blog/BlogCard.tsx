@@ -35,9 +35,7 @@ export default function BlogCard({ post, priority = false }: BlogCardProps) {
             {post.title}
           </h2>
         </Link>
-        <p className="text-[#808080] text-sm mb-3 line-clamp-2">
-          {post.description}
-        </p>
+        <p className="text-[#808080] text-sm mb-3 line-clamp-2">{post.description}</p>
         <div className="flex items-center gap-4 text-xs text-[#606060]">
           <span className="flex items-center gap-1">
             <Clock size={12} />

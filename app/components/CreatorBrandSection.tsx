@@ -57,7 +57,10 @@ const projectLinks = [
 
 export default function CreatorBrandSection() {
   return (
-    <section id="also-by-jeremy" className="-mx-5 flex scroll-mt-8 flex-col justify-center border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[78svh] lg:py-16">
+    <section
+      id="also-by-jeremy"
+      className="-mx-5 flex scroll-mt-8 flex-col justify-center border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[78svh] lg:py-16"
+    >
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12">
         <div>
           <div className="mb-5 flex items-center gap-3">
@@ -69,7 +72,12 @@ export default function CreatorBrandSection() {
 
           <p className="mb-6 text-lg leading-relaxed text-gray-300">
             YTgify is one of{' '}
-            <a href="https://neonwatty.com/" target="_blank" rel="noopener noreferrer" className="text-white underline decoration-[#E91E8C] decoration-2 underline-offset-4 transition-colors hover:text-[#E91E8C]">
+            <a
+              href="https://neonwatty.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white underline decoration-[#E91E8C] decoration-2 underline-offset-4 transition-colors hover:text-[#E91E8C]"
+            >
               Jeremy&apos;s
             </a>{' '}
             small media and automation projects. For the full context, read the launch notes or browse the source.

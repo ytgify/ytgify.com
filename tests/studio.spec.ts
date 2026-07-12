@@ -4,7 +4,7 @@ import path from 'node:path';
 const chromeDemoFixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.webm');
 const bobRossFixture = path.join(process.cwd(), 'tests/fixtures/bob-ross-15s.webm');
 
-test.describe.skip('Studio (disabled until public launch)', () => {
+test.describe('Studio (test-only route until public launch)', () => {
   test('exports a local video to GIF without uploading source media details', async ({ page }) => {
     const observedRequests: string[] = [];
     const secretFileName = 'studio-fixture-secret-video.webm';
@@ -29,7 +29,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
 
     await attachGeneratedVideo(page, secretFileName);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     const uploadedVideoUrl = await page.locator('video').getAttribute('src');
     await page.getByRole('button', { name: '3s' }).click();
     await page.getByRole('button', { name: /^5 fps/ }).click();
@@ -58,7 +60,7 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     expect(requestText).not.toContain(secretCaption);
 
     const revokedUrls = await page.evaluate(() => {
-      return ((window as typeof window & { __revokedObjectUrls?: string[] }).__revokedObjectUrls || []);
+      return (window as typeof window & { __revokedObjectUrls?: string[] }).__revokedObjectUrls || [];
     });
     expect(revokedUrls).not.toContain(uploadedVideoUrl);
   });
@@ -79,7 +81,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     await page.goto('/studio');
     await attachGeneratedVideo(page, 'studio-skip-text-video.webm');
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await expect(page.getByRole('listitem').filter({ hasText: 'Capture' })).toHaveAttribute('aria-current', 'step');
     await page.getByRole('button', { name: 'Continue to Customize' }).click();
 
@@ -105,7 +109,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     await page.goto('/studio');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await expect(page.getByText('414x360')).toBeVisible();
     await page.getByRole('spinbutton', { name: 'Start time' }).fill('1');
     await page.getByRole('button', { name: '3s' }).click();
@@ -145,7 +151,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     await page.goto('/studio');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await page.getByRole('spinbutton', { name: 'Start time' }).fill('1');
     await page.getByRole('button', { name: '3s' }).click();
     await page.getByRole('button', { name: /^5 fps/ }).click();
@@ -165,15 +173,21 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     await page.goto('/studio');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await page.getByRole('spinbutton', { name: 'Start time' }).fill('1');
     await page.getByRole('button', { name: '3s' }).click();
     await expect(page.getByText('Preview cued to 1.0s - 4.0s.')).toBeVisible();
-    await expect.poll(async () => page.locator('video').evaluate((video) => (video as HTMLVideoElement).currentTime)).toBeGreaterThan(0.9);
+    await expect
+      .poll(async () => page.locator('video').evaluate((video) => (video as HTMLVideoElement).currentTime))
+      .toBeGreaterThan(0.9);
 
     await page.getByRole('button', { name: 'Continue to Customize' }).click();
     await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeVisible();
-    await expect.poll(async () => page.locator('video').evaluate((video) => (video as HTMLVideoElement).currentTime)).toBeGreaterThan(0.9);
+    await expect
+      .poll(async () => page.locator('video').evaluate((video) => (video as HTMLVideoElement).currentTime))
+      .toBeGreaterThan(0.9);
     await page.getByLabel('Top text').fill('KEEP THIS DRAFT');
 
     await page.getByRole('button', { name: 'Go back' }).click();
@@ -196,7 +210,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     await page.goto('/studio');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await page.getByRole('button', { name: '3s' }).click();
 
     const timeline = page.getByTestId('studio-timeline');
@@ -216,9 +232,15 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     const startHandleBounds = await startHandle.boundingBox();
     expect(startHandleBounds).not.toBeNull();
 
-    await page.mouse.move(startHandleBounds!.x + startHandleBounds!.width / 2, startHandleBounds!.y + startHandleBounds!.height / 2);
+    await page.mouse.move(
+      startHandleBounds!.x + startHandleBounds!.width / 2,
+      startHandleBounds!.y + startHandleBounds!.height / 2,
+    );
     await page.mouse.down();
-    await page.mouse.move(timelineBounds!.x + timelineBounds!.width * 0.25, timelineBounds!.y + timelineBounds!.height / 2);
+    await page.mouse.move(
+      timelineBounds!.x + timelineBounds!.width * 0.25,
+      timelineBounds!.y + timelineBounds!.height / 2,
+    );
     await page.mouse.up();
 
     await expect.poll(async () => startTimeValue(page)).toBeLessThan(2);
@@ -229,7 +251,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     await page.goto('/studio');
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await expect(page.getByText('480x360')).toBeVisible();
     await page.getByRole('button', { name: '3s' }).click();
     await page.getByRole('button', { name: /^5 fps/ }).click();
@@ -251,7 +275,7 @@ test.describe.skip('Studio (disabled until public launch)', () => {
       HTMLMediaElement.prototype.addEventListener = function patchedAddEventListener(
         type: string,
         listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ) {
         if (type === 'seeked' && (observedWindow.__droppedSeekedListeners || 0) < 2) {
           observedWindow.__droppedSeekedListeners = (observedWindow.__droppedSeekedListeners || 0) + 1;
@@ -265,7 +289,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
     await page.goto('/studio');
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await page.getByRole('button', { name: '3s' }).click();
     await page.getByRole('button', { name: /^5 fps/ }).click();
     await page.getByRole('button', { name: /240p Mini/ }).click();
@@ -275,16 +301,22 @@ test.describe.skip('Studio (disabled until public launch)', () => {
 
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
     await expect(page.getByText('320x240')).toBeVisible();
-    await expect.poll(async () => page.evaluate(() => {
-      return (window as typeof window & { __droppedSeekedListeners?: number }).__droppedSeekedListeners || 0;
-    })).toBe(2);
+    await expect
+      .poll(async () =>
+        page.evaluate(() => {
+          return (window as typeof window & { __droppedSeekedListeners?: number }).__droppedSeekedListeners || 0;
+        }),
+      )
+      .toBe(2);
   });
 
   test('stays stable when export is double-clicked and reset during processing', async ({ page }) => {
     await page.goto('/studio');
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
+      timeout: 15000,
+    });
     await page.getByRole('button', { name: /^15 fps/ }).click();
     await page.getByRole('button', { name: /480p HD/ }).click();
     await expect(page.getByText(/Large export: 75 frames at 480p/)).toBeVisible();
@@ -295,7 +327,9 @@ test.describe.skip('Studio (disabled until public launch)', () => {
       (button as HTMLButtonElement).click();
     });
 
-    await expect(page.getByRole('heading', { name: 'Creating Your GIF' })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Creating Your GIF' })).toBeVisible({
+      timeout: 10000,
+    });
     await page.getByRole('button', { name: 'Start over' }).click();
     await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeHidden();

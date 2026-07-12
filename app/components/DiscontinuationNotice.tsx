@@ -2,12 +2,18 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { CheckCircle2, ChevronLeft, ChevronRight, Download, FolderOpen, Maximize2, MousePointerClick, Settings, X } from 'lucide-react';
 import {
-  CopyChromeExtensionsButton,
-  ExtensionFunnelView,
-  TrackedExtensionLink,
-} from './ExtensionAnalytics';
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  FolderOpen,
+  Maximize2,
+  MousePointerClick,
+  Settings,
+  X,
+} from 'lucide-react';
+import { CopyChromeExtensionsButton, ExtensionFunnelView, TrackedExtensionLink } from './ExtensionAnalytics';
 import {
   CHROME_EXTENSION_DOWNLOAD_PATH,
   CHROME_EXTENSION_VERSION,
@@ -19,7 +25,7 @@ const installSteps = [
     title: 'Open Chrome extensions',
     description: 'Paste chrome://extensions into Chrome or use the Extensions menu.',
     previewTitle: 'Go to chrome://extensions',
-    previewDetail: 'This is Chrome\'s built-in extensions manager. It is where local extensions are loaded and updated.',
+    previewDetail: "This is Chrome's built-in extensions manager. It is where local extensions are loaded and updated.",
     previewAction: 'Developer mode starts off. You will turn it on in the next step.',
     screenshot: '/install-screenshots/01-chrome-extensions-dev-mode-off.png',
     screenshotAlt: 'Chrome extensions page with Developer mode off',
@@ -106,19 +112,22 @@ export function LegacyInstallSection() {
     });
   }
 
-  const moveExpandedStep = useCallback((direction: -1 | 1) => {
-    if (expandedStepIndex === null) return;
+  const moveExpandedStep = useCallback(
+    (direction: -1 | 1) => {
+      if (expandedStepIndex === null) return;
 
-    const nextIndex = (expandedStepIndex + direction + installSteps.length) % installSteps.length;
-    setExpandedStepIndex(nextIndex);
-    setActiveStepIndex(nextIndex);
-    trackExtensionEvent('extension_install_step_image_carousel_navigated', {
-      surface: 'home_install_steps',
-      install_step: installSteps[nextIndex].title,
-      install_step_index: nextIndex + 1,
-      direction: direction > 0 ? 'next' : 'previous',
-    });
-  }, [expandedStepIndex]);
+      const nextIndex = (expandedStepIndex + direction + installSteps.length) % installSteps.length;
+      setExpandedStepIndex(nextIndex);
+      setActiveStepIndex(nextIndex);
+      trackExtensionEvent('extension_install_step_image_carousel_navigated', {
+        surface: 'home_install_steps',
+        install_step: installSteps[nextIndex].title,
+        install_step_index: nextIndex + 1,
+        direction: direction > 0 ? 'next' : 'previous',
+      });
+    },
+    [expandedStepIndex],
+  );
 
   useEffect(() => {
     if (expandedStepIndex === null) return;
@@ -148,13 +157,12 @@ export function LegacyInstallSection() {
         <ExtensionFunnelView surface="home_install_steps" funnelStep="install_steps_viewed" />
       </div>
       <div>
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">
-          Manual Chrome install
-        </p>
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">Manual Chrome install</p>
         <h2 className="mb-4 text-3xl font-bold text-white">Install the YTgify extension</h2>
 
         <p className="mb-6 leading-relaxed text-gray-300">
-          YTgify runs as an unpacked Chrome extension. The setup is the same flow developers use when testing extensions locally, and it keeps the GIF workflow right where you watch videos.
+          YTgify runs as an unpacked Chrome extension. The setup is the same flow developers use when testing extensions
+          locally, and it keeps the GIF workflow right where you watch videos.
         </p>
 
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -215,9 +223,11 @@ export function LegacyInstallSection() {
                       : 'border-gray-800 bg-gray-900/35 hover:border-gray-700 hover:bg-gray-900/60'
                   }`}
                 >
-                  <span className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white ${
-                    isActive ? 'bg-[#E91E8C]' : 'bg-blue-600'
-                  }`}>
+                  <span
+                    className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white ${
+                      isActive ? 'bg-[#E91E8C]' : 'bg-blue-600'
+                    }`}
+                  >
                     {index + 1}
                   </span>
                   <span>
@@ -322,7 +332,9 @@ export function LegacyInstallSection() {
               </span>
               <div>
                 <p className="font-medium text-white">Make your first GIF</p>
-                <p className="text-sm text-gray-400">Open a supported YouTube video and use the YTgify button in the player.</p>
+                <p className="text-sm text-gray-400">
+                  Open a supported YouTube video and use the YTgify button in the player.
+                </p>
               </div>
             </div>
           </div>
@@ -343,7 +355,9 @@ export function LegacyInstallSection() {
           >
             <div className="flex min-h-0 flex-col border-b border-gray-800 bg-[#080c14] lg:border-b-0 lg:border-r">
               <div className="flex items-center justify-between gap-3 border-b border-gray-800 px-4 py-3">
-                <p className="text-sm font-semibold text-white">Step {expandedStepOrdinal} of {installSteps.length}</p>
+                <p className="text-sm font-semibold text-white">
+                  Step {expandedStepOrdinal} of {installSteps.length}
+                </p>
                 <button
                   type="button"
                   onClick={() => setExpandedStepIndex(null)}
@@ -395,9 +409,7 @@ export function LegacyInstallSection() {
             </div>
             <div className="flex flex-col justify-between gap-6 p-5">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">
-                  Manual install
-                </p>
+                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E91E8C]">Manual install</p>
                 <h5 className="mt-3 text-2xl font-bold text-white">{expandedStep.previewTitle}</h5>
                 <p className="mt-4 text-sm leading-relaxed text-gray-300">{expandedStep.previewDetail}</p>
                 <div className="mt-5 border border-blue-500/30 bg-blue-950/20 p-4 text-sm leading-relaxed text-blue-100">

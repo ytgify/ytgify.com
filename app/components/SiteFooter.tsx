@@ -8,9 +8,7 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-[#2a2a2a] bg-gray-950/70">
       <div className="mx-auto flex max-w-[1080px] flex-col items-center gap-6 px-5 py-12 sm:px-8">
-        <p className="text-sm text-[#a0a0a0]">
-          © {currentYear} YTgify. All rights reserved.
-        </p>
+        <p className="text-sm text-[#a0a0a0]">© {currentYear} YTgify. All rights reserved.</p>
         <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
           <div className="flex gap-4">
             <a
@@ -29,7 +27,16 @@ export default function SiteFooter() {
               className="text-[#a0a0a0] hover:text-white transition-colors"
               aria-label="X (Twitter)"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M4 4l16 16m0-16L4 20" />
               </svg>
             </a>
@@ -43,10 +50,7 @@ export default function SiteFooter() {
               <BookOpen size={20} />
             </a>
           </div>
-          <Link
-            href="/blog"
-            className="text-[#a0a0a0] hover:text-white transition-colors"
-          >
+          <Link href="/blog" className="text-[#a0a0a0] hover:text-white transition-colors">
             Blog
           </Link>
           <a
@@ -67,22 +71,13 @@ export default function SiteFooter() {
             <TicketCheck size={16} />
             Seatify
           </a>
-          <Link
-            href="/#install"
-            className="text-[#a0a0a0] hover:text-white transition-colors"
-          >
+          <Link href="/#install" className="text-[#a0a0a0] hover:text-white transition-colors">
             Install Extension
           </Link>
-          <Link
-            href="/privacy-policy"
-            className="text-[#a0a0a0] hover:text-white transition-colors"
-          >
+          <Link href="/privacy-policy" className="text-[#a0a0a0] hover:text-white transition-colors">
             Privacy Policy
           </Link>
-          <Link
-            href="/terms-of-service"
-            className="text-[#a0a0a0] hover:text-white transition-colors"
-          >
+          <Link href="/terms-of-service" className="text-[#a0a0a0] hover:text-white transition-colors">
             Terms of Service
           </Link>
         </div>

@@ -6,7 +6,8 @@ export function makeTrimSelection(startTime: number, endTime: number, videoDurat
   const requestedStart = Number.isFinite(startTime) ? startTime : 0;
   const requestedEnd = Number.isFinite(endTime) ? endTime : requestedStart + 0.1;
   const safeStart = Math.max(0, Math.min(requestedStart, Math.max(0, safeVideoDuration - 0.1)));
-  const safeEnd = Math.max(safeStart + 0.1, Math.min(requestedEnd, safeVideoDuration));
+  const minimumEnd = Math.min(safeVideoDuration, safeStart + 0.1);
+  const safeEnd = Math.max(minimumEnd, Math.min(requestedEnd, safeVideoDuration));
   const clampedEnd = Math.min(safeEnd, safeStart + STUDIO_MAX_EXPORT_DURATION_SECONDS);
 
   return {
@@ -19,7 +20,7 @@ export function makeTrimSelection(startTime: number, endTime: number, videoDurat
 export function applyDurationPreset(
   duration: number,
   currentSelection: StudioTrimSelection,
-  videoDuration: number
+  videoDuration: number,
 ): StudioTrimSelection {
   const safeVideoDuration = Number.isFinite(videoDuration) ? Math.max(0, videoDuration) : 0;
   const requestedDuration = Number.isFinite(duration) ? duration : STUDIO_MAX_EXPORT_DURATION_SECONDS;
@@ -35,7 +36,7 @@ export function applyDurationPreset(
   return makeTrimSelection(startTime, endTime, safeVideoDuration);
 }
 
-export function roundTime(value: number): number {
+function roundTime(value: number): number {
   return Math.round(value * 10) / 10;
 }
 

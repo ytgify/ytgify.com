@@ -51,12 +51,15 @@ export function ExtensionFunnelView({
       return;
     }
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) {
-        captureView();
-        observer.disconnect();
-      }
-    }, { threshold: 0.1 });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          captureView();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
 
     observer.observe(marker);
     return () => observer.disconnect();

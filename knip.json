@@ -1,13 +1,22 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["app/**/*.{ts,tsx}", "lib/**/*.ts"],
-  "project": ["**/*.{ts,tsx,js,mjs}"],
-  "ignore": [
-    "content/**/*",
-    "docs/goals/**/.goalbuddy-board/**/*",
-    "scripts/**/*"
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "app/**/{error,layout,page,route}.{ts,tsx}",
+    "app/studio/page.disabled.tsx",
+    "lib/blog.ts",
+    "lib/studio/gif-exporter.ts",
+    "next.config.ts",
+    "scripts/**/*.{js,mjs}",
+    "playwright.config.ts",
+    "vitest.config.ts"
   ],
+  "project": ["**/*.{ts,tsx,js,mjs}"],
+  "ignore": ["content/**/*", "docs/goals/**/.goalbuddy-board/**/*"],
   "ignoreDependencies": [
+    "@next/mdx",
+    "gifenc",
+    "gifski-wasm",
+    "gray-matter",
     "puppeteer",
     "remark-frontmatter",
     "remark-gfm",

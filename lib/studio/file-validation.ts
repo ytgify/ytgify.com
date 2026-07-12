@@ -17,9 +17,7 @@ export function validateVideoFile(file: File): StudioError | null {
 
   const lowerName = file.name.toLowerCase();
   const hasAcceptedType = STUDIO_ACCEPTED_MIME_TYPES.includes(file.type);
-  const hasAcceptedExtension = STUDIO_ACCEPTED_EXTENSIONS.some((extension) =>
-    lowerName.endsWith(extension)
-  );
+  const hasAcceptedExtension = STUDIO_ACCEPTED_EXTENSIONS.some((extension) => lowerName.endsWith(extension));
 
   if (!hasAcceptedType && !hasAcceptedExtension) {
     return {

@@ -29,7 +29,7 @@ export function renderCaptions(
   ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
   captions: StudioCaptionSettings,
   width: number,
-  height: number
+  height: number,
 ): void {
   const layout = getCaptionLayout(width, height, captions);
 
@@ -42,7 +42,15 @@ export function renderCaptions(
   ctx.strokeStyle = layout.strokeStyle;
   ctx.lineWidth = layout.strokeWidth;
 
-  drawCaptionBlock(ctx, captions.topText, width / 2, layout.verticalPadding + layout.lineHeight / 2, layout.maxTextWidth, layout.lineHeight, 'top');
+  drawCaptionBlock(
+    ctx,
+    captions.topText,
+    width / 2,
+    layout.verticalPadding + layout.lineHeight / 2,
+    layout.maxTextWidth,
+    layout.lineHeight,
+    'top',
+  );
   drawCaptionBlock(
     ctx,
     captions.bottomText,
@@ -50,7 +58,7 @@ export function renderCaptions(
     height - layout.verticalPadding - layout.lineHeight / 2,
     layout.maxTextWidth,
     layout.lineHeight,
-    'bottom'
+    'bottom',
   );
 
   ctx.restore();
@@ -83,7 +91,7 @@ function drawCaptionBlock(
   y: number,
   maxWidth: number,
   lineHeight: number,
-  placement: 'top' | 'bottom'
+  placement: 'top' | 'bottom',
 ): void {
   const lines = wrapCaptionText(ctx, text.trim(), maxWidth);
   if (lines.length === 0) return;
@@ -98,10 +106,10 @@ function drawCaptionBlock(
   });
 }
 
-export function wrapCaptionText(
+function wrapCaptionText(
   ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
   text: string,
-  maxWidth: number
+  maxWidth: number,
 ): string[] {
   if (!text) return [];
 

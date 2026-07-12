@@ -13,10 +13,7 @@ export default function WelcomePage() {
   return (
     <>
       {/* Google Ads Conversion Tracking */}
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=AW-17812979843"
-        strategy="afterInteractive"
-      />
+      <Script src="https://www.googletagmanager.com/gtag/js?id=AW-17812979843" strategy="afterInteractive" />
       <Script id="google-ads-conversion" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];

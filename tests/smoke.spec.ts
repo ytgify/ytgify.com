@@ -16,7 +16,10 @@ test.describe('Landing Page Smoke Tests', () => {
   test('homepage exposes search-focused metadata and FAQ content', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle('YouTube to GIF Converter - Free, No Watermark | YTgify');
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Turn YouTube videos into GIFs for free/i);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      /Turn YouTube videos into GIFs for free/i,
+    );
     await expect(page.getByRole('heading', { name: /Common questions, answered/i })).toBeVisible();
     await expect(page.getByText(/How do I turn a YouTube video into a GIF/i)).toBeVisible();
     await expect(page.locator('script[type="application/ld+json"][data-schema="faq"]')).toHaveCount(1);
@@ -43,20 +46,30 @@ test.describe('Landing Page Smoke Tests', () => {
     await page.goto('/');
     const navInstallLinks = page.getByRole('navigation', { name: /Page sections/i }).locator('a[href="#install"]');
     await expect(navInstallLinks).toHaveCount(2);
-    await expect(page.getByRole('link', { name: /Install Chrome Extension/i }).first()).toHaveAttribute('href', '#install');
-    await expect(page.locator('#demo').getByRole('link', { name: /Install Chrome Extension/i })).toHaveAttribute('href', '#install');
+    await expect(page.getByRole('link', { name: /Install Chrome Extension/i }).first()).toHaveAttribute(
+      'href',
+      '#install',
+    );
+    await expect(page.locator('#demo').getByRole('link', { name: /Install Chrome Extension/i })).toHaveAttribute(
+      'href',
+      '#install',
+    );
     await expect(page.getByRole('link', { name: /View install walkthrough/i })).toHaveAttribute('href', '#install');
-    await expect(page.locator('#demo').getByRole('link', { name: /View walkthrough/i })).toHaveAttribute('href', '#install');
+    await expect(page.locator('#demo').getByRole('link', { name: /View walkthrough/i })).toHaveAttribute(
+      'href',
+      '#install',
+    );
     await expect(page.locator('a[href="/install"]')).toHaveCount(0);
   });
 
-  test('studio is not exposed while in development', async ({ page }) => {
+  test('studio remains unlinked before launch while test builds exercise the route', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('a[href="/studio"]')).toHaveCount(0);
     await expect(page.getByText(/Try Studio/i)).toHaveCount(0);
 
     const response = await page.goto('/studio');
-    expect(response?.status()).toBe(404);
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
   });
 
   test('landing install walkthrough is interactive', async ({ page }) => {
@@ -77,8 +90,12 @@ test.describe('Landing Page Smoke Tests', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/#install');
 
-    const introduction = await page.getByRole('heading', { name: 'Install the YTgify extension', exact: true }).boundingBox();
-    const walkthrough = await page.getByRole('heading', { name: 'Chrome install walkthrough', exact: true }).boundingBox();
+    const introduction = await page
+      .getByRole('heading', { name: 'Install the YTgify extension', exact: true })
+      .boundingBox();
+    const walkthrough = await page
+      .getByRole('heading', { name: 'Chrome install walkthrough', exact: true })
+      .boundingBox();
 
     expect(introduction).not.toBeNull();
     expect(walkthrough).not.toBeNull();
@@ -121,7 +138,9 @@ test.describe('Landing Page Smoke Tests', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
 
-    const navInstall = page.getByRole('navigation', { name: /Page sections/i }).getByRole('link', { name: 'Install', exact: true });
+    const navInstall = page
+      .getByRole('navigation', { name: /Page sections/i })
+      .getByRole('link', { name: 'Install', exact: true });
     await expect(navInstall).toBeVisible();
 
     const heroInstall = page.getByRole('link', { name: /Install Chrome Extension/i }).first();
@@ -188,7 +207,7 @@ test.describe('Landing Page Smoke Tests', () => {
   test('all social links have security attributes', async ({ page }) => {
     await page.goto('/');
     const socialLinks = page.locator('footer a[target="_blank"][rel="noopener noreferrer"]').filter({
-      has: page.locator('svg')
+      has: page.locator('svg'),
     });
     await expect(socialLinks).toHaveCount(5);
   });

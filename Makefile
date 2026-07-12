@@ -20,7 +20,7 @@ help:
 	@printf "  make status-dev     Show persistent dev server status\n"
 	@printf "  make logs-dev       Show recent persistent dev server logs\n"
 	@printf "  make stop-dev       Stop persistent dev server\n"
-	@printf "  make validate       Run lint, typecheck, build, and tests\n"
+	@printf "  make validate       Run the complete repository validation gate\n"
 
 dev: start-dev
 
@@ -90,7 +90,4 @@ stop-dev:
 	fi
 
 validate:
-	npm run lint
-	npm run typecheck
-	npm run build
-	npm test
+	npm run validate

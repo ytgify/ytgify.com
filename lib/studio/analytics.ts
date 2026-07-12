@@ -21,7 +21,18 @@ declare global {
   }
 }
 
-const REDACTED_KEYS = new Set(['fileName', 'filename', 'name', 'caption', 'captionText', 'topText', 'bottomText', 'text', 'objectUrl', 'url']);
+const REDACTED_KEYS = new Set([
+  'fileName',
+  'filename',
+  'name',
+  'caption',
+  'captionText',
+  'topText',
+  'bottomText',
+  'text',
+  'objectUrl',
+  'url',
+]);
 
 export function trackStudioEvent(eventName: StudioEventName, properties: StudioEventProperties = {}): void {
   if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
