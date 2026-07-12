@@ -11,25 +11,14 @@ const EXAMPLE_GIFS = [
 
 export default function ExampleGifsGallery() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMounted, setIsMounted] = useState(false);
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev === EXAMPLE_GIFS.length - 1 ? 0 : prev + 1));
-  };
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isMounted) return;
-
-    const interval = setInterval(() => {
-      goToNext();
+    const timeout = window.setTimeout(() => {
+      setCurrentIndex((prev) => (prev === EXAMPLE_GIFS.length - 1 ? 0 : prev + 1));
     }, 3000);
 
-    return () => clearInterval(interval);
-  }, [currentIndex, isMounted]);
+    return () => window.clearTimeout(timeout);
+  }, [currentIndex]);
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);

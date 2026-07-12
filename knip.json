@@ -8,7 +8,9 @@
     "scripts/**/*"
   ],
   "ignoreDependencies": [
-    "eslint-config-next",
-    "puppeteer"
+    "puppeteer",
+    "remark-frontmatter",
+    "remark-gfm",
+    "remark-mdx-frontmatter"
   ]
 }

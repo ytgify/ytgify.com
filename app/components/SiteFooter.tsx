@@ -1,16 +1,9 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Github, BookOpen, Scissors, TicketCheck } from 'lucide-react';
 import { GITHUB_ORG_URL } from '@/lib/constants';
 
 export default function SiteFooter() {
-  const [currentYear, setCurrentYear] = useState(2025);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-t border-[#2a2a2a] bg-gray-950/70">
