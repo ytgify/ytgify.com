@@ -85,9 +85,7 @@ export function generateArticleSchema(post: BlogPostMeta & { content?: string })
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
-    image: post.thumbnail.startsWith('http')
-      ? post.thumbnail
-      : `${SITE_URL}${post.thumbnail}`,
+    image: post.thumbnail.startsWith('http') ? post.thumbnail : `${SITE_URL}${post.thumbnail}`,
     datePublished: post.date,
     dateModified: post.updated || post.date,
     author: {
@@ -111,9 +109,7 @@ export function generateArticleSchema(post: BlogPostMeta & { content?: string })
   };
 }
 
-export function generateBreadcrumbSchema(
-  items: { name: string; url: string }[]
-) {
+export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -131,8 +127,7 @@ export function generateBlogIndexSchema(posts: BlogPostMeta[]) {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${SITE_NAME} Blog`,
-    description:
-      'Tips, tutorials, and guides for creating GIFs from YouTube videos',
+    description: 'Tips, tutorials, and guides for creating GIFs from YouTube videos',
     url: `${SITE_URL}/blog`,
     mainEntity: {
       '@type': 'ItemList',

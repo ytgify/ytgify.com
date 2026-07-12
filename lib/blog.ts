@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-export const DEFAULT_BLOG_AUTHOR = 'Jeremy Watt';
+const DEFAULT_BLOG_AUTHOR = 'Jeremy Watt';
 export const DEFAULT_BLOG_AUTHOR_URL = 'https://neonwatty.com/';
 
 interface BlogPost {
@@ -119,24 +119,16 @@ export function getAllTags(): string[] {
 
 export function getPostsByTag(tag: string): BlogPostMeta[] {
   const posts = getAllPosts();
-  return posts.filter((post) =>
-    post.tags.some((t) => t.toLowerCase() === tag.toLowerCase())
-  );
+  return posts.filter((post) => post.tags.some((t) => t.toLowerCase() === tag.toLowerCase()));
 }
 
-export function getRelatedPosts(
-  currentSlug: string,
-  tags: string[],
-  limit: number = 3
-): BlogPostMeta[] {
+export function getRelatedPosts(currentSlug: string, tags: string[], limit: number = 3): BlogPostMeta[] {
   const allPosts = getAllPosts();
 
   const relatedPosts = allPosts
     .filter((post) => post.slug !== currentSlug)
     .map((post) => {
-      const matchingTags = post.tags.filter((tag) =>
-        tags.some((t) => t.toLowerCase() === tag.toLowerCase())
-      ).length;
+      const matchingTags = post.tags.filter((tag) => tags.some((t) => t.toLowerCase() === tag.toLowerCase())).length;
       return { ...post, matchScore: matchingTags };
     })
     .filter((post) => post.matchScore > 0)

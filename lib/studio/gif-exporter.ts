@@ -107,13 +107,17 @@ async function encodeWithSelectedEncoder({
   encoderMode,
   signal,
   onProgress,
-}: EncodeSelectedOptions): Promise<{ blob: Blob; encoder: StudioEncoderUsed; encoderFallback?: boolean }> {
+}: EncodeSelectedOptions): Promise<{
+  blob: Blob;
+  encoder: StudioEncoderUsed;
+  encoderFallback?: boolean;
+}> {
   if (encoderMode === 'quality') {
     try {
       const blob = await encodeGifWithGifski({ frames, width, height, fps, signal, onProgress });
       return { blob, encoder: 'gifski' };
     } catch (error) {
-      if (signal?.aborted || error instanceof Error && error.message === 'cancelled') {
+      if (signal?.aborted || (error instanceof Error && error.message === 'cancelled')) {
         throw new Error('cancelled');
       }
 

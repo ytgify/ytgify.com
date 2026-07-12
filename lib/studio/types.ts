@@ -1,12 +1,6 @@
 export type StudioStatus = 'idle' | 'loading-video' | 'editing' | 'exporting' | 'complete' | 'error';
 
-export type StudioProgressStage =
-  | 'preparing'
-  | 'capturing'
-  | 'captions'
-  | 'encoding'
-  | 'finalizing'
-  | 'complete';
+type StudioProgressStage = 'preparing' | 'capturing' | 'captions' | 'encoding' | 'finalizing' | 'complete';
 
 export type StudioFps = 5 | 10 | 15;
 export type StudioResolution = 240 | 360 | 480;
@@ -67,7 +61,7 @@ export interface StudioFrame {
   delay: number;
 }
 
-export type StudioErrorCode =
+type StudioErrorCode =
   | 'unsupported_file'
   | 'decode_failed'
   | 'file_too_large'

@@ -3,11 +3,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
-const EXAMPLE_GIFS = [
-  '/examples/free-gratis.gif',
-  '/examples/boom-baby.gif',
-  '/examples/witness-me.gif',
-];
+const EXAMPLE_GIFS = ['/examples/free-gratis.gif', '/examples/boom-baby.gif', '/examples/witness-me.gif'];
 
 export default function ExampleGifsGallery() {
   const [currentIndex, setCurrentIndex] = useState(0);

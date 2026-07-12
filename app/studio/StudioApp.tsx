@@ -1,7 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from 'react';
 import {
   AlertCircle,
   Captions,
@@ -219,42 +227,45 @@ export default function StudioApp() {
     return () => window.clearTimeout(timeoutId);
   }, [metadata?.type, setStudioError, status, videoUrl]);
 
-  const handleFile = useCallback((file: File) => {
-    const validationError = validateVideoFile(file);
-    trackStudioEvent('studio_upload_started', {
-      file_type: file.type || 'unknown',
-      file_size_bucket: studioFileSizeBucket(file.size),
-    });
-
-    if (validationError) {
-      trackStudioEvent('studio_upload_failed', {
-        error_code: validationError.code,
+  const handleFile = useCallback(
+    (file: File) => {
+      const validationError = validateVideoFile(file);
+      trackStudioEvent('studio_upload_started', {
         file_type: file.type || 'unknown',
+        file_size_bucket: studioFileSizeBucket(file.size),
       });
-      setStudioError(validationError);
-      return;
-    }
 
-    revokeVideoUrl();
-    revokeResultUrl();
+      if (validationError) {
+        trackStudioEvent('studio_upload_failed', {
+          error_code: validationError.code,
+          file_type: file.type || 'unknown',
+        });
+        setStudioError(validationError);
+        return;
+      }
 
-    setError(null);
-    setResult(null);
-    setProgress(null);
-    setMetadata({
-      duration: 0,
-      width: 0,
-      height: 0,
-      type: file.type || 'unknown',
-      size: file.size,
-    });
-    setTrim(null);
-    setStep('upload');
-    setStatus('loading-video');
-    const nextVideoUrl = URL.createObjectURL(file);
-    videoUrlRef.current = nextVideoUrl;
-    setVideoUrl(nextVideoUrl);
-  }, [revokeResultUrl, revokeVideoUrl, setStudioError]);
+      revokeVideoUrl();
+      revokeResultUrl();
+
+      setError(null);
+      setResult(null);
+      setProgress(null);
+      setMetadata({
+        duration: 0,
+        width: 0,
+        height: 0,
+        type: file.type || 'unknown',
+        size: file.size,
+      });
+      setTrim(null);
+      setStep('upload');
+      setStatus('loading-video');
+      const nextVideoUrl = URL.createObjectURL(file);
+      videoUrlRef.current = nextVideoUrl;
+      setVideoUrl(nextVideoUrl);
+    },
+    [revokeResultUrl, revokeVideoUrl, setStudioError],
+  );
 
   const handleMetadataLoaded = useCallback(() => {
     const video = videoRef.current;
@@ -289,14 +300,17 @@ export default function StudioApp() {
     });
   }, [metadata, setStudioError, status]);
 
-  const updateTrim = useCallback((startTime: number, endTime: number) => {
-    if (!metadata) return;
-    const nextTrim = makeTrimSelection(startTime, endTime, metadata.duration);
-    setTrim(nextTrim);
-    trackStudioEvent('studio_trim_changed', {
-      output_duration: nextTrim.duration,
-    });
-  }, [metadata]);
+  const updateTrim = useCallback(
+    (startTime: number, endTime: number) => {
+      if (!metadata) return;
+      const nextTrim = makeTrimSelection(startTime, endTime, metadata.duration);
+      setTrim(nextTrim);
+      trackStudioEvent('studio_trim_changed', {
+        output_duration: nextTrim.duration,
+      });
+    },
+    [metadata],
+  );
 
   const updateCaption = useCallback((placement: keyof StudioCaptionSettings, value: string) => {
     const nextValue = value.slice(0, STUDIO_CAPTION_MAX_LENGTH);
@@ -311,92 +325,101 @@ export default function StudioApp() {
     });
   }, []);
 
-  const updateCaptionSetting = useCallback(<Key extends keyof StudioCaptionSettings>(key: Key, value: StudioCaptionSettings[Key]) => {
-    setCaptions((current) => ({ ...current, [key]: value }));
-  }, []);
+  const updateCaptionSetting = useCallback(
+    <Key extends keyof StudioCaptionSettings>(key: Key, value: StudioCaptionSettings[Key]) => {
+      setCaptions((current) => ({ ...current, [key]: value }));
+    },
+    [],
+  );
 
-  const exportGif = useCallback(async (captionOverride?: StudioCaptionSettings) => {
-    if (!videoRef.current || !metadata || !trim || !canExport || abortRef.current) return;
-    const exportCaptions = captionOverride || captions;
-    const exportHasCaptionText = exportCaptions.topText.trim() || exportCaptions.bottomText.trim();
+  const exportGif = useCallback(
+    async (captionOverride?: StudioCaptionSettings) => {
+      if (!videoRef.current || !metadata || !trim || !canExport || abortRef.current) return;
+      const exportCaptions = captionOverride || captions;
+      const exportHasCaptionText = exportCaptions.topText.trim() || exportCaptions.bottomText.trim();
 
-    const controller = new AbortController();
-    const runId = exportRunRef.current + 1;
-    exportRunRef.current = runId;
-    abortRef.current = controller;
-    setStep('processing');
-    setStatus('exporting');
-    setProgress({ stage: 'preparing', percentage: 0, message: 'Preparing export' });
-    setError(null);
-    trackStudioEvent('studio_export_started', {
-      source_duration_bucket: studioDurationBucket(metadata.duration),
-      output_duration: trim.duration,
-      output_fps: settings.fps,
-      output_resolution: settings.resolution,
-      output_encoder: settings.encoder,
-      captions_enabled: Boolean(exportHasCaptionText),
-    });
-
-    try {
-      const exported = await exportStudioGif({
-        video: videoRef.current,
-        metadata,
-        trim,
-        settings,
-        captions: exportCaptions,
-        signal: controller.signal,
-        onProgress: setProgress,
-      });
-      if (runId !== exportRunRef.current) return;
-      revokeResultUrl();
-      const url = URL.createObjectURL(exported.blob);
-      resultUrlRef.current = url;
-      const nextResult = { ...exported, url };
-      setResult(nextResult);
-      setStep('success');
-      setStatus('complete');
-      trackStudioEvent('studio_export_succeeded', {
-        output_duration: exported.duration,
-        output_fps: settings.fps,
-        output_resolution: settings.resolution,
-        output_encoder: exported.encoder,
-        output_encoder_fallback: Boolean(exported.encoderFallback),
-        captions_enabled: Boolean(exportHasCaptionText),
-        output_file_size_bucket: studioFileSizeBucket(exported.fileSize),
-      });
-    } catch (exportError) {
-      const code = exportError instanceof Error ? exportError.message : 'encoding_failed';
-      if (runId !== exportRunRef.current) return;
-      if (code === 'cancelled') {
-        setProgress(null);
-        setError(null);
-        setStep('text');
-        setStatus('editing');
-        return;
-      }
-
-      const studioError = mapExportError(code);
-      trackStudioEvent('studio_export_failed', {
-        error_code: studioError.code,
+      const controller = new AbortController();
+      const runId = exportRunRef.current + 1;
+      exportRunRef.current = runId;
+      abortRef.current = controller;
+      setStep('processing');
+      setStatus('exporting');
+      setProgress({ stage: 'preparing', percentage: 0, message: 'Preparing export' });
+      setError(null);
+      trackStudioEvent('studio_export_started', {
+        source_duration_bucket: studioDurationBucket(metadata.duration),
         output_duration: trim.duration,
         output_fps: settings.fps,
         output_resolution: settings.resolution,
         output_encoder: settings.encoder,
         captions_enabled: Boolean(exportHasCaptionText),
       });
-      setStudioError(studioError, 'processing');
-    } finally {
-      if (runId === exportRunRef.current) {
-        abortRef.current = null;
-      }
-    }
-  }, [canExport, captions, metadata, revokeResultUrl, setStudioError, settings, trim]);
 
-  const applyPreset = useCallback((duration: number) => {
-    if (!metadata || !trim) return;
-    const nextTrim = applyDurationPreset(duration, trim, metadata.duration);
-    updateTrim(nextTrim.startTime, nextTrim.endTime);
-  }, [metadata, trim, updateTrim]);
+      try {
+        const exported = await exportStudioGif({
+          video: videoRef.current,
+          metadata,
+          trim,
+          settings,
+          captions: exportCaptions,
+          signal: controller.signal,
+          onProgress: setProgress,
+        });
+        if (runId !== exportRunRef.current) return;
+        revokeResultUrl();
+        const url = URL.createObjectURL(exported.blob);
+        resultUrlRef.current = url;
+        const nextResult = { ...exported, url };
+        setResult(nextResult);
+        setStep('success');
+        setStatus('complete');
+        trackStudioEvent('studio_export_succeeded', {
+          output_duration: exported.duration,
+          output_fps: settings.fps,
+          output_resolution: settings.resolution,
+          output_encoder: exported.encoder,
+          output_encoder_fallback: Boolean(exported.encoderFallback),
+          captions_enabled: Boolean(exportHasCaptionText),
+          output_file_size_bucket: studioFileSizeBucket(exported.fileSize),
+        });
+      } catch (exportError) {
+        const code = exportError instanceof Error ? exportError.message : 'encoding_failed';
+        if (runId !== exportRunRef.current) return;
+        if (code === 'cancelled') {
+          setProgress(null);
+          setError(null);
+          setStep('text');
+          setStatus('editing');
+          return;
+        }
+
+        const studioError = mapExportError(code);
+        trackStudioEvent('studio_export_failed', {
+          error_code: studioError.code,
+          output_duration: trim.duration,
+          output_fps: settings.fps,
+          output_resolution: settings.resolution,
+          output_encoder: settings.encoder,
+          captions_enabled: Boolean(exportHasCaptionText),
+        });
+        setStudioError(studioError, 'processing');
+      } finally {
+        if (runId === exportRunRef.current) {
+          abortRef.current = null;
+        }
+      }
+    },
+    [canExport, captions, metadata, revokeResultUrl, setStudioError, settings, trim],
+  );
+
+  const applyPreset = useCallback(
+    (duration: number) => {
+      if (!metadata || !trim) return;
+      const nextTrim = applyDurationPreset(duration, trim, metadata.duration);
+      updateTrim(nextTrim.startTime, nextTrim.endTime);
+    },
+    [metadata, trim, updateTrim],
+  );
 
   const displayStep = status === 'complete' ? 'success' : step;
 
@@ -407,9 +430,16 @@ export default function StudioApp() {
           <Link href="/" className="text-sm font-semibold text-gray-400 transition-colors hover:text-white">
             YTgify
           </Link>
-          <nav aria-label="Studio navigation" className="flex flex-wrap items-center gap-4 text-sm font-semibold text-gray-400">
-            <a href="#wizard" className="transition-colors hover:text-white">Studio</a>
-            <Link href="/blog" className="transition-colors hover:text-white">Blog</Link>
+          <nav
+            aria-label="Studio navigation"
+            className="flex flex-wrap items-center gap-4 text-sm font-semibold text-gray-400"
+          >
+            <a href="#wizard" className="transition-colors hover:text-white">
+              Studio
+            </a>
+            <Link href="/blog" className="transition-colors hover:text-white">
+              Blog
+            </Link>
           </nav>
         </header>
 
@@ -547,7 +577,8 @@ function UploadScreen({
         <p className="mb-3 text-sm font-semibold uppercase text-[#4fd1c5]">Private local tool</p>
         <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">Video to GIF Studio</h1>
         <p className="mt-4 max-w-2xl text-base leading-7 text-gray-300">
-          Upload a local clip and walk through the same guided GIF flow as the extension: choose the moment, customize text, export, and download.
+          Upload a local clip and walk through the same guided GIF flow as the extension: choose the moment, customize
+          text, export, and download.
         </p>
       </div>
 
@@ -586,13 +617,17 @@ function UploadScreen({
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 items-center justify-center bg-[#E91E8C]/15 text-[#ff5fb2]">
-              {status === 'loading-video' ? <Loader2 className="h-6 w-6 animate-spin" /> : <Upload className="h-6 w-6" />}
+              {status === 'loading-video' ? (
+                <Loader2 className="h-6 w-6 animate-spin" />
+              ) : (
+                <Upload className="h-6 w-6" />
+              )}
             </div>
             <div>
               <h2 className="text-xl font-bold text-white">Upload video</h2>
               <p className="mt-1 text-sm leading-6 text-gray-400">
-                MP4, MOV, or WebM up to {formatFileSize(STUDIO_MAX_FILE_SIZE_BYTES)} and {Math.round(STUDIO_MAX_SOURCE_DURATION_SECONDS / 60)} minutes.
-                Runs in your browser.
+                MP4, MOV, or WebM up to {formatFileSize(STUDIO_MAX_FILE_SIZE_BYTES)} and{' '}
+                {Math.round(STUDIO_MAX_SOURCE_DURATION_SECONDS / 60)} minutes. Runs in your browser.
               </p>
               <p className="mt-1 text-sm leading-6 text-gray-500">Use videos you own or have permission to edit.</p>
             </div>
@@ -657,7 +692,10 @@ function WizardProgress({ currentStep }: { currentStep: StudioWizardStep }) {
   const currentIndex = wizardSteps.findIndex((item) => item.id === currentStep);
 
   return (
-    <ol aria-label="Studio wizard progress" className="grid grid-cols-2 gap-2 text-xs font-semibold text-gray-400 sm:grid-cols-5 sm:min-w-[520px]">
+    <ol
+      aria-label="Studio wizard progress"
+      className="grid grid-cols-2 gap-2 text-xs font-semibold text-gray-400 sm:grid-cols-5 sm:min-w-[520px]"
+    >
       {wizardSteps.map((item, index) => {
         const isComplete = currentIndex > index;
         const isCurrent = currentIndex === index;
@@ -673,7 +711,9 @@ function WizardProgress({ currentStep }: { currentStep: StudioWizardStep }) {
                   : 'border-gray-800 text-gray-500'
             }`}
           >
-            <span className="flex h-5 w-5 items-center justify-center border border-current text-[11px]">{isComplete ? '✓' : index + 1}</span>
+            <span className="flex h-5 w-5 items-center justify-center border border-current text-[11px]">
+              {isComplete ? '✓' : index + 1}
+            </span>
             <span>{item.label}</span>
           </li>
         );
@@ -735,52 +775,65 @@ function CaptureScreen({
     seekPreviewToSelection();
   }, [seekPreviewToSelection]);
 
-  const clampTimelineTime = useCallback((value: number) => {
-    if (!Number.isFinite(value)) return 0;
-    return Math.max(0, Math.min(value, metadata.duration));
-  }, [metadata.duration]);
+  const clampTimelineTime = useCallback(
+    (value: number) => {
+      if (!Number.isFinite(value)) return 0;
+      return Math.max(0, Math.min(value, metadata.duration));
+    },
+    [metadata.duration],
+  );
 
-  const timeFromClientX = useCallback((clientX: number) => {
-    const bounds = timelineRef.current?.getBoundingClientRect();
-    if (!bounds || bounds.width <= 0 || metadata.duration <= 0) return trim.startTime;
-    const ratio = Math.max(0, Math.min(1, (clientX - bounds.left) / bounds.width));
-    return clampTimelineTime(ratio * metadata.duration);
-  }, [clampTimelineTime, metadata.duration, trim.startTime]);
+  const timeFromClientX = useCallback(
+    (clientX: number) => {
+      const bounds = timelineRef.current?.getBoundingClientRect();
+      if (!bounds || bounds.width <= 0 || metadata.duration <= 0) return trim.startTime;
+      const ratio = Math.max(0, Math.min(1, (clientX - bounds.left) / bounds.width));
+      return clampTimelineTime(ratio * metadata.duration);
+    },
+    [clampTimelineTime, metadata.duration, trim.startTime],
+  );
 
-  const applyTimelineDrag = useCallback((clientX: number, mode: TimelineDragMode, offset: number) => {
-    const pointerTime = timeFromClientX(clientX);
-    const minDuration = 0.5;
+  const applyTimelineDrag = useCallback(
+    (clientX: number, mode: TimelineDragMode, offset: number) => {
+      const pointerTime = timeFromClientX(clientX);
+      const minDuration = 0.5;
 
-    if (mode === 'start') {
-      const nextStart = Math.min(pointerTime, trim.endTime - minDuration);
-      onTrimChange(clampTimelineTime(nextStart), trim.endTime);
-      return;
-    }
+      if (mode === 'start') {
+        const nextStart = Math.min(pointerTime, trim.endTime - minDuration);
+        onTrimChange(clampTimelineTime(nextStart), trim.endTime);
+        return;
+      }
 
-    if (mode === 'end') {
-      const maxEnd = Math.min(metadata.duration, trim.startTime + STUDIO_MAX_EXPORT_DURATION_SECONDS);
-      const nextEnd = Math.max(trim.startTime + minDuration, Math.min(pointerTime, maxEnd));
-      onTrimChange(trim.startTime, nextEnd);
-      return;
-    }
+      if (mode === 'end') {
+        const maxEnd = Math.min(metadata.duration, trim.startTime + STUDIO_MAX_EXPORT_DURATION_SECONDS);
+        const nextEnd = Math.max(trim.startTime + minDuration, Math.min(pointerTime, maxEnd));
+        onTrimChange(trim.startTime, nextEnd);
+        return;
+      }
 
-    const nextStart = Math.max(0, Math.min(pointerTime - offset, Math.max(0, metadata.duration - trim.duration)));
-    onTrimChange(nextStart, nextStart + trim.duration);
-  }, [clampTimelineTime, metadata.duration, onTrimChange, timeFromClientX, trim.duration, trim.endTime, trim.startTime]);
+      const nextStart = Math.max(0, Math.min(pointerTime - offset, Math.max(0, metadata.duration - trim.duration)));
+      onTrimChange(nextStart, nextStart + trim.duration);
+    },
+    [clampTimelineTime, metadata.duration, onTrimChange, timeFromClientX, trim.duration, trim.endTime, trim.startTime],
+  );
 
-  const beginTimelineDrag = useCallback((event: ReactPointerEvent, mode: TimelineDragMode) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const pointerTime = timeFromClientX(event.clientX);
-    const isRailClick = event.currentTarget === timelineRef.current;
-    const offset = mode === 'range'
-      ? isRailClick
-        ? trim.duration / 2
-        : Math.max(0, Math.min(trim.duration, pointerTime - trim.startTime))
-      : 0;
-    timelineDragRef.current = { mode, offset };
-    applyTimelineDrag(event.clientX, mode, offset);
-  }, [applyTimelineDrag, timeFromClientX, trim.duration, trim.startTime]);
+  const beginTimelineDrag = useCallback(
+    (event: ReactPointerEvent, mode: TimelineDragMode) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const pointerTime = timeFromClientX(event.clientX);
+      const isRailClick = event.currentTarget === timelineRef.current;
+      const offset =
+        mode === 'range'
+          ? isRailClick
+            ? trim.duration / 2
+            : Math.max(0, Math.min(trim.duration, pointerTime - trim.startTime))
+          : 0;
+      timelineDragRef.current = { mode, offset };
+      applyTimelineDrag(event.clientX, mode, offset);
+    },
+    [applyTimelineDrag, timeFromClientX, trim.duration, trim.startTime],
+  );
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
@@ -858,7 +911,10 @@ function CaptureScreen({
             aria-label="Selected clip range"
             data-testid="timeline-selection"
             className="absolute top-1/2 h-6 -translate-y-1/2 cursor-grab border border-[#4fd1c5] bg-[#4fd1c5]/30 active:cursor-grabbing"
-            style={{ left: `${timelineStartPercent}%`, width: `${Math.min(100 - timelineStartPercent, timelineWidthPercent)}%` }}
+            style={{
+              left: `${timelineStartPercent}%`,
+              width: `${Math.min(100 - timelineStartPercent, timelineWidthPercent)}%`,
+            }}
             onPointerDown={(event) => beginTimelineDrag(event, 'range')}
           />
           <button
@@ -966,7 +1022,8 @@ function CaptureScreen({
 
       {isHighCostExport ? (
         <div role="status" className="border border-amber-400/40 bg-amber-950/20 p-4 text-sm leading-6 text-amber-100">
-          Large export: {frameCount} frames at {settings.resolution}p can take longer and use more memory in this browser tab.
+          Large export: {frameCount} frames at {settings.resolution}p can take longer and use more memory in this
+          browser tab.
         </div>
       ) : null}
 
@@ -1003,7 +1060,10 @@ function TextScreen({
   trim: StudioTrimSelection;
   captions: StudioCaptionSettings;
   onCaptionChange: (placement: keyof StudioCaptionSettings, value: string) => void;
-  onCaptionSettingChange: <Key extends keyof StudioCaptionSettings>(key: Key, value: StudioCaptionSettings[Key]) => void;
+  onCaptionSettingChange: <Key extends keyof StudioCaptionSettings>(
+    key: Key,
+    value: StudioCaptionSettings[Key],
+  ) => void;
   onBack: () => void;
   onSkip: () => void;
   onCreate: () => void;
@@ -1047,15 +1107,33 @@ function TextScreen({
           style={{ aspectRatio: `${metadata.width || 16} / ${metadata.height || 9}` }}
           data-testid="caption-preview-frame"
         >
-          <video ref={videoRef} src={videoUrl} controls playsInline className="absolute inset-0 h-full w-full object-contain" />
-          <CaptionOverlay placement="top" metadata={metadata} captions={captions}>{captions.topText}</CaptionOverlay>
-          <CaptionOverlay placement="bottom" metadata={metadata} captions={captions}>{captions.bottomText}</CaptionOverlay>
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            controls
+            playsInline
+            className="absolute inset-0 h-full w-full object-contain"
+          />
+          <CaptionOverlay placement="top" metadata={metadata} captions={captions}>
+            {captions.topText}
+          </CaptionOverlay>
+          <CaptionOverlay placement="bottom" metadata={metadata} captions={captions}>
+            {captions.bottomText}
+          </CaptionOverlay>
         </div>
 
         <section className="border border-gray-800 p-4">
           <h3 className="mb-4 text-lg font-bold text-white">Captions</h3>
-          <CaptionInput label="Top text" value={captions.topText} onChange={(value) => onCaptionChange('topText', value)} />
-          <CaptionInput label="Bottom text" value={captions.bottomText} onChange={(value) => onCaptionChange('bottomText', value)} />
+          <CaptionInput
+            label="Top text"
+            value={captions.topText}
+            onChange={(value) => onCaptionChange('topText', value)}
+          />
+          <CaptionInput
+            label="Bottom text"
+            value={captions.bottomText}
+            onChange={(value) => onCaptionChange('bottomText', value)}
+          />
           <OptionSection icon={<Captions className="h-4 w-4" />} label="Caption Size">
             {(Object.keys(captionSizeDetails) as StudioCaptionSize[]).map((size) => (
               <OptionButton
@@ -1121,7 +1199,13 @@ function ProcessingScreen({
     { key: 'finalizing', name: 'Finalizing' },
   ];
   const currentStage = progress?.stage || 'preparing';
-  const currentIndex = currentStage === 'preparing' ? 0 : Math.max(0, stages.findIndex((stage) => stage.key === currentStage));
+  const currentIndex =
+    currentStage === 'preparing'
+      ? 0
+      : Math.max(
+          0,
+          stages.findIndex((stage) => stage.key === currentStage),
+        );
   const isError = Boolean(error);
   const helper = isError
     ? [error?.message, error?.action].filter(Boolean).join(' ') || 'Try again with a shorter clip.'
@@ -1138,11 +1222,16 @@ function ProcessingScreen({
 
       <section className="border border-gray-800 p-5">
         <div className="mb-5 flex items-center justify-between gap-3">
-          <h3 className="text-lg font-bold text-white">{isError ? 'Error occurred' : `Stage ${Math.min(currentIndex + 1, 4)} of 4`}</h3>
+          <h3 className="text-lg font-bold text-white">
+            {isError ? 'Error occurred' : `Stage ${Math.min(currentIndex + 1, 4)} of 4`}
+          </h3>
           <span className="text-sm font-semibold text-gray-400">{progress?.percentage || 0}%</span>
         </div>
         <div className="mb-5 h-2 bg-gray-800">
-          <div className={`h-full ${isError ? 'bg-red-400' : 'bg-[#4fd1c5]'}`} style={{ width: `${progress?.percentage || 0}%` }} />
+          <div
+            className={`h-full ${isError ? 'bg-red-400' : 'bg-[#4fd1c5]'}`}
+            style={{ width: `${progress?.percentage || 0}%` }}
+          />
         </div>
         <div className="space-y-3">
           {stages.map((stage, index) => {
@@ -1162,7 +1251,9 @@ function ProcessingScreen({
                         : 'border-gray-800 text-gray-500'
                 }`}
               >
-                <span className="flex h-6 w-6 items-center justify-center border border-current text-xs">{failed ? '!' : completed ? '✓' : current ? '●' : '○'}</span>
+                <span className="flex h-6 w-6 items-center justify-center border border-current text-xs">
+                  {failed ? '!' : completed ? '✓' : current ? '●' : '○'}
+                </span>
                 <span className="font-semibold">{stage.name}</span>
               </div>
             );
@@ -1224,7 +1315,11 @@ function SuccessScreen({
             <a
               href={result.url}
               download="ytgify-studio.gif"
-              onClick={() => trackStudioEvent('studio_download_clicked', { output_file_size_bucket: studioFileSizeBucket(result.fileSize) })}
+              onClick={() =>
+                trackStudioEvent('studio_download_clicked', {
+                  output_file_size_bucket: studioFileSizeBucket(result.fileSize),
+                })
+              }
               className="inline-flex w-full items-center justify-center gap-2 bg-[#E91E8C] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#d51a80]"
             >
               <Download className="h-4 w-4" />
@@ -1340,7 +1435,17 @@ function OptionButton({
   );
 }
 
-function TimeInput({ label, value, max, onChange }: { label: string; value: number; max: number; onChange: (value: number) => void }) {
+function TimeInput({
+  label,
+  value,
+  max,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  onChange: (value: number) => void;
+}) {
   return (
     <label className="block text-sm font-semibold text-gray-300">
       {label}
@@ -1399,7 +1504,9 @@ function CaptionInput({ label, value, onChange }: { label: string; value: string
         className="mt-2 w-full border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none transition-colors placeholder:text-gray-600 focus:border-[#E91E8C]"
         placeholder="Optional caption"
       />
-      <span className="mt-1 block text-xs text-gray-500">{value.length}/{STUDIO_CAPTION_MAX_LENGTH}</span>
+      <span className="mt-1 block text-xs text-gray-500">
+        {value.length}/{STUDIO_CAPTION_MAX_LENGTH}
+      </span>
     </label>
   );
 }
@@ -1463,7 +1570,11 @@ function ErrorNotice({ error, onReset }: { error: StudioError; onReset: () => vo
         <div>
           <p className="font-semibold text-red-100">{error.message}</p>
           <p className="mt-1 text-sm leading-6 text-red-200/80">{error.action}</p>
-          <button type="button" onClick={onReset} className="mt-3 text-sm font-semibold text-white underline underline-offset-4">
+          <button
+            type="button"
+            onClick={onReset}
+            className="mt-3 text-sm font-semibold text-white underline underline-offset-4"
+          >
             Start over
           </button>
         </div>

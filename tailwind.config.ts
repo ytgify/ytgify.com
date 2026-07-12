@@ -1,11 +1,11 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./content/**/*.{md,mdx}",
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './content/**/*.{md,mdx}',
   ],
   theme: {
     extend: {
@@ -28,10 +28,10 @@ const config: Config = {
         'ytg-gradient-reverse': 'linear-gradient(135deg, #8B5CF6 0%, #FF0080 50%, #FF0050 100%)',
       },
       animation: {
-        'glow': 'glow 2s ease-in-out infinite',
+        glow: 'glow 2s ease-in-out infinite',
         'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'gradient-shift': 'gradient-shift 3s ease-in-out infinite',
-        'float': 'float 3s ease-in-out infinite',
+        float: 'float 3s ease-in-out infinite',
       },
       keyframes: {
         glow: {

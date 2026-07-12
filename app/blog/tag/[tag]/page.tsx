@@ -60,23 +60,17 @@ export default async function TagPage({ params }: PageProps) {
         </Link>
 
         <header className="mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            {formattedTag} Articles
-          </h1>
+          <h1 className="text-4xl font-bold text-white mb-4">{formattedTag} Articles</h1>
           <p className="text-[#a0a0a0] text-lg">
-            {posts.length} article{posts.length !== 1 ? 's' : ''} tagged with &quot;{decodedTag}&quot;
+            {posts.length} article{posts.length !== 1 ? 's' : ''} tagged with &quot;{decodedTag}
+            &quot;
           </p>
         </header>
 
         {posts.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-[#606060] text-lg">
-              No articles found with this tag.
-            </p>
-            <Link
-              href="/blog"
-              className="inline-block mt-4 text-ytg-pink hover:underline"
-            >
+            <p className="text-[#606060] text-lg">No articles found with this tag.</p>
+            <Link href="/blog" className="inline-block mt-4 text-ytg-pink hover:underline">
               View all articles
             </Link>
           </div>

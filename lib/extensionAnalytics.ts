@@ -12,10 +12,7 @@ type AnalyticsWindow = Window & {
 const MAX_PROPERTY_LENGTH = 120;
 const SAFE_LABEL_PATTERN = /[^a-zA-Z0-9._:/-]/g;
 
-const hasPostHogKey = Boolean(
-  process.env.NEXT_PUBLIC_POSTHOG_KEY ||
-    process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN
-);
+const hasPostHogKey = Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN);
 
 function safeLabel(value: string | null, maxLength = MAX_PROPERTY_LENGTH) {
   if (!value) return null;
@@ -74,10 +71,7 @@ function pageProperties() {
   };
 }
 
-export function trackExtensionEvent(
-  eventName: string,
-  properties: AnalyticsProperties = {}
-) {
+export function trackExtensionEvent(eventName: string, properties: AnalyticsProperties = {}) {
   if (typeof window === 'undefined') return;
 
   const eventProperties = cleanProperties({
@@ -96,14 +90,14 @@ export function trackExtensionEvent(
   }
 }
 
-export function trackExtensionException(
-  error: unknown,
-  properties: AnalyticsProperties = {}
-) {
+export function trackExtensionException(error: unknown, properties: AnalyticsProperties = {}) {
   if (!hasPostHogKey || typeof window === 'undefined') return;
 
-  posthog.captureException(error, cleanProperties({
-    ...pageProperties(),
-    ...properties,
-  }));
+  posthog.captureException(
+    error,
+    cleanProperties({
+      ...pageProperties(),
+      ...properties,
+    }),
+  );
 }

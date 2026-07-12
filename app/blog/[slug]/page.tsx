@@ -29,9 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {};
   }
 
-  const ogImage = post.thumbnail.startsWith('http')
-    ? post.thumbnail
-    : `${SITE_URL}${post.thumbnail}`;
+  const ogImage = post.thumbnail.startsWith('http') ? post.thumbnail : `${SITE_URL}${post.thumbnail}`;
 
   return {
     title: `${post.title} | ${SITE_NAME} Blog`,
@@ -101,10 +99,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         data-schema="article"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main className="min-h-screen bg-[#0a0a0a]">
         <article className="max-w-[800px] mx-auto px-6 sm:px-12 pt-12 pb-8">
           <Link
@@ -121,10 +116,11 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <TagBadge key={tag} tag={tag} />
               ))}
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              {post.title}
-            </h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#808080]" data-testid="article-evidence">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{post.title}</h1>
+            <div
+              className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#808080]"
+              data-testid="article-evidence"
+            >
               <a
                 href={DEFAULT_BLOG_AUTHOR_URL}
                 target="_blank"
@@ -181,7 +177,8 @@ export default async function BlogPostPage({ params }: PageProps) {
               >
                 {post.author}
               </a>{' '}
-              builds YTgify and documents the product behavior used in these guides. Product details on this page were checked against the version shown above.
+              builds YTgify and documents the product behavior used in these guides. Product details on this page were
+              checked against the version shown above.
             </p>
           </aside>
 

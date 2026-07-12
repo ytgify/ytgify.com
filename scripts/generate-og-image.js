@@ -54,7 +54,7 @@ async function generateOGImage() {
   });
 
   // Wait for fonts and images to load
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   // Take screenshot of the OG image element
   const element = await page.$('#og-image');
