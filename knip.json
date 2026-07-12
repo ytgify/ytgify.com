@@ -2,7 +2,6 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
     "app/**/{error,layout,page,route}.{ts,tsx}",
-    "app/studio/page.disabled.tsx",
     "lib/blog.ts",
     "lib/studio/gif-exporter.ts",
     "next.config.ts",
@@ -15,7 +14,6 @@
   "ignoreDependencies": [
     "@next/mdx",
     "gifenc",
-    "gifski-wasm",
     "gray-matter",
     "puppeteer",
     "remark-frontmatter",

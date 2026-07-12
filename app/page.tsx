@@ -8,6 +8,8 @@ import SiteFooter from './components/SiteFooter';
 import { LegacyInstallSection } from './components/DiscontinuationNotice';
 import CreatorBrandSection from './components/CreatorBrandSection';
 import HomeFAQ, { homeFAQItems } from './components/HomeFAQ';
+import BrowserToolPromo from './components/BrowserToolPromo';
+import HomeNavLinks from './components/HomeNavLinks';
 import {
   BookOpen,
   ChevronDown,
@@ -95,20 +97,7 @@ export default function Home() {
                 </span>
                 <span className="font-bold tracking-tight">YTgify</span>
               </Link>
-              <div className="hidden items-center gap-x-5 text-sm font-semibold text-gray-400 md:flex">
-                <a href="#demo" className="hover:text-white transition-colors">
-                  Demo
-                </a>
-                <a href="#install" className="hover:text-white transition-colors">
-                  Install
-                </a>
-                <Link href="/blog" className="hover:text-white transition-colors">
-                  Guides
-                </Link>
-                <a href="#also-by-jeremy" className="hover:text-white transition-colors">
-                  Builder
-                </a>
-              </div>
+              <HomeNavLinks />
               <TrackedExtensionLink
                 href="#install"
                 surface="home_sticky_nav"
@@ -195,6 +184,8 @@ export default function Home() {
               <ChevronDown className="h-4 w-4" />
             </a>
           </section>
+
+          <BrowserToolPromo />
 
           <section
             id="demo"

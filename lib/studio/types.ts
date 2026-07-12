@@ -4,8 +4,7 @@ type StudioProgressStage = 'preparing' | 'capturing' | 'captions' | 'encoding' |
 
 export type StudioFps = 5 | 10 | 15;
 export type StudioResolution = 240 | 360 | 480;
-export type StudioEncoderMode = 'fast' | 'quality';
-export type StudioEncoderUsed = 'gifenc' | 'gifski';
+export type StudioEncoderUsed = 'gifenc';
 export type StudioCaptionSize = 'standard' | 'large';
 export type StudioCaptionColor = 'white' | 'yellow';
 
@@ -26,7 +25,6 @@ export interface StudioTrimSelection {
 export interface StudioOutputSettings {
   fps: StudioFps;
   resolution: StudioResolution;
-  encoder: StudioEncoderMode;
 }
 
 export interface StudioCaptionSettings {
@@ -53,7 +51,6 @@ export interface StudioExportResult {
   duration: number;
   frameCount: number;
   encoder: StudioEncoderUsed;
-  encoderFallback?: boolean;
 }
 
 export interface StudioFrame {
@@ -70,6 +67,7 @@ type StudioErrorCode =
   | 'canvas_failed'
   | 'extraction_timeout'
   | 'encoding_failed'
+  | 'memory_limit'
   | 'cancelled';
 
 export interface StudioError {

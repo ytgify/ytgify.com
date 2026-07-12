@@ -10,7 +10,7 @@ export function validateVideoFile(file: File): StudioError | null {
   if (file.size > STUDIO_MAX_FILE_SIZE_BYTES) {
     return {
       code: 'file_too_large',
-      message: 'That video is larger than the 250 MB Studio limit.',
+      message: 'That video is larger than the 250 MB converter limit.',
       action: 'Choose a smaller clip or trim the source video first.',
     };
   }
@@ -22,7 +22,7 @@ export function validateVideoFile(file: File): StudioError | null {
   if (!hasAcceptedType && !hasAcceptedExtension) {
     return {
       code: 'unsupported_file',
-      message: 'Studio supports browser-decodable MP4, MOV, and WebM files.',
+      message: 'The converter supports browser-decodable MP4, MOV, and WebM files.',
       action: 'Choose a different local video file.',
     };
   }
@@ -42,7 +42,7 @@ export function validateVideoDuration(duration: number): StudioError | null {
   if (duration > STUDIO_MAX_SOURCE_DURATION_SECONDS) {
     return {
       code: 'source_too_long',
-      message: 'Studio MVP supports source videos up to 5 minutes.',
+      message: 'The converter supports source videos up to 5 minutes.',
       action: 'Choose a shorter source clip for now.',
     };
   }

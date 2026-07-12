@@ -40,12 +40,6 @@ const eslintConfig = [
     },
   },
   {
-    files: ['app/studio/StudioApp.tsx'],
-    rules: {
-      'max-lines': ['error', { max: 1513, skipBlankLines: true, skipComments: true }],
-    },
-  },
-  {
     ignores: [
       'node_modules/**',
       '.next/**',

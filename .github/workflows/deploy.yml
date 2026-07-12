@@ -36,8 +36,8 @@ jobs:
           NEXT_PUBLIC_POSTHOG_KEY: ${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}
           NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
 
-      - name: Verify dormant Studio is not deployed
-        run: npm run verify:studio-disabled
+      - name: Verify public tool routes
+        run: npm run verify:public-tool
 
       - name: Archive Pages artifact
         run: |

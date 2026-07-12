@@ -1,10 +1,12 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const chromeDemoFixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.webm');
+const chromeDemoMp4Fixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.mp4');
 const bobRossFixture = path.join(process.cwd(), 'tests/fixtures/bob-ross-15s.webm');
 
-test.describe('Studio (test-only route until public launch)', () => {
+test.describe('public video-to-GIF converter', () => {
   test('exports a local video to GIF without uploading source media details', async ({ page }) => {
     const observedRequests: string[] = [];
     const secretFileName = 'studio-fixture-secret-video.webm';
@@ -14,7 +16,8 @@ test.describe('Studio (test-only route until public launch)', () => {
       observedRequests.push(`${request.url()} ${request.postData() || ''}`);
     });
 
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
+    await expect(page.locator('main[data-ph-no-capture]')).toHaveCount(1);
     await expect(page.getByRole('listitem').filter({ hasText: 'Upload' })).toHaveAttribute('aria-current', 'step');
     await page.evaluate(() => {
       const originalRevoke = URL.revokeObjectURL.bind(URL);
@@ -25,7 +28,7 @@ test.describe('Studio (test-only route until public launch)', () => {
         originalRevoke(url);
       };
     });
-    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
 
     await attachGeneratedVideo(page, secretFileName);
 
@@ -47,13 +50,15 @@ test.describe('Studio (test-only route until public launch)', () => {
     await expect(page.getByRole('heading', { name: 'Creating Your GIF' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
     await expect(page.getByAltText('Generated GIF preview')).toBeVisible();
-    await expect(page.getByText('Frames')).toBeVisible();
-    await expect(page.getByText(/\d+(\.\d+)? (B|KB|MB)/)).toBeVisible();
+    await expect(page.getByText('Frames', { exact: true })).toBeVisible();
 
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('link', { name: 'Download GIF' }).click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toBe('ytgify-studio.gif');
+    expect(download.suggestedFilename()).toBe('ytgify-video-to-gif.gif');
+    const downloadedPath = await download.path();
+    expect(downloadedPath).not.toBeNull();
+    await expectValidAnimatedGif(downloadedPath!, { width: 160, height: 90 });
 
     const requestText = observedRequests.join('\n');
     expect(requestText).not.toContain(secretFileName);
@@ -66,36 +71,36 @@ test.describe('Studio (test-only route until public launch)', () => {
   });
 
   test('shows a product error for unsupported files', async ({ page }) => {
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles({
       name: 'not-a-video.txt',
       mimeType: 'text/plain',
       buffer: Buffer.from('not a video'),
     });
 
-    await expect(page.getByText('Studio supports browser-decodable MP4, MOV, and WebM files.')).toBeVisible();
+    await expect(page.getByText('The converter supports browser-decodable MP4, MOV, and WebM files.')).toBeVisible();
     await expect(page.getByText('Choose a different local video file.')).toBeVisible();
   });
 
   test('exports from the skip text branch and returns from success to capture', async ({ page }) => {
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await attachGeneratedVideo(page, 'studio-skip-text-video.webm');
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
       timeout: 15000,
     });
-    await expect(page.getByRole('listitem').filter({ hasText: 'Capture' })).toHaveAttribute('aria-current', 'step');
+    await expect(page.getByRole('listitem').filter({ hasText: 'Edit' })).toHaveAttribute('aria-current', 'step');
     await page.getByRole('button', { name: 'Continue to Customize' }).click();
 
     await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeVisible();
-    await expect(page.getByRole('listitem').filter({ hasText: 'Text' })).toHaveAttribute('aria-current', 'step');
+    await expect(page.getByRole('listitem').filter({ hasText: 'Edit' })).toHaveAttribute('aria-current', 'step');
     await page.getByRole('button', { name: 'Create without text' }).click();
 
     await expect(page.getByRole('heading', { name: 'Creating Your GIF' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
     await page.getByRole('button', { name: 'Edit clip' }).click();
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible();
-    await expect(page.getByRole('listitem').filter({ hasText: 'Capture' })).toHaveAttribute('aria-current', 'step');
+    await expect(page.getByRole('listitem').filter({ hasText: 'Edit' })).toHaveAttribute('aria-current', 'step');
   });
 
   test('exports the bundled Chrome demo fixture to GIF', async ({ page }) => {
@@ -106,7 +111,7 @@ test.describe('Studio (test-only route until public launch)', () => {
       observedRequests.push(`${request.url()} ${request.postData() || ''}`);
     });
 
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
@@ -139,7 +144,10 @@ test.describe('Studio (test-only route until public launch)', () => {
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('link', { name: 'Download GIF' }).click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toBe('ytgify-studio.gif');
+    expect(download.suggestedFilename()).toBe('ytgify-video-to-gif.gif');
+    const downloadedPath = await download.path();
+    expect(downloadedPath).not.toBeNull();
+    await expectValidAnimatedGif(downloadedPath!, { width: 276, height: 240 });
 
     const requestText = observedRequests.join('\n');
     expect(requestText).not.toContain('ytgify-chrome-demo.webm');
@@ -147,8 +155,8 @@ test.describe('Studio (test-only route until public launch)', () => {
     expect(requestText).not.toContain(fixtureCaption);
   });
 
-  test('exports the Chrome demo with the optional high-quality encoder path', async ({ page }) => {
-    await page.goto('/studio');
+  test('uses the single reliable browser encoder', async ({ page }) => {
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
@@ -158,19 +166,17 @@ test.describe('Studio (test-only route until public launch)', () => {
     await page.getByRole('button', { name: '3s' }).click();
     await page.getByRole('button', { name: /^5 fps/ }).click();
     await page.getByRole('button', { name: /240p Mini/ }).click();
-    await page.getByRole('button', { name: /^Best quality gifski/ }).click();
-
     await page.getByRole('button', { name: 'Continue to Customize' }).click();
     await page.getByRole('button', { name: 'Create without text' }).click();
 
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 60000 });
     await expect(page.getByText('Encoder')).toBeVisible();
-    await expect(page.getByText(/gifski|gifenc fallback/)).toBeVisible();
+    await expect(page.getByText('gifenc')).toBeVisible();
     await expect(page.getByText('276x240')).toBeVisible();
   });
 
   test('preserves trim and caption drafts when moving backward and exporting without text', async ({ page }) => {
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
@@ -207,7 +213,7 @@ test.describe('Studio (test-only route until public launch)', () => {
   });
 
   test('updates the trim selection from the direct timeline scrubber', async ({ page }) => {
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
@@ -248,7 +254,7 @@ test.describe('Studio (test-only route until public launch)', () => {
   });
 
   test('exports the Bob Ross fixture to GIF from the no-text branch', async ({ page }) => {
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
@@ -286,7 +292,7 @@ test.describe('Studio (test-only route until public launch)', () => {
       };
     });
 
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
@@ -310,8 +316,25 @@ test.describe('Studio (test-only route until public launch)', () => {
       .toBe(2);
   });
 
+  test('blocks settings above the reliable browser memory budget', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(HTMLVideoElement.prototype, 'videoWidth', { configurable: true, get: () => 1920 });
+      Object.defineProperty(HTMLVideoElement.prototype, 'videoHeight', { configurable: true, get: () => 1080 });
+    });
+    await page.goto('/video-to-gif');
+    await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
+
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
+    await page.getByRole('button', { name: '10s' }).click();
+    await page.getByRole('button', { name: /^15 fps/ }).click();
+    await page.getByRole('button', { name: /480p HD/ }).click();
+
+    await expect(page.getByText(/This combination needs about \d+ MB just for video frames/)).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Continue to Customize' })).toBeDisabled();
+  });
+
   test('stays stable when export is double-clicked and reset during processing', async ({ page }) => {
-    await page.goto('/studio');
+    await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
@@ -331,10 +354,47 @@ test.describe('Studio (test-only route until public launch)', () => {
       timeout: 10000,
     });
     await page.getByRole('button', { name: 'Start over' }).click();
-    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeHidden();
     await page.waitForTimeout(1000);
-    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
+  });
+});
+
+test.describe('video-to-GIF browser matrix', () => {
+  test('exports a real fixture without overflow or console errors', async ({ page, browserName }, testInfo) => {
+    const consoleErrors: string[] = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') consoleErrors.push(message.text());
+    });
+    page.on('pageerror', (error) => consoleErrors.push(error.message));
+
+    await page.goto('/video-to-gif');
+    await page
+      .getByLabel('Upload video')
+      .setInputFiles(browserName === 'webkit' ? chromeDemoMp4Fixture : chromeDemoFixture);
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 20000 });
+    await page.getByRole('button', { name: '3s' }).click();
+    await page.getByRole('button', { name: /^5 fps/ }).click();
+    await page.getByRole('button', { name: /240p Mini/ }).click();
+    await page.getByRole('button', { name: 'Continue to Customize' }).click();
+    await page.getByRole('button', { name: 'Create without text' }).click();
+    await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 60000 });
+
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('link', { name: 'Download GIF' }).click();
+    const download = await downloadPromise;
+    const downloadedPath = await download.path();
+    expect(downloadedPath).not.toBeNull();
+    await expectValidAnimatedGif(downloadedPath!, { width: 276, height: 240 });
+
+    const dimensions = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+    if (testInfo.project.name === 'mobile-chromium') expect(page.viewportSize()).toEqual({ width: 390, height: 844 });
+    expect(consoleErrors).toEqual([]);
   });
 });
 
@@ -399,4 +459,48 @@ async function attachGeneratedVideo(page: import('@playwright/test').Page, fileN
     input.files = transfer.files;
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }, fileName);
+}
+
+async function expectValidAnimatedGif(filePath: string, dimensions: { width: number; height: number }): Promise<void> {
+  const bytes = await readFile(filePath);
+  expect(bytes.length).toBeGreaterThan(100);
+  expect(['GIF87a', 'GIF89a']).toContain(bytes.subarray(0, 6).toString('ascii'));
+  expect(bytes.readUInt16LE(6)).toBe(dimensions.width);
+  expect(bytes.readUInt16LE(8)).toBe(dimensions.height);
+  expect(countGifFrames(bytes)).toBeGreaterThan(1);
+}
+
+function countGifFrames(bytes: Buffer): number {
+  const globalTableBytes = bytes[10] & 0x80 ? 3 * 2 ** ((bytes[10] & 0x07) + 1) : 0;
+  let offset = 13 + globalTableBytes;
+  let frames = 0;
+
+  while (offset < bytes.length) {
+    const marker = bytes[offset];
+    if (marker === 0x3b) break;
+    if (marker === 0x21) {
+      offset = skipGifSubBlocks(bytes, offset + 2);
+      continue;
+    }
+    if (marker !== 0x2c || offset + 10 > bytes.length) break;
+
+    frames += 1;
+    const packed = bytes[offset + 9];
+    const localTableBytes = packed & 0x80 ? 3 * 2 ** ((packed & 0x07) + 1) : 0;
+    offset += 10 + localTableBytes + 1;
+    offset = skipGifSubBlocks(bytes, offset);
+  }
+
+  return frames;
+}
+
+function skipGifSubBlocks(bytes: Buffer, start: number): number {
+  let offset = start;
+  while (offset < bytes.length) {
+    const size = bytes[offset];
+    offset += 1;
+    if (size === 0) return offset;
+    offset += size;
+  }
+  return offset;
 }

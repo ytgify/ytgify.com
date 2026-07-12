@@ -1,6 +1,6 @@
 # Engineering Standards
 
-These rules keep the landing site and browser-based Studio independently maintainable while they share one Next.js deployment and domain.
+These rules keep the landing site and browser-based video-to-GIF converter independently maintainable while they share one Next.js deployment and domain.
 
 ## Module boundaries
 
@@ -8,7 +8,7 @@ These rules keep the landing site and browser-based Studio independently maintai
 - Functions over 120 effective lines, complexity over 20, and nesting deeper than four levels produce refactoring warnings.
 - Tests may reach 500 effective lines when a cohesive workflow benefits from staying together.
 - Existing oversized files use exact debt-ratchet ceilings in `eslint.config.mjs`. Those ceilings must never increase. Refactors should lower or delete them.
-- Prefer feature ownership: Studio UI belongs under `app/studio`, reusable media logic under `lib/studio`, and Studio browser coverage in `tests/studio.spec.ts`.
+- Prefer feature ownership: converter UI belongs under `app/studio`, reusable media logic under `lib/studio`, and converter browser coverage in `tests/studio.spec.ts`.
 - Keep browser/platform adapters separate from framework-independent calculations and encoders.
 
 ## Required local gates
@@ -21,29 +21,29 @@ These rules keep the landing site and browser-based Studio independently maintai
 4. Knip's production dependency and unused-code graph.
 5. Fast Vitest unit tests.
 6. A production Next.js build.
-7. Verification that the dormant Studio route is absent from production output.
+7. Verification that the canonical converter route is present and the retired `/studio` route is absent.
 
-Use `npm run test:e2e` for the complete browser suite or `npm run test:studio` for the Studio workflow. Both activate `/studio` only inside the disposable test build.
+Use `npm run test:e2e` for the complete browser suite or `npm run test:video-to-gif` for the public converter workflow, accessibility, and SEO coverage. Both exercise the canonical `/video-to-gif` route from the normal production-shaped build.
 
 ## Test layers
 
 - Unit tests cover deterministic calculations, validation, sanitization, and state transitions.
 - Site browser tests cover landing, install, blog/SEO, welcome, and responsive behavior.
-- Studio browser tests use real video fixtures and verify export, download, privacy, cancellation, and recovery behavior.
+- Converter browser tests use real video fixtures and verify export, download, privacy, cancellation, and recovery behavior.
 - A feature is not accepted only because it renders. Test the user outcome and its most likely failure modes.
 
 ## CI boundaries
 
 - Quality checks run for every code pull request and merge-group candidate.
 - Site browser tests run for site or shared-framework changes.
-- Studio browser tests run for Studio or shared-framework changes.
+- Converter browser tests run for converter or shared-framework changes.
 - Shared dependency, Next.js, TypeScript, styling, Playwright, analytics, and workflow changes run both browser suites.
 - `CI Gate` is the stable required check and accepts only successful or intentionally path-skipped jobs.
-- Production remains one GitHub Pages artifact. Every main deployment verifies that the test-only Studio route was not included before publishing.
+- Production remains one GitHub Pages artifact. Every main deployment verifies that `/video-to-gif` exists and that no duplicate `/studio` route is included.
 
 ## Knip policy
 
-Do not make every source file a Knip entry; that masks unused files. Entry points should represent framework routes, executable scripts, configuration, and explicitly dormant product roots. Dependencies used only through Next.js build configuration, dynamic encoder loading, or dormant Studio roots are listed explicitly in `ignoreDependencies`.
+Do not make every source file a Knip entry; that masks unused files. Entry points should represent framework routes, executable scripts, and configuration. Dependencies used only through Next.js build configuration or dynamic loading are listed explicitly in `ignoreDependencies`.
 
 When Knip reports an issue, prefer deleting unused code or narrowing exports before adding an exception.
 

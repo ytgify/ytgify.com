@@ -32,9 +32,10 @@ run_check "ESLint" npm run lint
 run_check "Prettier" npm run format:check
 run_check "TypeScript" npm run typecheck
 run_check "Knip production graph" npm run knip:production
+run_check "CI path boundaries" npm run verify:ci-boundaries
 run_check "Unit tests" npm run test:unit
 run_check "Production build" npm run build
-run_check "Studio remains disabled in production" npm run verify:studio-disabled
+run_check "Public tool production routes" npm run verify:public-tool
 
 if [[ "$failed" -ne 0 ]]; then
   echo
