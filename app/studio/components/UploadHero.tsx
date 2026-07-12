@@ -14,7 +14,7 @@ export function UploadHero() {
         Private, local processing
       </div>
       <h1 className="max-w-3xl text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-6xl">
-        Video to GIF Studio
+        Free Video to GIF Converter
       </h1>
       <p className="mt-5 max-w-2xl text-base leading-7 text-gray-300 sm:text-lg">
         Turn a clip you own into a crisp, share-ready GIF. Trim the moment, add an optional caption, and download it —

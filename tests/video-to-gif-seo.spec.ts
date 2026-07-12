@@ -10,7 +10,8 @@ test.describe('public video to GIF launch surface', () => {
       /Convert your own MP4, MOV, or WebM/i,
     );
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /index/);
-    await expect(page.getByRole('heading', { level: 1, name: 'Video to GIF Studio' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Free Video to GIF Converter' })).toBeVisible();
+    await expect(page.getByText('Studio', { exact: false })).toHaveCount(0);
   });
 
   test('exposes application, how-to, breadcrumb, and FAQ structured data', async ({ page }) => {
@@ -34,6 +35,12 @@ test.describe('public video to GIF launch surface', () => {
     await expect(page.getByText(/250 MB and 5 minute source limits/)).toBeVisible();
     await expect(page.getByText(/H.264 MP4 or WebM works best/)).toBeVisible();
     await expect(page.getByText(/does not send your source media, filename, or captions/)).toBeVisible();
+    await expect(page.getByRole('link', { name: 'How it works' })).toHaveAttribute('href', '#how-it-works');
+    await expect(page.locator('article')).toHaveCount(1);
+    await expect(page.getByRole('link', { name: 'Install the YTgify Chrome extension' })).toHaveAttribute(
+      'href',
+      '/#install',
+    );
     await expect(page.getByRole('link', { name: 'View the extension' })).toHaveAttribute('href', '/#install');
   });
 

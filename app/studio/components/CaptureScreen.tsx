@@ -90,8 +90,8 @@ export function CaptureScreen(props: CaptureScreenProps) {
           className="rounded-xl border border-red-400/40 bg-red-950/20 p-4 text-sm leading-6 text-red-100"
         >
           This combination needs about {exportBudget.estimatedMegabytes}
-          {' MB '}just for video frames, above Studio&apos;s reliable browser budget. Lower the duration, frame rate, or
-          resolution to continue.
+          {' MB '}just for video frames, above this converter&apos;s reliable browser budget. Lower the duration, frame
+          rate, or resolution to continue.
         </div>
       ) : frameCount >= highCostFrameThreshold ? (
         <div

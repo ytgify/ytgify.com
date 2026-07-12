@@ -17,7 +17,7 @@
     "test:unit": "vitest run",
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:studio": "playwright test tests/studio.spec.ts tests/video-to-gif-accessibility.spec.ts tests/video-to-gif-seo.spec.ts",
+    "test:video-to-gif": "playwright test tests/studio.spec.ts tests/video-to-gif-accessibility.spec.ts tests/video-to-gif-seo.spec.ts",
     "test:ui": "playwright test --ui",
     "validate": "npm run lint && npm run format:check && npm run typecheck && npm run knip:production && npm run test:unit && npm run build && npm run test:e2e",
     "verify:public-tool": "node scripts/verify-public-tool.mjs",

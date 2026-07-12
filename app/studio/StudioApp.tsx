@@ -23,12 +23,21 @@ export default function StudioApp() {
             </span>
             <span className="font-bold tracking-tight">YTgify</span>
           </Link>
-          <nav aria-label="Studio navigation" className="flex items-center gap-4 text-sm font-semibold text-gray-400">
-            <Link href="/blog" className="transition-colors hover:text-white">
-              GIF guides
-            </Link>
-            <Link href="/" className="hidden items-center gap-1 transition-colors hover:text-white sm:inline-flex">
-              Chrome extension <ArrowUpRight className="h-3.5 w-3.5" />
+          <nav
+            aria-label="Video to GIF navigation"
+            className="flex items-center gap-3 text-sm font-semibold text-gray-400 sm:gap-4"
+          >
+            <a href="#how-it-works" className="hidden transition-colors hover:text-white sm:inline">
+              How it works
+            </a>
+            <Link
+              href="/#install"
+              aria-label="Install the YTgify Chrome extension"
+              className="inline-flex items-center gap-1 transition-colors hover:text-white"
+            >
+              <span className="sm:hidden">Extension</span>
+              <span className="hidden sm:inline">Chrome extension</span>
+              <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
           </nav>
         </header>

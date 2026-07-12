@@ -12,7 +12,7 @@ export function mapExportError(code: string): StudioError {
   if (code === 'canvas_failed') {
     return {
       code: 'canvas_failed',
-      message: 'Studio could not create a canvas for this export.',
+      message: 'The converter could not create a canvas for this export.',
       action: 'Try a shorter clip or restart the browser tab.',
     };
   }
@@ -36,14 +36,14 @@ export function mapExportError(code: string): StudioError {
   if (code === 'decode_failed') {
     return {
       code: 'decode_failed',
-      message: 'Studio could not decode that frame.',
+      message: 'The converter could not decode that frame.',
       action: 'Try a different browser-decodable video or choose another clip range.',
     };
   }
 
   return {
     code: 'encoding_failed',
-    message: 'Studio could not encode that GIF.',
+    message: 'The converter could not encode that GIF.',
     action: 'Try a shorter clip, lower FPS, or lower resolution.',
   };
 }

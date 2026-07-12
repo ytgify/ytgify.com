@@ -5,8 +5,8 @@ test.describe('video to GIF accessibility', () => {
     await page.goto('/video-to-gif');
 
     await expect(page.locator('main')).toHaveCount(1);
-    await expect(page.getByRole('heading', { level: 1, name: 'Video to GIF Studio' })).toBeVisible();
-    await expect(page.getByRole('list', { name: 'Studio wizard progress' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Free Video to GIF Converter' })).toBeVisible();
+    await expect(page.getByRole('list', { name: 'Video to GIF progress' })).toBeVisible();
     await expect(page.getByRole('listitem').filter({ hasText: 'Upload' })).toHaveAttribute('aria-current', 'step');
     await expect(page.getByLabel('Upload video')).toHaveAttribute('accept', /video\/mp4/);
 
@@ -24,7 +24,7 @@ test.describe('video to GIF accessibility', () => {
       buffer: Buffer.from('not video data'),
     });
 
-    const alert = page.getByRole('alert').filter({ hasText: 'Studio supports browser-decodable' });
+    const alert = page.getByRole('alert').filter({ hasText: 'The converter supports browser-decodable' });
     await expect(alert).toContainText('Choose a different local video file');
     const startOver = page.getByRole('button', { name: 'Start over' });
     await startOver.focus();

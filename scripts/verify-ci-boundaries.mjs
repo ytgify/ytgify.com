@@ -1,10 +1,10 @@
 import { readFileSync } from 'node:fs';
 
 const workflow = readFileSync('.github/workflows/ci.yml', 'utf8');
-const siteFilter = sectionBetween(workflow, '            site:\n', '            studio:\n');
-const studioFilter = sectionBetween(workflow, '            studio:\n', '\n  quality:');
-const siteJob = sectionBetween(workflow, '  site-browser-tests:\n', '\n  studio-browser-tests:');
-const studioJob = sectionBetween(workflow, '  studio-browser-tests:\n', '\n  ci-gate:');
+const siteFilter = sectionBetween(workflow, '            site:\n', '            tool:\n');
+const toolFilter = sectionBetween(workflow, '            tool:\n', '\n  quality:');
+const siteJob = sectionBetween(workflow, '  site-browser-tests:\n', '\n  video-to-gif-browser-tests:');
+const toolJob = sectionBetween(workflow, '  video-to-gif-browser-tests:\n', '\n  ci-gate:');
 
 requireEntries(siteFilter, [
   "- '!app/studio/**'",
@@ -15,7 +15,7 @@ requireEntries(siteFilter, [
   "- '!tests/video-to-gif-seo.spec.ts'",
 ]);
 
-requireEntries(studioFilter, [
+requireEntries(toolFilter, [
   "- 'app/studio/**'",
   "- 'app/video-to-gif/**'",
   "- 'lib/studio/**'",
@@ -27,7 +27,7 @@ requireEntries(studioFilter, [
   "- '.github/workflows/**'",
 ]);
 
-requireEntries(studioJob, [
+requireEntries(toolJob, [
   'npx playwright install chromium firefox webkit --with-deps',
   'http://localhost:3217/video-to-gif',
 ]);

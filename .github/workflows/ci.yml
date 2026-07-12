@@ -29,7 +29,7 @@ jobs:
     if: github.event_name == 'pull_request'
     outputs:
       site: ${{ steps.filter.outputs.site }}
-      studio: ${{ steps.filter.outputs.studio }}
+      tool: ${{ steps.filter.outputs.tool }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
@@ -62,7 +62,7 @@ jobs:
               - 'tsconfig.json'
               - '.github/actions/**'
               - '.github/workflows/**'
-            studio:
+            tool:
               - 'app/studio/**'
               - 'app/video-to-gif/**'
               - 'app/globals.css'
@@ -131,7 +131,7 @@ jobs:
       always() && !cancelled() && needs.quality.result == 'success' &&
       (github.event_name == 'merge_group' ||
        needs.detect-changes.outputs.site == 'true' ||
-       needs.detect-changes.outputs.studio == 'true')
+       needs.detect-changes.outputs.tool == 'true')
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup-node
@@ -181,14 +181,14 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: http://localhost:3217
 
-  studio-browser-tests:
-    name: Studio Browser Tests
+  video-to-gif-browser-tests:
+    name: Video-to-GIF Browser Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: [detect-changes, build-test-app]
     if: >-
       always() && !cancelled() && needs.build-test-app.result == 'success' &&
-      (github.event_name == 'merge_group' || needs.detect-changes.outputs.studio == 'true')
+      (github.event_name == 'merge_group' || needs.detect-changes.outputs.tool == 'true')
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup-node
@@ -221,7 +221,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: always()
-    needs: [quality, build-test-app, site-browser-tests, studio-browser-tests]
+    needs: [quality, build-test-app, site-browser-tests, video-to-gif-browser-tests]
     steps:
       - name: Require successful or intentionally skipped jobs
         env:
@@ -229,7 +229,7 @@ jobs:
             ${{ needs.quality.result }}
             ${{ needs.build-test-app.result }}
             ${{ needs.site-browser-tests.result }}
-            ${{ needs.studio-browser-tests.result }}
+            ${{ needs.video-to-gif-browser-tests.result }}
         run: |
           echo "Job results: $RESULTS"
           for result in $RESULTS; do

@@ -19,5 +19,5 @@ See [`docs/engineering-standards.md`](docs/engineering-standards.md) for module-
 The browser tool is served from `/video-to-gif`. Its focused test command covers the real media workflow across Chromium, Firefox, WebKit, and a 390x844 mobile viewport, plus accessibility and SEO checks:
 
 ```bash
-npm run test:studio
+npm run test:video-to-gif
 ```

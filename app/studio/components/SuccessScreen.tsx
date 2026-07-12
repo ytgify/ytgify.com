@@ -54,7 +54,7 @@ export function SuccessScreen({
             </button>
             <a
               href={result.url}
-              download="ytgify-studio.gif"
+              download="ytgify-video-to-gif.gif"
               onClick={() =>
                 trackStudioEvent('studio_download_clicked', {
                   output_file_size_bucket: studioFileSizeBucket(result.fileSize),
@@ -75,7 +75,7 @@ export function SuccessScreen({
             </button>
           </div>
           <label className="mt-5 block text-sm font-semibold text-gray-300">
-            What should Studio add next?
+            What should YTgify add next?
             <select
               value={nextTool}
               onChange={(event) => {

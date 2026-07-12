@@ -35,7 +35,7 @@ export function WizardProgress({ currentStep }: { currentStep: StudioWizardStep 
 
   return (
     <ol
-      aria-label="Studio wizard progress"
+      aria-label="Video to GIF progress"
       className="grid grid-cols-3 gap-2 text-xs font-semibold text-gray-400 sm:min-w-[520px]"
     >
       {wizardSteps.map((item, index) => {

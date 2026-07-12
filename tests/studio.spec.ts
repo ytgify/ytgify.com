@@ -6,7 +6,7 @@ const chromeDemoFixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome
 const chromeDemoMp4Fixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.mp4');
 const bobRossFixture = path.join(process.cwd(), 'tests/fixtures/bob-ross-15s.webm');
 
-test.describe('Studio public video-to-GIF route', () => {
+test.describe('public video-to-GIF converter', () => {
   test('exports a local video to GIF without uploading source media details', async ({ page }) => {
     const observedRequests: string[] = [];
     const secretFileName = 'studio-fixture-secret-video.webm';
@@ -28,7 +28,7 @@ test.describe('Studio public video-to-GIF route', () => {
         originalRevoke(url);
       };
     });
-    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
 
     await attachGeneratedVideo(page, secretFileName);
 
@@ -55,7 +55,7 @@ test.describe('Studio public video-to-GIF route', () => {
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('link', { name: 'Download GIF' }).click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toBe('ytgify-studio.gif');
+    expect(download.suggestedFilename()).toBe('ytgify-video-to-gif.gif');
     const downloadedPath = await download.path();
     expect(downloadedPath).not.toBeNull();
     await expectValidAnimatedGif(downloadedPath!, { width: 160, height: 90 });
@@ -78,7 +78,7 @@ test.describe('Studio public video-to-GIF route', () => {
       buffer: Buffer.from('not a video'),
     });
 
-    await expect(page.getByText('Studio supports browser-decodable MP4, MOV, and WebM files.')).toBeVisible();
+    await expect(page.getByText('The converter supports browser-decodable MP4, MOV, and WebM files.')).toBeVisible();
     await expect(page.getByText('Choose a different local video file.')).toBeVisible();
   });
 
@@ -144,7 +144,7 @@ test.describe('Studio public video-to-GIF route', () => {
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('link', { name: 'Download GIF' }).click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toBe('ytgify-studio.gif');
+    expect(download.suggestedFilename()).toBe('ytgify-video-to-gif.gif');
     const downloadedPath = await download.path();
     expect(downloadedPath).not.toBeNull();
     await expectValidAnimatedGif(downloadedPath!, { width: 276, height: 240 });
@@ -354,14 +354,14 @@ test.describe('Studio public video-to-GIF route', () => {
       timeout: 10000,
     });
     await page.getByRole('button', { name: 'Start over' }).click();
-    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeHidden();
     await page.waitForTimeout(1000);
-    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
   });
 });
 
-test.describe('Studio browser matrix', () => {
+test.describe('video-to-GIF browser matrix', () => {
   test('exports a real fixture without overflow or console errors', async ({ page, browserName }, testInfo) => {
     const consoleErrors: string[] = [];
     page.on('console', (message) => {
