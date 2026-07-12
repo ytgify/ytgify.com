@@ -53,6 +53,9 @@ export default function SiteFooter() {
           <Link href="/blog" className="text-[#a0a0a0] hover:text-white transition-colors">
             Blog
           </Link>
+          <Link href="/video-to-gif" className="text-[#a0a0a0] hover:text-white transition-colors">
+            Video to GIF Converter
+          </Link>
           <a
             href="https://bleepthat.sh/"
             target="_blank"

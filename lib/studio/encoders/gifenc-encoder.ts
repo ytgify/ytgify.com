@@ -40,6 +40,7 @@ export async function encodeGif({ frames, width, height, fps, signal, onProgress
 
   const encoder = GIFEncoder();
   const palette = createGlobalPalette(frames);
+  if (signal?.aborted) throw new Error('cancelled');
   const delay = Math.round(1000 / fps);
 
   for (let index = 0; index < frames.length; index += 1) {
@@ -48,6 +49,7 @@ export async function encodeGif({ frames, width, height, fps, signal, onProgress
     const pixels = frames[index].imageData.data;
     const framePalette = palette || createFramePalette(pixels);
     const indexedFrame = applyPaletteWithStuckiDither(pixels, framePalette, width, height);
+    if (signal?.aborted) throw new Error('cancelled');
 
     encoder.writeFrame(indexedFrame, width, height, {
       palette: framePalette,
@@ -65,8 +67,9 @@ export async function encodeGif({ frames, width, height, fps, signal, onProgress
       totalFrames: frames.length,
     });
 
-    if (index % 8 === 0) {
+    if (index % 4 === 0) {
       await new Promise((resolve) => window.setTimeout(resolve, 0));
+      if (signal?.aborted) throw new Error('cancelled');
     }
   }
 
@@ -78,6 +81,7 @@ export async function encodeGif({ frames, width, height, fps, signal, onProgress
   });
 
   encoder.finish();
+  if (signal?.aborted) throw new Error('cancelled');
   return new Blob([new Uint8Array(encoder.bytes())], { type: 'image/gif' });
 }
 

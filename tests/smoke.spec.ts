@@ -62,14 +62,14 @@ test.describe('Landing Page Smoke Tests', () => {
     await expect(page.locator('a[href="/install"]')).toHaveCount(0);
   });
 
-  test('studio remains unlinked before launch while test builds exercise the route', async ({ page }) => {
+  test('public video converter is linked while the internal studio route remains unlinked', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('a[href="/studio"]')).toHaveCount(0);
-    await expect(page.getByText(/Try Studio/i)).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /Open video to GIF converter/i })).toBeVisible();
+    await expect(page.locator('a[href="/video-to-gif"]')).not.toHaveCount(0);
 
     const response = await page.goto('/studio');
-    expect(response?.status()).toBe(200);
-    await expect(page.getByRole('heading', { name: 'Video to GIF Studio' })).toBeVisible();
+    expect(response?.status()).toBe(404);
   });
 
   test('landing install walkthrough is interactive', async ({ page }) => {

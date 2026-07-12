@@ -64,6 +64,74 @@ export function generateSiteSchema() {
   };
 }
 
+export function generateVideoToGifSchema() {
+  const url = `${SITE_URL}/video-to-gif`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebApplication',
+        '@id': `${url}#application`,
+        name: 'YTgify Video to GIF Converter',
+        url,
+        description:
+          'A free, private browser tool for converting local MP4, MOV, and WebM video clips into downloadable animated GIFs.',
+        applicationCategory: 'MultimediaApplication',
+        applicationSubCategory: 'Video to GIF converter',
+        operatingSystem: 'Any',
+        browserRequirements: 'Requires a modern browser that can decode the selected local video format',
+        isAccessibleForFree: true,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        featureList: [
+          'Local browser video processing',
+          'MP4, MOV, and WebM input',
+          'Clip trimming up to 10 seconds',
+          'Optional top and bottom captions',
+          '5, 10, and 15 FPS output',
+          '240p, 360p, and 480p output',
+          'No-watermark animated GIF download',
+        ],
+        provider: { '@id': `${SITE_URL}/#organization` },
+      },
+      {
+        '@type': 'HowTo',
+        '@id': `${url}#howto`,
+        name: 'How to convert a video to a GIF',
+        totalTime: 'PT2M',
+        step: [
+          {
+            '@type': 'HowToStep',
+            position: 1,
+            name: 'Choose a local video',
+            text: 'Select an MP4, MOV, or WebM file.',
+          },
+          {
+            '@type': 'HowToStep',
+            position: 2,
+            name: 'Edit the clip',
+            text: 'Trim the moment and add optional captions.',
+          },
+          {
+            '@type': 'HowToStep',
+            position: 3,
+            name: 'Export the GIF',
+            text: 'Create, preview, and download the animated GIF.',
+          },
+        ],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${url}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'YTgify', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'Video to GIF Converter', item: url },
+        ],
+      },
+    ],
+  };
+}
+
 export function generateFAQSchema(items: FAQItem[]) {
   return {
     '@context': 'https://schema.org',

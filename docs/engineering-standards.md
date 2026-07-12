@@ -23,7 +23,7 @@ These rules keep the landing site and browser-based Studio independently maintai
 6. A production Next.js build.
 7. Verification that the dormant Studio route is absent from production output.
 
-Use `npm run test:e2e` for the complete browser suite or `npm run test:studio` for the Studio workflow. Both activate `/studio` only inside the disposable test build.
+Use `npm run test:e2e` for the complete browser suite or `npm run test:studio` for the public video-to-GIF workflow, accessibility, and SEO coverage. Both exercise the canonical `/video-to-gif` route from the normal production-shaped build.
 
 ## Test layers
 
@@ -39,7 +39,7 @@ Use `npm run test:e2e` for the complete browser suite or `npm run test:studio` f
 - Studio browser tests run for Studio or shared-framework changes.
 - Shared dependency, Next.js, TypeScript, styling, Playwright, analytics, and workflow changes run both browser suites.
 - `CI Gate` is the stable required check and accepts only successful or intentionally path-skipped jobs.
-- Production remains one GitHub Pages artifact. Every main deployment verifies that the test-only Studio route was not included before publishing.
+- Production remains one GitHub Pages artifact. Every main deployment verifies that `/video-to-gif` exists and that no duplicate `/studio` route is included.
 
 ## Knip policy
 

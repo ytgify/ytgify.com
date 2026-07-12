@@ -17,9 +17,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: SITE_URL,
-      lastModified: new Date('2026-07-11'),
+      lastModified: new Date('2026-07-12'),
       changeFrequency: 'monthly',
       priority: 1.0,
+    },
+    {
+      url: `${SITE_URL}/video-to-gif`,
+      lastModified: new Date('2026-07-12'),
+      changeFrequency: 'monthly',
+      priority: 0.9,
     },
     {
       url: `${SITE_URL}/blog`,

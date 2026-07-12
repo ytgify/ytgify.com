@@ -85,7 +85,8 @@ test.describe('evidence-backed guide cluster', () => {
     for (const guide of guides) {
       expect(sitemap).toContain(`<loc>https://ytgify.com/blog/${guide.slug}</loc>`);
     }
-    expect(sitemap.match(/<lastmod>2026-07-11/g)).toHaveLength(5);
+    expect(sitemap.match(/<lastmod>2026-07-11/g)).toHaveLength(4);
+    expect(sitemap.match(/<lastmod>2026-07-12/g)).toHaveLength(2);
 
     const keyResponse = await request.get('/d1fc505c0bd2b087bc463a1b955f0f13.txt');
     expect(keyResponse.ok()).toBeTruthy();

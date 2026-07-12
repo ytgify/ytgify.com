@@ -40,6 +40,7 @@ jobs:
             site:
               - 'app/**'
               - '!app/studio/**'
+              - '!app/video-to-gif/**'
               - 'content/**'
               - 'hooks/**'
               - 'lib/**'
@@ -47,6 +48,8 @@ jobs:
               - 'public/**'
               - 'tests/**'
               - '!tests/studio.spec.ts'
+              - '!tests/video-to-gif-accessibility.spec.ts'
+              - '!tests/video-to-gif-seo.spec.ts'
               - '!tests/fixtures/**'
               - 'instrumentation-client.ts'
               - 'mdx-components.tsx'
@@ -61,11 +64,15 @@ jobs:
               - '.github/workflows/**'
             studio:
               - 'app/studio/**'
+              - 'app/video-to-gif/**'
               - 'app/globals.css'
               - 'app/layout.tsx'
               - 'lib/studio/**'
               - 'lib/constants.ts'
+              - 'lib/schema.ts'
               - 'tests/studio.spec.ts'
+              - 'tests/video-to-gif-accessibility.spec.ts'
+              - 'tests/video-to-gif-seo.spec.ts'
               - 'tests/fixtures/**'
               - 'instrumentation-client.ts'
               - 'package.json'
@@ -101,6 +108,9 @@ jobs:
       - name: Check the production dependency graph
         run: npm run knip:production
 
+      - name: Check CI path boundaries
+        run: npm run verify:ci-boundaries
+
       - name: Run unit tests with coverage
         run: npm run test:unit:coverage
 
@@ -126,10 +136,8 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup-node
 
-      - name: Build with the test-only Studio route
-        run: bash scripts/with-studio-route.sh npm run build
-        env:
-          YTGIFY_KEEP_STUDIO_BUILD: '1'
+      - name: Build test application
+        run: npm run build
 
       - name: Upload static test application
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -155,8 +163,8 @@ jobs:
           name: test-application
           path: out/
 
-      - name: Install Chromium
-        run: npx playwright install chromium --with-deps
+      - name: Install browser matrix
+        run: npx playwright install chromium firefox webkit --with-deps
 
       - name: Start static test server
         run: |
@@ -197,14 +205,14 @@ jobs:
         run: |
           npx serve out -l 3217 > /tmp/ytgify-serve.log 2>&1 &
           for attempt in $(seq 1 30); do
-            curl --fail --silent http://localhost:3217/studio > /dev/null && exit 0
+            curl --fail --silent http://localhost:3217/video-to-gif > /dev/null && exit 0
             sleep 1
           done
           cat /tmp/ytgify-serve.log
           exit 1
 
-      - name: Run Studio workflow tests
-        run: npx playwright test tests/studio.spec.ts
+      - name: Run video-to-GIF workflow, accessibility, and SEO tests
+        run: npx playwright test tests/studio.spec.ts tests/video-to-gif-accessibility.spec.ts tests/video-to-gif-seo.spec.ts
         env:
           PLAYWRIGHT_BASE_URL: http://localhost:3217
 

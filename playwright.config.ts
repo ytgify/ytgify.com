@@ -20,6 +20,29 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'firefox',
+      testMatch: /studio\.spec\.ts/,
+      grepInvert: /Studio public video-to-GIF route/,
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      testMatch: /studio\.spec\.ts/,
+      grepInvert: /Studio public video-to-GIF route/,
+      use: { ...devices['Desktop Safari'] },
+    },
+    {
+      name: 'mobile-chromium',
+      testMatch: /studio\.spec\.ts/,
+      grepInvert: /Studio public video-to-GIF route/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 390, height: 844 },
+        hasTouch: true,
+        isMobile: true,
+      },
+    },
   ],
   webServer: externalBaseUrl
     ? undefined
