@@ -182,7 +182,8 @@ test.describe('touch trimming', () => {
     await start.press('Enter');
     await openDetails(page, 'Fine-tune timing');
     const handle = page.getByTestId('timeline-start-handle');
-    await handle.scrollIntoViewIfNeeded();
+    // Center the handle above the sticky Create bar before dispatching raw touch input.
+    await handle.evaluate((element) => element.scrollIntoView({ block: 'center', behavior: 'instant' }));
     const bounds = (await handle.boundingBox())!;
     const rail = (await page.getByTestId('studio-timeline').boundingBox())!;
     const touch = await page.context().newCDPSession(page);
@@ -286,4 +287,30 @@ test('make smaller preserves the previous download through failure and replaces 
       }
     }, originalUrl),
   ).toBe(true);
+});
+
+test('keeps the decoding source connected and surfaces export status after a deep edit', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/video-to-gif');
+  await page.getByLabel('Upload video').setInputFiles('tests/fixtures/ytgify-chrome-demo.webm');
+  await page.getByRole('button', { name: '3s', exact: true }).click();
+  await page.locator('summary').filter({ hasText: 'Add a caption' }).click();
+  await page.getByLabel('Top text').fill('Connected export');
+  await page.getByLabel('Top text').blur();
+  await page.evaluate(() => {
+    const original = CanvasRenderingContext2D.prototype.drawImage;
+    CanvasRenderingContext2D.prototype.drawImage = function (
+      this: CanvasRenderingContext2D,
+      ...args: Parameters<typeof original>
+    ) {
+      if (args[0] instanceof HTMLVideoElement && !args[0].isConnected) throw new Error('detached video');
+      return original.apply(this, args);
+    } as typeof original;
+  });
+  await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
+  const heading = page.getByRole('heading', { name: 'GIF ready', exact: true });
+  await expect(heading).toBeVisible();
+  await expect(heading).toBeInViewport();
+  await expect(page.getByRole('textbox', { name: /Top text/ })).toHaveCount(0);
+  expect(await page.locator('video').evaluate((video: HTMLVideoElement) => video.paused)).toBe(true);
 });

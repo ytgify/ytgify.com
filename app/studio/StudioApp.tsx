@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 import { CaptureScreen } from './components/CaptureScreen';
 import { ProcessingScreen } from './components/ProcessingScreen';
@@ -12,6 +13,14 @@ import { useStudioController } from './useStudioController';
 
 export default function StudioApp() {
   const studio = useStudioController();
+  const wizardRef = useRef<HTMLElement>(null);
+  const previousStep = useRef(studio.displayStep);
+  useEffect(() => {
+    if (previousStep.current !== studio.displayStep) {
+      wizardRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
+      previousStep.current = studio.displayStep;
+    }
+  }, [studio.displayStep]);
 
   return (
     <main data-ph-no-capture className="min-h-screen bg-[#0a0a0a] grid-pattern text-white">
@@ -42,7 +51,7 @@ export default function StudioApp() {
           </nav>
         </header>
 
-        <section id="wizard" className="mx-auto w-full max-w-[920px]">
+        <section ref={wizardRef} id="wizard" className="mx-auto w-full max-w-[920px]">
           {studio.displayStep === 'upload' ? (
             <UploadScreen
               status={studio.status}
@@ -62,7 +71,16 @@ export default function StudioApp() {
 
           {studio.displayStep !== 'upload' && studio.metadata && studio.trim && studio.videoUrl ? (
             <WizardFrame currentStep={studio.displayStep} onReset={studio.resetStudio}>
-              {studio.displayStep === 'capture' ? (
+              {/* Keep the decoding video attached while iOS Safari extracts frames. */}
+              <div
+                aria-hidden={studio.displayStep !== 'capture' ? true : undefined}
+                inert={studio.displayStep !== 'capture'}
+                className={
+                  studio.displayStep !== 'capture'
+                    ? 'fixed -left-[10000px] top-0 w-[360px] opacity-0 pointer-events-none'
+                    : undefined
+                }
+              >
                 <CaptureScreen
                   videoUrl={studio.videoUrl}
                   videoRef={studio.videoRef}
@@ -80,7 +98,7 @@ export default function StudioApp() {
                   notice={studio.smallerMessage}
                   onCreate={studio.exportWithText}
                 />
-              ) : null}
+              </div>
               {studio.displayStep === 'processing' ? (
                 <ProcessingScreen
                   progress={studio.progress}
