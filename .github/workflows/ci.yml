@@ -3,10 +3,6 @@ name: CI
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
-      - 'plans/**'
   merge_group:
     branches: [main]
 
@@ -26,66 +22,20 @@ jobs:
     name: Detect Changed Paths
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.event_name == 'pull_request'
     outputs:
       site: ${{ steps.filter.outputs.site }}
       tool: ${{ steps.filter.outputs.tool }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
-        id: filter
         with:
-          filters: |
-            site:
-              - 'app/**'
-              - '!app/studio/**'
-              - '!app/video-to-gif/**'
-              - 'content/**'
-              - 'hooks/**'
-              - 'lib/**'
-              - '!lib/studio/**'
-              - 'public/**'
-              - 'tests/**'
-              - '!tests/studio.spec.ts'
-              - '!tests/video-to-gif-accessibility.spec.ts'
-              - '!tests/video-to-gif-seo.spec.ts'
-              - '!tests/converter-improvements.spec.ts'
-              - '!tests/fixtures/**'
-              - 'instrumentation-client.ts'
-              - 'mdx-components.tsx'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'next.config.ts'
-              - 'playwright.config.ts'
-              - 'postcss.config.mjs'
-              - 'tailwind.config.ts'
-              - 'tsconfig.json'
-              - '.github/actions/**'
-              - '.github/workflows/**'
-            tool:
-              - 'app/studio/**'
-              - 'app/video-to-gif/**'
-              - 'app/globals.css'
-              - 'app/layout.tsx'
-              - 'lib/studio/**'
-              - 'lib/constants.ts'
-              - 'lib/schema.ts'
-              - 'tests/studio.spec.ts'
-              - 'tests/video-to-gif-accessibility.spec.ts'
-              - 'tests/video-to-gif-seo.spec.ts'
-              - 'tests/converter-improvements.spec.ts'
-              - 'tests/fixtures/**'
-              - 'instrumentation-client.ts'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'next.config.ts'
-              - 'playwright.config.ts'
-              - 'postcss.config.mjs'
-              - 'tailwind.config.ts'
-              - 'tsconfig.json'
-              - '.github/actions/**'
-              - '.github/workflows/**'
+          fetch-depth: 0
+
+      - name: Select suites for the candidate diff
+        id: filter
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
+        run: node scripts/ci/select-suites.mjs
 
   quality:
     name: Quality Checks
@@ -128,11 +78,10 @@ jobs:
     name: Build Test Application
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [detect-changes, quality]
+    needs: [detect-changes]
     if: >-
-      always() && !cancelled() && needs.quality.result == 'success' &&
-      (github.event_name == 'merge_group' ||
-       needs.detect-changes.outputs.site == 'true' ||
+      !cancelled() && needs.detect-changes.result == 'success' &&
+      (needs.detect-changes.outputs.site == 'true' ||
        needs.detect-changes.outputs.tool == 'true')
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -141,12 +90,16 @@ jobs:
       - name: Build test application
         run: npm run build
 
+      - name: Verify public tool routes
+        run: npm run verify:public-tool
+
       - name: Upload static test application
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: test-application
           path: out/
           retention-days: 1
+          if-no-files-found: error
 
   site-browser-tests:
     name: Site Browser Tests
@@ -155,7 +108,7 @@ jobs:
     needs: [detect-changes, build-test-app]
     if: >-
       always() && !cancelled() && needs.build-test-app.result == 'success' &&
-      (github.event_name == 'merge_group' || needs.detect-changes.outputs.site == 'true')
+      needs.detect-changes.outputs.site == 'true'
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup-node
@@ -171,7 +124,7 @@ jobs:
       - name: Start static test server
         run: |
           npx serve out -l 3217 > /tmp/ytgify-serve.log 2>&1 &
-          for attempt in $(seq 1 30); do
+          for _attempt in $(seq 1 30); do
             curl --fail --silent http://localhost:3217/ > /dev/null && exit 0
             sleep 1
           done
@@ -190,7 +143,7 @@ jobs:
     needs: [detect-changes, build-test-app]
     if: >-
       always() && !cancelled() && needs.build-test-app.result == 'success' &&
-      (github.event_name == 'merge_group' || needs.detect-changes.outputs.tool == 'true')
+      needs.detect-changes.outputs.tool == 'true'
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/actions/setup-node
@@ -206,7 +159,7 @@ jobs:
       - name: Start static test server
         run: |
           npx serve out -l 3217 > /tmp/ytgify-serve.log 2>&1 &
-          for attempt in $(seq 1 30); do
+          for _attempt in $(seq 1 30); do
             curl --fail --silent http://localhost:3217/video-to-gif > /dev/null && exit 0
             sleep 1
           done
@@ -223,21 +176,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: always()
-    needs: [quality, build-test-app, site-browser-tests, video-to-gif-browser-tests]
+    needs: [detect-changes, quality, build-test-app, site-browser-tests, video-to-gif-browser-tests]
     steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Require successful or intentionally skipped jobs
         env:
-          RESULTS: >-
-            ${{ needs.quality.result }}
-            ${{ needs.build-test-app.result }}
-            ${{ needs.site-browser-tests.result }}
-            ${{ needs.video-to-gif-browser-tests.result }}
-        run: |
-          echo "Job results: $RESULTS"
-          for result in $RESULTS; do
-            if [ "$result" = 'failure' ] || [ "$result" = 'cancelled' ]; then
-              echo "A required job reported: $result"
-              exit 1
-            fi
-          done
-          echo 'All required jobs passed or were intentionally skipped.'
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: node scripts/ci/check-gate.mjs

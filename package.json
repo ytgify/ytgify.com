@@ -21,7 +21,7 @@
     "test:ui": "playwright test --ui",
     "test:browsers:install": "playwright install chromium firefox webkit",
     "test:smoke": "playwright test --project=chromium tests/smoke.spec.ts tests/video-to-gif-accessibility.spec.ts --grep 'page loads successfully|headline is visible|video to GIF accessibility' --workers=2",
-    "validate": "npm run lint && npm run format:check && npm run typecheck && npm run knip:production && npm run test:unit && npm run build && npm run test:e2e",
+    "validate": "npm run lint && npm run format:check && npm run typecheck && npm run knip:production && npm run test:unit && npm run build && npm run verify:public-tool && PLAYWRIGHT_SKIP_BUILD=1 npm run test:e2e",
     "verify:public-tool": "node scripts/verify-public-tool.mjs",
     "verify:ci-boundaries": "node scripts/verify-ci-boundaries.mjs",
     "pre-push": "bash scripts/pre-push.sh",
