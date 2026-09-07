@@ -1,6 +1,7 @@
 import { renderCaptions } from './captions';
 import { isSuspiciousDuplicate, recoverDuplicateFrame } from './frame-quality';
 import { seekVideo } from './frame-seeking';
+import { prepareVideo } from './prepare-video';
 import type { StudioCaptionSettings, StudioExportProgress, StudioFrame, StudioTrimSelection } from './types';
 
 const MAX_SUSPICIOUS_DUPLICATES = 4;
@@ -39,13 +40,13 @@ export async function extractVideoFrames({
   const frameDelay = Math.round(1000 / fps);
   const frames: StudioFrame[] = [];
   const originalTime = video.currentTime;
-  const wasPaused = video.paused;
   let previousFrame: ImageData | null = null;
   let consecutiveSuspiciousDuplicates = 0;
 
   video.pause();
 
   try {
+    await prepareVideo(video, signal);
     for (let index = 0; index < totalFrames; index += 1) {
       if (signal?.aborted) throw new Error('cancelled');
 
@@ -103,9 +104,7 @@ export async function extractVideoFrames({
   } finally {
     try {
       video.currentTime = originalTime;
-      if (!wasPaused) {
-        await video.play().catch(() => undefined);
-      }
+      video.pause();
     } catch {
       // Restoring preview state is best-effort after export/cancel.
     }

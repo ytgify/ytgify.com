@@ -1,6 +1,5 @@
 import { studioDurationBucket, studioFileSizeBucket, trackStudioEvent } from '@/lib/studio/analytics';
 import { STUDIO_MAX_EXPORT_DURATION_SECONDS } from '@/lib/studio/constants';
-import { formatTime } from '@/lib/studio/presets';
 import type {
   StudioError,
   StudioExportResult,
@@ -27,15 +26,6 @@ export function isValidExport(
     (trim?.duration || 0) > 0 &&
     (trim?.duration || 0) <= STUDIO_MAX_EXPORT_DURATION_SECONDS
   );
-}
-
-export function getOutputSummary(
-  metadata: StudioVideoMetadata | null,
-  trim: StudioTrimSelection | null,
-  settings: StudioOutputSettings,
-) {
-  if (!metadata || !trim) return null;
-  return `${formatTime(trim.duration)} at ${settings.fps} FPS, max ${settings.resolution}p, browser GIF encoder`;
 }
 
 export function getSizeTargetLabel(target: StudioSizeTarget): string {

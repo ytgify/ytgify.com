@@ -37,12 +37,12 @@ test.describe('public video-to-GIF converter', () => {
     });
     const uploadedVideoUrl = await page.locator('video').getAttribute('src');
     await page.getByRole('button', { name: '3s' }).click();
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
-    await page.getByRole('button', { name: /240p Mini/ }).click();
-    await expect(page.getByText('~15')).toBeVisible();
+    await page.getByRole('button', { name: '240p', exact: true }).click();
 
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
-    await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeVisible();
+    await openDetails(page, 'Add a caption');
+    await expect(page.getByLabel('Top text')).toBeVisible();
     await page.getByLabel('Top text').fill(secretCaption);
 
     await page.getByRole('button', { name: 'Create GIF' }).click();
@@ -50,7 +50,6 @@ test.describe('public video-to-GIF converter', () => {
     await expect(page.getByRole('heading', { name: 'Creating Your GIF' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
     await expect(page.getByAltText('Generated GIF preview')).toBeVisible();
-    await expect(page.getByText('Frames', { exact: true })).toBeVisible();
 
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('link', { name: 'Download GIF' }).click();
@@ -82,7 +81,7 @@ test.describe('public video-to-GIF converter', () => {
     await expect(page.getByText('Choose a different local video file.')).toBeVisible();
   });
 
-  test('exports from the skip text branch and returns from success to capture', async ({ page }) => {
+  test('exports with empty captions and returns from success to capture', async ({ page }) => {
     await page.goto('/video-to-gif');
     await attachGeneratedVideo(page, 'studio-skip-text-video.webm');
 
@@ -90,11 +89,11 @@ test.describe('public video-to-GIF converter', () => {
       timeout: 15000,
     });
     await expect(page.getByRole('listitem').filter({ hasText: 'Edit' })).toHaveAttribute('aria-current', 'step');
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
+    await openDetails(page, 'Add a caption');
 
-    await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeVisible();
+    await expect(page.getByLabel('Top text')).toBeVisible();
     await expect(page.getByRole('listitem').filter({ hasText: 'Edit' })).toHaveAttribute('aria-current', 'step');
-    await page.getByRole('button', { name: 'Create without text' }).click();
+    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
 
     await expect(page.getByRole('heading', { name: 'Creating Your GIF' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
@@ -117,25 +116,34 @@ test.describe('public video-to-GIF converter', () => {
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
       timeout: 15000,
     });
-    await expect(page.getByText('414x360')).toBeVisible();
-    await page.getByRole('spinbutton', { name: 'Start time' }).fill('1');
+    await expect
+      .poll(() => page.locator('video').evaluate((video) => (video as HTMLVideoElement).videoWidth))
+      .toBe(414);
+    await page.getByRole('textbox', { name: 'Start time' }).fill('1');
     await page.getByRole('button', { name: '3s' }).click();
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
-    await page.getByRole('button', { name: /240p Mini/ }).click();
+    await page.getByRole('button', { name: '240p', exact: true }).click();
 
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
+    await openDetails(page, 'Add a caption');
     await page.getByLabel('Bottom text').fill(fixtureCaption);
-    await page.getByRole('button', { name: /^Large/ }).click();
-    await page.getByRole('button', { name: /^Yellow/ }).click();
-    const captionPreviewFrame = page.getByTestId('caption-preview-frame');
-    const bottomCaption = captionPreviewFrame.getByText(fixtureCaption);
-    await expect(bottomCaption).toBeVisible();
-    await expect(bottomCaption).toHaveCSS('color', 'rgb(255, 228, 92)');
-    const captionBounds = await bottomCaption.boundingBox();
-    const frameBounds = await captionPreviewFrame.boundingBox();
-    expect(captionBounds).not.toBeNull();
-    expect(frameBounds).not.toBeNull();
-    expect(captionBounds!.y + captionBounds!.height).toBeLessThanOrEqual(frameBounds!.y + frameBounds!.height);
+    await openDetails(page, 'Caption style');
+    await page.getByLabel('Caption size').selectOption('large');
+    await page.getByLabel('Caption color').selectOption('yellow');
+    const overlay = page.getByLabel('Caption preview', { exact: true });
+    await expect(overlay).toHaveAttribute('width', '276');
+    await expect(overlay).toHaveAttribute('height', '240');
+    await expect
+      .poll(() =>
+        overlay.evaluate((canvas) => {
+          const pixels = (canvas as HTMLCanvasElement).getContext('2d')!.getImageData(0, 0, 276, 240).data;
+          let yellow = 0;
+          for (let i = 0; i < pixels.length; i += 4)
+            if (pixels[i] > 220 && pixels[i + 1] > 180 && pixels[i + 2] < 140 && pixels[i + 3] > 200) yellow++;
+          return yellow;
+        }),
+      )
+      .toBeGreaterThan(100);
     await page.getByRole('button', { name: 'Create GIF' }).click();
 
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
@@ -162,53 +170,56 @@ test.describe('public video-to-GIF converter', () => {
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
       timeout: 15000,
     });
-    await page.getByRole('spinbutton', { name: 'Start time' }).fill('1');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('1');
     await page.getByRole('button', { name: '3s' }).click();
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
-    await page.getByRole('button', { name: /240p Mini/ }).click();
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
-    await page.getByRole('button', { name: 'Create without text' }).click();
+    await page.getByRole('button', { name: '240p', exact: true }).click();
+    await openDetails(page, 'Add a caption');
+    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
 
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 60000 });
-    await expect(page.getByText('Encoder')).toBeVisible();
-    await expect(page.getByText('gifenc')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Download GIF', exact: true })).toHaveAttribute(
+      'download',
+      'ytgify-video-to-gif.gif',
+    );
     await expect(page.getByText('276x240')).toBeVisible();
   });
 
-  test('preserves trim and caption drafts when moving backward and exporting without text', async ({ page }) => {
+  test('preserves trim and caption drafts when closing disclosures and editing an export', async ({ page }) => {
     await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(chromeDemoFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
       timeout: 15000,
     });
-    await page.getByRole('spinbutton', { name: 'Start time' }).fill('1');
+    await page.getByRole('textbox', { name: 'Start time' }).fill('1');
     await page.getByRole('button', { name: '3s' }).click();
-    await expect(page.getByText('Preview cued to 1.0s - 4.0s.')).toBeVisible();
+    await expect(page.getByText('Preview cued to 00:01.0 - 00:04.0.')).toBeVisible();
     await expect
       .poll(async () => page.locator('video').evaluate((video) => (video as HTMLVideoElement).currentTime))
       .toBeGreaterThan(0.9);
 
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
-    await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeVisible();
+    await openDetails(page, 'Add a caption');
+    await expect(page.getByLabel('Top text')).toBeVisible();
     await expect
       .poll(async () => page.locator('video').evaluate((video) => (video as HTMLVideoElement).currentTime))
       .toBeGreaterThan(0.9);
     await page.getByLabel('Top text').fill('KEEP THIS DRAFT');
 
-    await page.getByRole('button', { name: 'Go back' }).click();
+    await page.locator('summary').filter({ hasText: 'Add a caption' }).click();
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible();
-    await expect(page.getByRole('spinbutton', { name: 'Start time' })).toHaveValue('1');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('00:01.0');
 
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
+    await openDetails(page, 'Add a caption');
     await expect(page.getByLabel('Top text')).toHaveValue('KEEP THIS DRAFT');
-    await page.getByRole('button', { name: 'Create without text' }).click();
+    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
 
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
     await page.getByRole('button', { name: 'Edit clip' }).click();
-    await expect(page.getByRole('spinbutton', { name: 'Start time' })).toHaveValue('1');
+    await expect(page.getByRole('textbox', { name: 'Start time' })).toHaveValue('00:01.0');
 
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
+    await openDetails(page, 'Add a caption');
     await expect(page.getByLabel('Top text')).toHaveValue('KEEP THIS DRAFT');
   });
 
@@ -221,6 +232,7 @@ test.describe('public video-to-GIF converter', () => {
     });
     await page.getByRole('button', { name: '3s' }).click();
 
+    await openDetails(page, 'Fine-tune timing');
     const timeline = page.getByTestId('studio-timeline');
     const timelineBounds = await timeline.boundingBox();
     expect(timelineBounds).not.toBeNull();
@@ -250,23 +262,26 @@ test.describe('public video-to-GIF converter', () => {
     await page.mouse.up();
 
     await expect.poll(async () => startTimeValue(page)).toBeLessThan(2);
-    await expect(page.getByText(/Preview cued to \d+\.\ds - \d+\.\ds\./)).toBeVisible();
+    await expect(page.getByText(/Preview cued to \d+:\d+\.\d - \d+:\d+\.\d\./)).toBeVisible();
   });
 
-  test('exports the Bob Ross fixture to GIF from the no-text branch', async ({ page }) => {
+  test('exports the Bob Ross fixture to GIF with no caption', async ({ page }) => {
     await page.goto('/video-to-gif');
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
       timeout: 15000,
     });
-    await expect(page.getByText('480x360')).toBeVisible();
+    await expect
+      .poll(() => page.locator('video').evaluate((video) => (video as HTMLVideoElement).videoWidth))
+      .toBe(480);
     await page.getByRole('button', { name: '3s' }).click();
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
-    await page.getByRole('button', { name: /240p Mini/ }).click();
+    await page.getByRole('button', { name: '240p', exact: true }).click();
 
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
-    await page.getByRole('button', { name: 'Create without text' }).click();
+    await openDetails(page, 'Add a caption');
+    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
 
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
     await expect(page.getByText('320x240')).toBeVisible();
@@ -299,11 +314,12 @@ test.describe('public video-to-GIF converter', () => {
       timeout: 15000,
     });
     await page.getByRole('button', { name: '3s' }).click();
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
-    await page.getByRole('button', { name: /240p Mini/ }).click();
+    await page.getByRole('button', { name: '240p', exact: true }).click();
 
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
-    await page.getByRole('button', { name: 'Create without text' }).click();
+    await openDetails(page, 'Add a caption');
+    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
 
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 45000 });
     await expect(page.getByText('320x240')).toBeVisible();
@@ -326,11 +342,12 @@ test.describe('public video-to-GIF converter', () => {
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
     await page.getByRole('button', { name: '10s' }).click();
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^15 fps/ }).click();
-    await page.getByRole('button', { name: /480p HD/ }).click();
+    await page.getByRole('button', { name: '480p', exact: true }).click();
 
     await expect(page.getByText(/This combination needs about \d+ MB just for video frames/)).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Continue to Customize' })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Create GIF', exact: true })).toBeDisabled();
   });
 
   test('stays stable when export is double-clicked and reset during processing', async ({ page }) => {
@@ -340,10 +357,11 @@ test.describe('public video-to-GIF converter', () => {
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({
       timeout: 15000,
     });
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^15 fps/ }).click();
-    await page.getByRole('button', { name: /480p HD/ }).click();
-    await expect(page.getByText(/Large export: 75 frames at 480p/)).toBeVisible();
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
+    await page.getByRole('button', { name: '480p', exact: true }).click();
+    await expect(page.getByTestId('effective-settings')).toContainText('480p · 15 FPS');
+    await openDetails(page, 'Add a caption');
 
     await page.getByRole('button', { name: 'Create GIF' }).evaluate((button) => {
       (button as HTMLButtonElement).click();
@@ -355,7 +373,7 @@ test.describe('public video-to-GIF converter', () => {
     });
     await page.getByRole('button', { name: 'Start over' }).click();
     await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Make It Memorable' })).toBeHidden();
+    await expect(page.getByLabel('Top text')).toBeHidden();
     await page.waitForTimeout(1000);
     await expect(page.getByRole('heading', { name: 'Free Video to GIF Converter' })).toBeVisible();
   });
@@ -375,10 +393,11 @@ test.describe('video-to-GIF browser matrix', () => {
       .setInputFiles(browserName === 'webkit' ? chromeDemoMp4Fixture : chromeDemoFixture);
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 20000 });
     await page.getByRole('button', { name: '3s' }).click();
+    await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
-    await page.getByRole('button', { name: /240p Mini/ }).click();
-    await page.getByRole('button', { name: 'Continue to Customize' }).click();
-    await page.getByRole('button', { name: 'Create without text' }).click();
+    await page.getByRole('button', { name: '240p', exact: true }).click();
+    await openDetails(page, 'Add a caption');
+    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 60000 });
 
     const downloadPromise = page.waitForEvent('download');
@@ -399,8 +418,9 @@ test.describe('video-to-GIF browser matrix', () => {
 });
 
 async function startTimeValue(page: import('@playwright/test').Page): Promise<number> {
-  const value = await page.getByRole('spinbutton', { name: 'Start time' }).inputValue();
-  return Number(value);
+  const value = await page.getByRole('textbox', { name: 'Start time' }).inputValue();
+  const [minutes, seconds] = value.split(':').map(Number);
+  return minutes * 60 + seconds;
 }
 
 async function attachGeneratedVideo(page: import('@playwright/test').Page, fileName: string): Promise<void> {
@@ -503,4 +523,9 @@ function skipGifSubBlocks(bytes: Buffer, start: number): number {
     offset += size;
   }
   return offset;
+}
+
+async function openDetails(page: import('@playwright/test').Page, title: string) {
+  const summary = page.locator('summary').filter({ hasText: title });
+  if ((await summary.locator('..').getAttribute('open')) === null) await summary.click();
 }
