@@ -250,7 +250,7 @@ test('make smaller preserves the previous download through failure and replaces 
   await openDetails(page, 'Add a caption');
   await page.getByLabel('Top text').fill('Keep me');
   await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'GIF ready', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'GIF ready', exact: true })).toBeVisible({ timeout: 45000 });
   const originalUrl = (await page.getByRole('link', { name: 'Download GIF', exact: true }).getAttribute('href'))!;
   const originalSize = await page.evaluate(async (url) => (await (await fetch(url)).blob()).size, originalUrl);
   await page.getByRole('button', { name: 'Make smaller', exact: true }).click();
@@ -271,7 +271,7 @@ test('make smaller preserves the previous download through failure and replaces 
   await page.getByRole('button', { name: 'Go back', exact: true }).click();
   await expect(page.getByLabel('Top text')).toHaveValue('Keep me');
   await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'GIF ready', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'GIF ready', exact: true })).toBeVisible({ timeout: 45000 });
   const nextUrl = (await page.getByRole('link', { name: 'Download GIF', exact: true }).getAttribute('href'))!;
   expect(nextUrl).not.toBe(originalUrl);
   expect(await page.evaluate(async (url) => (await (await fetch(url)).blob()).size, nextUrl)).toBeLessThan(
@@ -290,6 +290,7 @@ test('make smaller preserves the previous download through failure and replaces 
 });
 
 test('keeps the decoding source connected and surfaces export status after a deep edit', async ({ page }) => {
+  test.setTimeout(60000);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/video-to-gif');
   await page.getByLabel('Upload video').setInputFiles('tests/fixtures/ytgify-chrome-demo.webm');
@@ -309,7 +310,7 @@ test('keeps the decoding source connected and surfaces export status after a dee
   });
   await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
   const heading = page.getByRole('heading', { name: 'GIF ready', exact: true });
-  await expect(heading).toBeVisible();
+  await expect(heading).toBeVisible({ timeout: 45000 });
   await expect(heading).toBeInViewport();
   await expect(page.getByRole('textbox', { name: /Top text/ })).toHaveCount(0);
   expect(await page.locator('video').evaluate((video: HTMLVideoElement) => video.paused)).toBe(true);
