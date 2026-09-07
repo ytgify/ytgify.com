@@ -10,11 +10,11 @@ import CreatorBrandSection from './components/CreatorBrandSection';
 import HomeFAQ, { homeFAQItems } from './components/HomeFAQ';
 import BrowserToolPromo from './components/BrowserToolPromo';
 import HomeNavLinks from './components/HomeNavLinks';
+import HeroConverterLink from './components/HeroConverterLink';
 import {
   BookOpen,
   ChevronDown,
   Download,
-  FileVideo2,
   Github,
   MessageSquareText,
   Share2,
@@ -160,13 +160,7 @@ export default function Home() {
                     <BookOpen className="w-4 h-4" />
                     View install walkthrough
                   </TrackedExtensionLink>
-                  <Link
-                    href="/video-to-gif?entry=home_hero"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#4fd1c5]/50 bg-[#4fd1c5]/10 px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-[#4fd1c5] hover:bg-[#4fd1c5]/20"
-                  >
-                    <FileVideo2 className="h-4 w-4" />
-                    From a video file
-                  </Link>
+                  <HeroConverterLink />
                 </div>
 
                 <p className="mt-3 text-xs text-gray-500">

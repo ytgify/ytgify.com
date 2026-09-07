@@ -84,7 +84,7 @@ test('size target recalculates after trim and manual settings turn it off', asyn
 test('mobile homepage has a clear file entry and guide links are crawlable', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  await page.getByRole('link', { name: 'From a video file' }).click();
+  await page.getByRole('link', { name: 'Convert video to GIF Free online tool · No installation' }).click();
   await expect(page.getByRole('button', { name: 'Choose video' })).toBeVisible();
   await expect
     .poll(() => events(page, 'studio_page_view'))
