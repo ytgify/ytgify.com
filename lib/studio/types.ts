@@ -58,6 +58,7 @@ export interface StudioExportResult {
 
 export interface StudioFrame {
   imageData: ImageData;
+  /** Display duration in milliseconds, already allocated in whole GIF centiseconds. */
   delay: number;
 }
 

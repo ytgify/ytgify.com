@@ -59,7 +59,6 @@ export async function exportStudioGif({
     frames,
     width: dimensions.width,
     height: dimensions.height,
-    fps: settings.fps,
     signal,
     onProgress,
   });

@@ -21,12 +21,11 @@ interface EncodeGifOptions {
   frames: StudioFrame[];
   width: number;
   height: number;
-  fps: number;
   signal?: AbortSignal;
   onProgress?: (progress: StudioExportProgress) => void;
 }
 
-export async function encodeGif({ frames, width, height, fps, signal, onProgress }: EncodeGifOptions): Promise<Blob> {
+export async function encodeGif({ frames, width, height, signal, onProgress }: EncodeGifOptions): Promise<Blob> {
   if (frames.length === 0) {
     throw new Error('encoding_failed');
   }
@@ -41,7 +40,6 @@ export async function encodeGif({ frames, width, height, fps, signal, onProgress
   const encoder = GIFEncoder();
   const palette = createGlobalPalette(frames);
   if (signal?.aborted) throw new Error('cancelled');
-  const delay = Math.round(1000 / fps);
 
   for (let index = 0; index < frames.length; index += 1) {
     if (signal?.aborted) throw new Error('cancelled');
@@ -53,7 +51,7 @@ export async function encodeGif({ frames, width, height, fps, signal, onProgress
 
     encoder.writeFrame(indexedFrame, width, height, {
       palette: framePalette,
-      delay: frames[index].delay || delay,
+      delay: frames[index].delay,
       dispose: 2,
       first: index === 0,
       repeat: index === 0 ? 0 : undefined,
