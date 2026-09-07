@@ -3,6 +3,7 @@ import {
   dispatchStudioEvent,
   sanitizeProperties,
   studioDurationBucket,
+  studioEntryPoint,
   studioFileSizeBucket,
   studioFileTypeBucket,
   studioSourceBucket,
@@ -10,6 +11,25 @@ import {
 } from './analytics';
 
 describe('Studio analytics privacy', () => {
+  it('restricts new measurement fields to known categories at dispatch', () => {
+    expect(sanitizeProperties('studio_page_view', { entry_point: 'private.mp4' })).toEqual({ entry_point: 'unknown' });
+    expect(sanitizeProperties('studio_page_view', { entry_point: 'tutorial' })).toEqual({ entry_point: 'tutorial' });
+    expect(
+      sanitizeProperties('studio_export_succeeded', {
+        size_target: 5,
+        size_target_outcome: 'met',
+        output_duration: 3,
+      }),
+    ).toEqual({ size_target: 5, size_target_outcome: 'met', output_duration: 3 });
+    expect(
+      sanitizeProperties('studio_export_succeeded', {
+        size_target: 'private',
+        size_target_outcome: 'private',
+        output_duration: Number.NaN,
+      }),
+    ).toEqual({});
+    expect(sanitizeProperties('studio_size_target_selected', { size_target: 'auto' })).toEqual({ size_target: 'auto' });
+  });
   it('uses an event-specific allowlist and rejects private or unexpected values', () => {
     expect(
       sanitizeProperties('studio_export_started', {
@@ -61,6 +81,10 @@ describe('Studio analytics privacy', () => {
     expect(studioSourceBucket('https://ytgify.com/blog?private=yes', 'ytgify.com')).toBe('internal');
     expect(studioSourceBucket('https://search.example/result?private=yes', 'ytgify.com')).toBe('external');
     expect(studioSourceBucket('not a url', 'ytgify.com')).toBe('unknown');
+    expect(studioEntryPoint('?entry=home_hero')).toBe('home_hero');
+    expect(studioEntryPoint('?entry=https%3A%2F%2Fprivate.example')).toBe('unknown');
+    expect(studioEntryPoint('?entry=private_filename.mp4')).toBe('unknown');
+    expect(studioEntryPoint('')).toBe('unknown');
     expect(studioFileTypeBucket('video/quicktime')).toBe('mov');
     expect(studioFileTypeBucket('private/caption')).toBe('other');
     expect(studioDurationBucket(45)).toBe('31-60s');

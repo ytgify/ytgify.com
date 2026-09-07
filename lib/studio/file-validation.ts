@@ -42,8 +42,8 @@ export function validateVideoDuration(duration: number): StudioError | null {
   if (duration > STUDIO_MAX_SOURCE_DURATION_SECONDS) {
     return {
       code: 'source_too_long',
-      message: 'The converter supports source videos up to 5 minutes.',
-      action: 'Choose a shorter source clip for now.',
+      message: 'The converter supports source videos up to 30 minutes.',
+      action: 'Trim the source to 30 minutes or less, then select up to 10 seconds for your GIF.',
     };
   }
 
@@ -55,7 +55,9 @@ export function durationBucket(duration: number): string {
   if (duration <= 30) return '11-30s';
   if (duration <= 60) return '31-60s';
   if (duration <= 180) return '1-3m';
-  return '3-5m';
+  if (duration <= 300) return '3-5m';
+  if (duration <= 600) return '5-10m';
+  return '10-30m';
 }
 
 export function fileSizeBucket(size: number): string {

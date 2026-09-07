@@ -8,8 +8,9 @@ import type {
   StudioStatus,
   StudioTrimSelection,
   StudioVideoMetadata,
+  StudioSizeTarget,
 } from '@/lib/studio/types';
-import { resolutionDetails } from './studio-config';
+import { sizeTargetOutcome } from '@/lib/studio/size-target';
 
 export function isValidExport(
   status: StudioStatus,
@@ -37,9 +38,8 @@ export function getOutputSummary(
   return `${formatTime(trim.duration)} at ${settings.fps} FPS, max ${settings.resolution}p, browser GIF encoder`;
 }
 
-export function getEstimatedSize(trim: StudioTrimSelection | null, settings: StudioOutputSettings) {
-  if (!trim) return '0.0';
-  return (trim.duration * settings.fps * 0.05 * resolutionDetails[settings.resolution].multiplier).toFixed(1);
+export function getSizeTargetLabel(target: StudioSizeTarget): string {
+  return target === 'auto' ? 'No target' : `Aim for ${target} MB`;
 }
 
 export function trackExportStarted(
@@ -49,6 +49,7 @@ export function trackExportStarted(
   captions: boolean,
 ) {
   trackStudioEvent('studio_export_started', {
+    size_target: settings.sizeTarget,
     source_duration_bucket: studioDurationBucket(metadata.duration),
     output_duration: trim.duration,
     output_fps: settings.fps,
@@ -64,6 +65,8 @@ export function trackExportSucceeded(
   captions: boolean,
 ) {
   trackStudioEvent('studio_export_succeeded', {
+    size_target: settings.sizeTarget,
+    size_target_outcome: sizeTargetOutcome(exported.fileSize, settings.sizeTarget),
     output_duration: exported.duration,
     output_fps: settings.fps,
     output_resolution: settings.resolution,
@@ -80,6 +83,7 @@ export function trackExportFailed(
   captions: boolean,
 ) {
   trackStudioEvent('studio_export_failed', {
+    size_target: settings.sizeTarget,
     error_code: error.code,
     output_duration: trim.duration,
     output_fps: settings.fps,

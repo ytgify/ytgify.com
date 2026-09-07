@@ -12,7 +12,7 @@ export default function HomeNavLinks() {
       <Link href="/blog" className="transition-colors hover:text-white">
         Guides
       </Link>
-      <Link href="/video-to-gif" className="transition-colors hover:text-white">
+      <Link href="/video-to-gif?entry=home_nav" className="transition-colors hover:text-white">
         Video file to GIF
       </Link>
       <a href="#also-by-jeremy" className="transition-colors hover:text-white">

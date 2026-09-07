@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-set -uo pipefail
-
-failed=0
+set -euo pipefail
 
 run_check() {
   local label="$1"
@@ -14,7 +12,7 @@ run_check() {
     echo "PASS: ${label}"
   else
     echo "FAIL: ${label}"
-    failed=1
+    exit 1
   fi
 }
 
@@ -34,14 +32,13 @@ run_check "TypeScript" npm run typecheck
 run_check "Knip production graph" npm run knip:production
 run_check "CI path boundaries" npm run verify:ci-boundaries
 run_check "Unit tests" npm run test:unit
-run_check "Production build" npm run build
-run_check "Public tool production routes" npm run verify:public-tool
-
-if [[ "$failed" -ne 0 ]]; then
-  echo
-  echo "Pre-push validation failed."
+if [[ -f .next/dev/lock ]] && { ! command -v lsof >/dev/null 2>&1 || lsof -t .next/dev/lock >/dev/null 2>&1; }; then
+  echo "Stop the local dev server with make stop-dev before the production build."
   exit 1
 fi
+run_check "Production build" npm run build
+run_check "Public tool production routes" npm run verify:public-tool
+run_check "Chromium smoke tests" env -u PLAYWRIGHT_BASE_URL PLAYWRIGHT_SKIP_BUILD=1 npm run test:smoke
 
 echo
 echo "Pre-push validation passed."

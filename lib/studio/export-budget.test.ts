@@ -30,5 +30,5 @@ function trim(duration: number): StudioTrimSelection {
 }
 
 function settings(fps: 5 | 10 | 15, resolution: 240 | 360 | 480): StudioOutputSettings {
-  return { fps, resolution };
+  return { fps, resolution, sizeTarget: 'auto' };
 }

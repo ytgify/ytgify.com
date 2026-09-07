@@ -2,6 +2,7 @@ import { CheckCircle2, ChevronLeft, Download, RotateCcw } from 'lucide-react';
 import { trackStudioEvent, studioFileSizeBucket } from '@/lib/studio/analytics';
 import { formatFileSize } from '@/lib/studio/file-validation';
 import { formatTime } from '@/lib/studio/presets';
+import { sizeTargetOutcome } from '@/lib/studio/size-target';
 import type { StudioExportResult } from '@/lib/studio/types';
 import { MetadataItem, WizardHeader } from './shared';
 
@@ -44,6 +45,13 @@ export function SuccessScreen({
             <h2 className="text-lg font-bold">GIF ready</h2>
           </div>
           <div className="space-y-3">
+            {result.sizeTarget !== 'auto' ? (
+              <p role="status" className="text-sm text-gray-300">
+                {sizeTargetOutcome(result.fileSize, result.sizeTarget) === 'met'
+                  ? `This GIF meets your ${result.sizeTarget} MB target.`
+                  : `This GIF exceeds your ${result.sizeTarget} MB target. Edit the clip to shorten it or lower the FPS or resolution.`}
+              </p>
+            ) : null}
             <button
               type="button"
               onClick={onBack}
@@ -57,6 +65,8 @@ export function SuccessScreen({
               download="ytgify-video-to-gif.gif"
               onClick={() =>
                 trackStudioEvent('studio_download_clicked', {
+                  size_target: result.sizeTarget,
+                  size_target_outcome: sizeTargetOutcome(result.fileSize, result.sizeTarget),
                   output_file_size_bucket: studioFileSizeBucket(result.fileSize),
                 })
               }

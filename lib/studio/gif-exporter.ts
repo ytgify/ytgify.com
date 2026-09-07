@@ -66,6 +66,7 @@ export async function exportStudioGif({
 
   onProgress?.({ stage: 'complete', percentage: 100, message: 'GIF ready', totalFrames: frames.length });
   return {
+    sizeTarget: settings.sizeTarget,
     blob,
     fileSize: blob.size,
     width: dimensions.width,

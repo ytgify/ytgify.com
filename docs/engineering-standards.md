@@ -13,6 +13,16 @@ These rules keep the landing site and browser-based video-to-GIF converter indep
 
 ## Required local gates
 
+Husky is enabled by `npm ci` through the `prepare` script (`git config core.hooksPath` should report `.husky/_`).
+
+- **Commit:** `npm run pre-commit` runs lint-staged's ESLint/Prettier fixes on staged files, then the fast unit suite. No build or browser launch.
+- **Push:** `npm run pre-push` fails at the first failed gate, builds once, and runs four Chromium smoke checks against that output (homepage loading/headline and converter keyboard access/error recovery).
+- **Full validation:** run `npm run test:e2e` for the broader browser matrix; media changes also need a real fixture export. The push smoke suite does not replace these checks.
+
+Install the pinned Playwright browser runtimes with `npm run test:browsers:install` after the first `npm ci` or a Playwright upgrade. Linux CI may use `npx playwright install --with-deps chromium firefox webkit`. Browser installation is explicit, so hooks never download browsers unexpectedly. HTML reports are saved without opening a server that would keep failed hooks running.
+
+Stop the local dev server before building or running production browser tests. `PLAYWRIGHT_SKIP_BUILD=1` is used by pre-push only after its successful build; ordinary test commands build fresh output. `PLAYWRIGHT_BASE_URL` is available for deliberate testing against an existing server, and is cleared by the push gate to ensure it tests the local build.
+
 `npm run pre-push` runs the same core checks expected by CI:
 
 1. ESLint, including module-size limits.
@@ -22,6 +32,7 @@ These rules keep the landing site and browser-based video-to-GIF converter indep
 5. Fast Vitest unit tests.
 6. A production Next.js build.
 7. Verification that the canonical converter route is present and the retired `/studio` route is absent.
+8. A bounded Chromium smoke suite against the same production build.
 
 Use `npm run test:e2e` for the complete browser suite or `npm run test:video-to-gif` for the public converter workflow, accessibility, and SEO coverage. Both exercise the canonical `/video-to-gif` route from the normal production-shaped build.
 

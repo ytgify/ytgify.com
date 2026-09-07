@@ -5,7 +5,7 @@ import { CaptionInput, OptionButton, OptionSection } from './shared';
 
 interface CaptionEditorProps {
   captions: StudioCaptionSettings;
-  onCaptionChange: (placement: keyof StudioCaptionSettings, value: string) => void;
+  onCaptionChange: (placement: 'topText' | 'bottomText', value: string) => void;
   onCaptionSettingChange: <Key extends keyof StudioCaptionSettings>(
     key: Key,
     value: StudioCaptionSettings[Key],

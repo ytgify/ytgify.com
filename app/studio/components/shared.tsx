@@ -63,6 +63,7 @@ export function OptionButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={`min-h-[86px] rounded-xl border px-4 py-3 text-left transition-colors ${
         active
           ? 'border-[#E91E8C] bg-[#E91E8C]/15 text-white'

@@ -17,12 +17,15 @@
     "test:unit": "vitest run",
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:video-to-gif": "playwright test tests/studio.spec.ts tests/video-to-gif-accessibility.spec.ts tests/video-to-gif-seo.spec.ts",
+    "test:video-to-gif": "playwright test tests/studio.spec.ts tests/video-to-gif-accessibility.spec.ts tests/video-to-gif-seo.spec.ts tests/converter-improvements.spec.ts",
     "test:ui": "playwright test --ui",
+    "test:browsers:install": "playwright install chromium firefox webkit",
+    "test:smoke": "playwright test --project=chromium tests/smoke.spec.ts tests/video-to-gif-accessibility.spec.ts --grep 'page loads successfully|headline is visible|video to GIF accessibility' --workers=2",
     "validate": "npm run lint && npm run format:check && npm run typecheck && npm run knip:production && npm run test:unit && npm run build && npm run test:e2e",
     "verify:public-tool": "node scripts/verify-public-tool.mjs",
     "verify:ci-boundaries": "node scripts/verify-ci-boundaries.mjs",
     "pre-push": "bash scripts/pre-push.sh",
+    "pre-commit": "lint-staged && npm run test:unit",
     "prepare": "husky"
   },
   "dependencies": {

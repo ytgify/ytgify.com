@@ -66,7 +66,7 @@ test.describe('Landing Page Smoke Tests', () => {
     await page.goto('/');
     await expect(page.locator('a[href="/studio"]')).toHaveCount(0);
     await expect(page.getByRole('link', { name: /Open video to GIF converter/i })).toBeVisible();
-    await expect(page.locator('a[href="/video-to-gif"]')).not.toHaveCount(0);
+    await expect(page.locator('a[href^="/video-to-gif"]')).not.toHaveCount(0);
 
     const response = await page.goto('/studio');
     expect(response?.status()).toBe(404);

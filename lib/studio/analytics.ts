@@ -8,6 +8,7 @@ export type StudioEventName =
   | 'studio_upload_failed'
   | 'studio_trim_changed'
   | 'studio_caption_added'
+  | 'studio_size_target_selected'
   | 'studio_export_started'
   | 'studio_export_succeeded'
   | 'studio_export_failed'
@@ -30,13 +31,15 @@ declare global {
 
 const hasPostHogKey = Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN);
 const safeProperties: Record<StudioEventName, readonly string[]> = {
-  studio_page_view: ['source_page'],
+  studio_page_view: ['source_page', 'entry_point'],
   studio_upload_started: ['file_type', 'file_size_bucket'],
   studio_upload_loaded: ['file_type', 'source_duration_bucket'],
   studio_upload_failed: ['error_code', 'file_type'],
   studio_trim_changed: ['output_duration'],
   studio_caption_added: ['captions_enabled'],
+  studio_size_target_selected: ['size_target'],
   studio_export_started: [
+    'size_target',
     'source_duration_bucket',
     'output_duration',
     'output_fps',
@@ -45,6 +48,8 @@ const safeProperties: Record<StudioEventName, readonly string[]> = {
     'captions_enabled',
   ],
   studio_export_succeeded: [
+    'size_target',
+    'size_target_outcome',
     'output_duration',
     'output_fps',
     'output_resolution',
@@ -53,6 +58,7 @@ const safeProperties: Record<StudioEventName, readonly string[]> = {
     'output_file_size_bucket',
   ],
   studio_export_failed: [
+    'size_target',
     'error_code',
     'output_duration',
     'output_fps',
@@ -60,7 +66,7 @@ const safeProperties: Record<StudioEventName, readonly string[]> = {
     'output_encoder',
     'captions_enabled',
   ],
-  studio_download_clicked: ['output_file_size_bucket'],
+  studio_download_clicked: ['output_file_size_bucket', 'size_target', 'size_target_outcome'],
   studio_next_tool_selected: ['next_tool'],
 };
 
@@ -90,6 +96,12 @@ export function sanitizeProperties(
   const allowed = new Set(safeProperties[eventName]);
   return Object.entries(properties).reduce<StudioEventProperties>((safe, [key, value]) => {
     if (!allowed.has(key) || value === undefined) return safe;
+    if (key === 'entry_point') {
+      safe[key] = knownEntryPoint(value);
+      return safe;
+    }
+    if (key === 'size_target' && !['auto', 5, 10, 25].includes(value as string | number)) return safe;
+    if (key === 'size_target_outcome' && !['met', 'exceeded', 'not_requested'].includes(String(value))) return safe;
     if (typeof value === 'number') {
       if (Number.isFinite(value)) safe[key] = value;
       return safe;
@@ -106,6 +118,18 @@ export function studioSourceBucket(referrer: string, currentHostname: string): s
   } catch {
     return 'unknown';
   }
+}
+
+export function studioEntryPoint(search: string): string {
+  const entry = new URLSearchParams(search).get('entry');
+  return knownEntryPoint(entry);
+}
+
+function knownEntryPoint(entry: unknown): string {
+  return typeof entry === 'string' &&
+    ['home_hero', 'home_nav', 'browser_tool_promo', 'footer', 'tutorial', 'settings_guide'].includes(entry)
+    ? entry
+    : 'unknown';
 }
 
 export function studioFileTypeBucket(type: string): string {

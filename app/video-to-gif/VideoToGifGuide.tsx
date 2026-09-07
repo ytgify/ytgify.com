@@ -21,7 +21,7 @@ export const videoToGifFAQs: FAQItem[] = [
   {
     question: 'What are the free converter limits?',
     answer:
-      'Source files can be up to 250 MB and 5 minutes long. Each GIF can use up to 10 seconds at 5, 10, or 15 FPS and a maximum output height of 240p, 360p, or 480p.',
+      'Source files can be up to 250 MB and 30 minutes long. Each GIF can use up to 10 seconds at 5, 10, or 15 FPS and a maximum output height of 240p, 360p, or 480p. Size targets adjust resolution and FPS using a rough estimate; the final size is shown after export.',
   },
   {
     question: 'Why are some large GIF settings unavailable?',
@@ -88,7 +88,7 @@ export function VideoToGifGuide() {
             <h2 className="text-2xl font-bold text-white">Formats and practical limits</h2>
             <ul className="mt-4 space-y-3 text-sm leading-6 text-gray-400">
               <li>MP4, MOV, or WebM that the current browser can decode</li>
-              <li>250 MB and 5 minute source limits</li>
+              <li>250 MB and 30 minute source limits</li>
               <li>10 second GIFs at 5, 10, or 15 FPS</li>
               <li>240p, 360p, or 480p maximum output height</li>
               <li>Automatic memory guard for large combinations</li>

@@ -1,10 +1,12 @@
 import { Captions, Gauge, ImageIcon, Scissors } from 'lucide-react';
 import type { RefObject } from 'react';
-import { STUDIO_FPS_OPTIONS, STUDIO_RESOLUTION_OPTIONS } from '@/lib/studio/constants';
+import { STUDIO_FPS_OPTIONS, STUDIO_RESOLUTION_OPTIONS, STUDIO_SIZE_TARGETS } from '@/lib/studio/constants';
 import type { StudioExportBudget } from '@/lib/studio/export-budget';
 import { formatTime } from '@/lib/studio/presets';
+import { estimateGifSize } from '@/lib/studio/size-target';
 import type { StudioOutputSettings, StudioTrimSelection, StudioVideoMetadata } from '@/lib/studio/types';
 import { fpsDetails, highCostFrameThreshold, resolutionDetails } from '../studio-config';
+import { getSizeTargetLabel } from '../studio-controller-helpers';
 import { useTimelineSelection } from '../useTimelineSelection';
 import { InfoPill, MetadataItem, OptionButton, OptionSection, WizardHeader } from './shared';
 import { TimelinePanel } from './TimelinePanel';
@@ -79,6 +81,32 @@ export function CaptureScreen(props: CaptureScreenProps) {
         onPreset={props.onPreset}
       />
       <OutputOptions settings={settings} onChange={props.onSettingsChange} />
+      <section aria-labelledby="size-target-heading" className="rounded-xl border border-gray-800 bg-gray-950/50 p-4">
+        <h2 id="size-target-heading" className="text-sm font-semibold text-white">
+          File size target
+        </h2>
+        <p className="mt-1 text-xs leading-5 text-gray-500">
+          We automatically adjust resolution and FPS as you trim. This is a rough estimate, not a guaranteed limit.
+          Motion, detail, and captions affect the final size; preview the GIF and check its actual size after export.
+        </p>
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {STUDIO_SIZE_TARGETS.map((target) => (
+            <OptionButton
+              key={target}
+              active={settings.sizeTarget === target}
+              title={getSizeTargetLabel(target)}
+              description={target === 'auto' ? 'Use my choices' : 'Estimated output'}
+              onClick={() => props.onSettingsChange({ ...settings, sizeTarget: target })}
+            />
+          ))}
+        </div>
+      </section>
+      {settings.sizeTarget !== 'auto' &&
+      estimateGifSize(metadata, trim, settings).high > settings.sizeTarget * 1048576 ? (
+        <p role="status" className="text-sm text-amber-200">
+          Even the smallest settings may exceed your target. Shorten the clip.
+        </p>
+      ) : null}
       <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
         <InfoPill icon={<Scissors className="h-5 w-5" />} label="Duration" value={formatTime(trim.duration)} />
         <InfoPill icon={<ImageIcon className="h-5 w-5" />} label="Frames" value={`~${frameCount}`} />
@@ -133,7 +161,7 @@ function OutputOptions({
             active={settings.resolution === resolution}
             title={resolutionDetails[resolution].name}
             description={resolutionDetails[resolution].description}
-            onClick={() => onChange({ ...settings, resolution })}
+            onClick={() => onChange({ ...settings, resolution, sizeTarget: 'auto' })}
           />
         ))}
       </OptionSection>
@@ -144,7 +172,7 @@ function OutputOptions({
             active={settings.fps === fps}
             title={fpsDetails[fps].label}
             description={fpsDetails[fps].description}
-            onClick={() => onChange({ ...settings, fps })}
+            onClick={() => onChange({ ...settings, fps, sizeTarget: 'auto' })}
           />
         ))}
       </OptionSection>

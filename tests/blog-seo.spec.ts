@@ -3,16 +3,22 @@ import { expect, test } from '@playwright/test';
 const guides = [
   {
     slug: 'how-to-create-gif-from-youtube-video',
+    updated: '2026-09-06',
+    updatedLabel: 'September 6, 2026',
     heading: 'How to Create a GIF from a YouTube Video',
     evidence: ['installed manually in Chrome', '1 to 20 seconds', '144p, 240p, 360p, 480p'],
   },
   {
     slug: 'best-gif-settings-for-social-media',
+    updated: '2026-09-06',
+    updatedLabel: 'September 6, 2026',
     heading: 'Best GIF Settings for Sharing: Resolution, FPS, and Length',
     evidence: ['Quick settings by sharing goal', 'YTgify starting points', '5, 10, or 15 FPS'],
   },
   {
     slug: 'youtube-to-gif-free-no-watermark',
+    updated: '2026-07-11',
+    updatedLabel: 'July 11, 2026',
     heading: 'YouTube to GIF Without a Watermark: What Stays Local',
     evidence: ['What “local” means here', 'Current practical limits', 'processing is local'],
   },
@@ -26,7 +32,7 @@ test.describe('evidence-backed guide cluster', () => {
       await expect(page.getByRole('heading', { level: 1, name: guide.heading })).toBeVisible();
       const evidenceRow = page.getByTestId('article-evidence');
       await expect(evidenceRow).toContainText('By Jeremy Watt');
-      await expect(evidenceRow).toContainText('Updated July 11, 2026');
+      await expect(evidenceRow).toContainText(`Updated ${guide.updatedLabel}`);
       await expect(evidenceRow).toContainText('Tested with YTgify v1.0.19');
       await expect(page.getByRole('complementary', { name: 'About the author' })).toContainText('Jeremy Watt');
 
@@ -39,7 +45,7 @@ test.describe('evidence-backed guide cluster', () => {
       expect(schema['@type']).toBe('BlogPosting');
       expect(schema.headline).toBe(guide.heading);
       expect(schema.author.name).toBe('Jeremy Watt');
-      expect(schema.dateModified).toBe('2026-07-11');
+      expect(schema.dateModified).toBe(guide.updated);
       expect(schema.datePublished).toMatch(/^2025-/);
     });
   }
@@ -83,10 +89,10 @@ test.describe('evidence-backed guide cluster', () => {
     const sitemap = await sitemapResponse.text();
 
     for (const guide of guides) {
-      expect(sitemap).toContain(`<loc>https://ytgify.com/blog/${guide.slug}</loc>`);
+      expect(sitemap.replace(/>\s+</g, '><')).toContain(
+        `<loc>https://ytgify.com/blog/${guide.slug}</loc><lastmod>${guide.updated}`,
+      );
     }
-    expect(sitemap.match(/<lastmod>2026-07-11/g)).toHaveLength(4);
-    expect(sitemap.match(/<lastmod>2026-07-12/g)).toHaveLength(2);
 
     const keyResponse = await request.get('/d1fc505c0bd2b087bc463a1b955f0f13.txt');
     expect(keyResponse.ok()).toBeTruthy();

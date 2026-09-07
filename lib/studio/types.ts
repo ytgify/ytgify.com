@@ -5,6 +5,7 @@ type StudioProgressStage = 'preparing' | 'capturing' | 'captions' | 'encoding' |
 export type StudioFps = 5 | 10 | 15;
 export type StudioResolution = 240 | 360 | 480;
 export type StudioEncoderUsed = 'gifenc';
+export type StudioSizeTarget = 'auto' | 5 | 10 | 25;
 export type StudioCaptionSize = 'standard' | 'large';
 export type StudioCaptionColor = 'white' | 'yellow';
 
@@ -25,6 +26,7 @@ export interface StudioTrimSelection {
 export interface StudioOutputSettings {
   fps: StudioFps;
   resolution: StudioResolution;
+  sizeTarget: StudioSizeTarget;
 }
 
 export interface StudioCaptionSettings {
@@ -43,6 +45,7 @@ export interface StudioExportProgress {
 }
 
 export interface StudioExportResult {
+  sizeTarget: StudioSizeTarget;
   blob: Blob;
   url: string;
   fileSize: number;

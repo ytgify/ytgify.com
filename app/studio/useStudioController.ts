@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   studioDurationBucket,
+  studioEntryPoint,
   studioFileSizeBucket,
   studioFileTypeBucket,
   studioSourceBucket,
   trackStudioEvent,
 } from '@/lib/studio/analytics';
-import { STUDIO_CAPTION_MAX_LENGTH } from '@/lib/studio/constants';
+import { chooseSettingsForTarget, estimateGifSize } from '@/lib/studio/size-target';
 import { validateVideoDuration, validateVideoFile } from '@/lib/studio/file-validation';
 import { calculateExportBudget } from '@/lib/studio/export-budget';
 import { exportStudioGif } from '@/lib/studio/gif-exporter';
@@ -25,7 +26,6 @@ import type {
 } from '@/lib/studio/types';
 import { defaultCaptions, defaultSettings, type StudioWizardStep } from './studio-config';
 import {
-  getEstimatedSize,
   getOutputSummary,
   isValidExport,
   trackExportFailed,
@@ -34,31 +34,39 @@ import {
 } from './studio-controller-helpers';
 import { mapExportError } from './studio-errors';
 import { useObjectUrls } from './useObjectUrls';
+import { useStudioCaptions } from './useStudioCaptions';
 
 export function useStudioController() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const exportRunRef = useRef(0);
+  const pageViewReported = useRef(false);
   const [status, setStatus] = useState<StudioStatus>('idle');
   const [step, setStep] = useState<StudioWizardStep>('upload');
   const [isDragging, setIsDragging] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<StudioVideoMetadata | null>(null);
   const [trim, setTrim] = useState<StudioTrimSelection | null>(null);
-  const [settings, setSettings] = useState<StudioOutputSettings>(defaultSettings);
-  const [captions, setCaptions] = useState<StudioCaptionSettings>(defaultCaptions);
+  const [requestedSettings, setSettings] = useState<StudioOutputSettings>(defaultSettings);
+  const { captions, resetCaptions, updateCaption, updateCaptionSetting } = useStudioCaptions();
   const [progress, setProgress] = useState<StudioExportProgress | null>(null);
   const [result, setResult] = useState<StudioExportResult | null>(null);
   const [error, setError] = useState<StudioError | null>(null);
   const [nextTool, setNextTool] = useState('');
   const abortOnUnmount = useCallback(() => abortRef.current?.abort(), []);
   const { createResultUrl, createVideoUrl, revokeResultUrl, revokeVideoUrl } = useObjectUrls(abortOnUnmount);
+  const settings = chooseSettingsForTarget(metadata, trim, requestedSettings);
 
   useEffect(() => {
+    if (pageViewReported.current) return;
+    pageViewReported.current = true;
     trackStudioEvent('studio_page_view', {
       source_page:
-        typeof document === 'undefined' ? 'unknown' : studioSourceBucket(document.referrer, window.location.hostname),
+        studioEntryPoint(window.location.search) !== 'unknown'
+          ? 'internal'
+          : studioSourceBucket(document.referrer, window.location.hostname),
+      entry_point: typeof window === 'undefined' ? 'direct' : studioEntryPoint(window.location.search),
     });
   }, []);
 
@@ -96,13 +104,13 @@ export function useStudioController() {
     setMetadata(null);
     setTrim(null);
     setSettings(defaultSettings);
-    setCaptions(defaultCaptions);
+    resetCaptions();
     setProgress(null);
     setResult(null);
     setError(null);
     setNextTool('');
     if (inputRef.current) inputRef.current.value = '';
-  }, [revokeResultUrl, revokeVideoUrl]);
+  }, [resetCaptions, revokeResultUrl, revokeVideoUrl]);
 
   const handleFile = useCallback(
     (file: File) => {
@@ -120,6 +128,7 @@ export function useStudioController() {
         return;
       }
       revokeResultUrl();
+      resetCaptions();
       setError(null);
       setResult(null);
       setProgress(null);
@@ -129,7 +138,7 @@ export function useStudioController() {
       setStatus('loading-video');
       setVideoUrl(createVideoUrl(file));
     },
-    [createVideoUrl, revokeResultUrl, setStudioError],
+    [createVideoUrl, resetCaptions, revokeResultUrl, setStudioError],
   );
 
   const handleMetadataLoaded = useCallback(() => {
@@ -186,21 +195,6 @@ export function useStudioController() {
     [metadata, trim, updateTrim],
   );
 
-  const updateCaption = useCallback((placement: keyof StudioCaptionSettings, value: string) => {
-    const nextValue = value.slice(0, STUDIO_CAPTION_MAX_LENGTH);
-    setCaptions((current) => {
-      if (nextValue.trim()) trackStudioEvent('studio_caption_added', { captions_enabled: true });
-      return { ...current, [placement]: nextValue };
-    });
-  }, []);
-
-  const updateCaptionSetting = useCallback(
-    <Key extends keyof StudioCaptionSettings>(key: Key, value: StudioCaptionSettings[Key]) => {
-      setCaptions((current) => ({ ...current, [key]: value }));
-    },
-    [],
-  );
-
   const exportBudget = metadata && trim ? calculateExportBudget(metadata, trim, settings) : null;
   const canExport = isValidExport(status, metadata, trim) && Boolean(exportBudget?.allowed);
   const exportGif = useCallback(
@@ -254,8 +248,20 @@ export function useStudioController() {
   );
 
   const outputSummary = getOutputSummary(metadata, trim, settings);
-  const estimatedSize = getEstimatedSize(trim, settings);
+  const sizeEstimate = metadata?.duration && trim ? estimateGifSize(metadata, trim, settings) : null;
+  const estimatedSize = sizeEstimate
+    ? `${(sizeEstimate.low / 1048576).toFixed(1)}–${(sizeEstimate.high / 1048576).toFixed(1)}`
+    : '0';
   const displayStep = status === 'complete' ? 'success' : step;
+  const updateSettings = useCallback(
+    (nextSettings: StudioOutputSettings) => {
+      if (nextSettings.sizeTarget !== requestedSettings.sizeTarget) {
+        trackStudioEvent('studio_size_target_selected', { size_target: nextSettings.sizeTarget });
+      }
+      setSettings(nextSettings);
+    },
+    [requestedSettings.sizeTarget],
+  );
 
   return {
     inputRef,
@@ -277,7 +283,7 @@ export function useStudioController() {
     outputSummary,
     estimatedSize,
     setIsDragging,
-    setSettings,
+    setSettings: updateSettings,
     setNextTool,
     resetStudio,
     handleFile,
@@ -306,5 +312,3 @@ export function useStudioController() {
     },
   };
 }
-
-export type StudioController = ReturnType<typeof useStudioController>;

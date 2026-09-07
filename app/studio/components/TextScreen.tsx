@@ -21,7 +21,7 @@ export function TextScreen({
   metadata: StudioVideoMetadata;
   trim: StudioTrimSelection;
   captions: StudioCaptionSettings;
-  onCaptionChange: (placement: keyof StudioCaptionSettings, value: string) => void;
+  onCaptionChange: (placement: 'topText' | 'bottomText', value: string) => void;
   onCaptionSettingChange: <Key extends keyof StudioCaptionSettings>(
     key: Key,
     value: StudioCaptionSettings[Key],

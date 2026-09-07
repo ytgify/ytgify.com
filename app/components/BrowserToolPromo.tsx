@@ -26,7 +26,7 @@ export default function BrowserToolPromo() {
           </div>
         </div>
         <Link
-          href="/video-to-gif"
+          href="/video-to-gif?entry=browser_tool_promo"
           className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-gray-950 transition-colors hover:bg-gray-200"
         >
           Open video to GIF converter <ArrowRight className="h-4 w-4" />

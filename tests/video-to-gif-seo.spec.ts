@@ -32,7 +32,7 @@ test.describe('public video to GIF launch surface', () => {
     await page.goto('/video-to-gif');
     await expect(page.getByRole('heading', { name: 'Convert video to GIF in three steps' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Private by design' })).toBeVisible();
-    await expect(page.getByText(/250 MB and 5 minute source limits/)).toBeVisible();
+    await expect(page.getByText(/250 MB and 30 minute source limits/)).toBeVisible();
     await expect(page.getByText(/H.264 MP4 or WebM works best/)).toBeVisible();
     await expect(page.getByText(/does not send your source media, filename, or captions/)).toBeVisible();
     await expect(page.getByRole('link', { name: 'How it works' })).toHaveAttribute('href', '#how-it-works');

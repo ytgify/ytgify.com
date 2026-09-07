@@ -21,6 +21,7 @@ export const defaultCaptions: StudioCaptionSettings = {
 export const defaultSettings: StudioOutputSettings = {
   fps: STUDIO_DEFAULT_FPS,
   resolution: STUDIO_DEFAULT_RESOLUTION,
+  sizeTarget: 'auto',
 };
 
 export const resolutionDetails: Record<StudioResolution, { name: string; description: string; multiplier: number }> = {

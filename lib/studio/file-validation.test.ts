@@ -27,7 +27,7 @@ describe('Studio file validation', () => {
 
   it('rejects invalid and overly long durations', () => {
     expect(validateVideoDuration(Number.NaN)?.code).toBe('decode_failed');
-    expect(validateVideoDuration(301)?.code).toBe('source_too_long');
+    expect(validateVideoDuration(1801)?.code).toBe('source_too_long');
     expect(validateVideoDuration(300)).toBeNull();
   });
 
@@ -36,6 +36,8 @@ describe('Studio file validation', () => {
     expect(durationBucket(30)).toBe('11-30s');
     expect(durationBucket(180)).toBe('1-3m');
     expect(durationBucket(181)).toBe('3-5m');
+    expect(durationBucket(360)).toBe('5-10m');
+    expect(durationBucket(1800)).toBe('10-30m');
     expect(fileSizeBucket(5 * 1024 * 1024)).toBe('0-5mb');
     expect(fileSizeBucket(20 * 1024 * 1024)).toBe('5-25mb');
     expect(fileSizeBucket(80 * 1024 * 1024)).toBe('25-100mb');

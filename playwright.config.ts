@@ -10,7 +10,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: externalBaseUrl || testUrl,
     trace: 'on-first-retry',
@@ -47,7 +47,10 @@ export default defineConfig({
   webServer: externalBaseUrl
     ? undefined
     : {
-        command: `npm run build && npx serve out -l ${testPort}`,
+        command:
+          process.env.PLAYWRIGHT_SKIP_BUILD === '1'
+            ? `npx serve out -l ${testPort}`
+            : `npm run build && npx serve out -l ${testPort}`,
         url: testUrl,
         reuseExistingServer: false,
         timeout: 120000,
