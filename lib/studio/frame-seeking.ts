@@ -1,5 +1,7 @@
 const SEEK_TIMEOUT_MS = 5000;
 const SEEK_POLL_INTERVAL_MS = 25;
+// seeked/readyState can precede usable canvas pixels in Firefox and WebKit.
+const FRAME_DECODE_SETTLE_MS = 100;
 const SEEK_READY_TOLERANCE_SECONDS = 0.075;
 
 interface SeekResult {
@@ -7,7 +9,12 @@ interface SeekResult {
 }
 
 export async function seekVideo(video: HTMLVideoElement, time: number, signal?: AbortSignal): Promise<SeekResult> {
-  if (Math.abs(video.currentTime - time) < 0.035 && video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+  if (
+    !video.seeking &&
+    Math.abs(video.currentTime - time) < 0.035 &&
+    video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+  ) {
+    await delay(FRAME_DECODE_SETTLE_MS, signal);
     return { actualTime: video.currentTime };
   }
 
@@ -116,12 +123,12 @@ async function seekOnce(
     pollReady();
   });
 
-  await delay(video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA ? 25 : 80, signal);
+  await delay(FRAME_DECODE_SETTLE_MS, signal);
   return { actualTime: video.currentTime };
 }
 
 function canRenderFrame(video: HTMLVideoElement, targetTime: number): boolean {
-  if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return false;
+  if (video.seeking || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return false;
   if (Math.abs(video.currentTime - targetTime) > SEEK_READY_TOLERANCE_SECONDS) return false;
 
   return isBuffered(video, video.currentTime) || video.buffered.length === 0;
