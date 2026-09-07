@@ -30,7 +30,7 @@ const eslintConfig = [
   {
     files: ['app/page.tsx'],
     rules: {
-      'max-lines': ['error', { max: 325, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 317, skipBlankLines: true, skipComments: true }],
     },
   },
   {
