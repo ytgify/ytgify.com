@@ -12,4 +12,7 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: npm ci
+      # Puppeteer is only used by the manual OG-image generator, not CI.
+      env:
+        PUPPETEER_SKIP_DOWNLOAD: true
+      run: npm ci --no-audit

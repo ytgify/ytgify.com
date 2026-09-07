@@ -21,7 +21,9 @@ Husky is enabled by `npm ci` through the `prepare` script (`git config core.hook
 
 Install the pinned Playwright browser runtimes with `npm run test:browsers:install` after the first `npm ci` or a Playwright upgrade. Linux CI may use `npx playwright install --with-deps chromium firefox webkit`. Browser installation is explicit, so hooks never download browsers unexpectedly. HTML reports are saved without opening a server that would keep failed hooks running.
 
-Stop the local dev server before building or running production browser tests. `PLAYWRIGHT_SKIP_BUILD=1` is used by pre-push only after its successful build; ordinary test commands build fresh output. `PLAYWRIGHT_BASE_URL` is available for deliberate testing against an existing server, and is cleared by the push gate to ensure it tests the local build.
+`PLAYWRIGHT_PORT` can select a free local port when validating concurrent worktrees (default 3217).
+
+Stop the local dev server before building or running production browser tests. `PLAYWRIGHT_SKIP_BUILD=1` is used by pre-push and validate only after their successful build; ordinary test commands build fresh output. `PLAYWRIGHT_BASE_URL` is available for deliberate testing against an existing server, and is cleared by the push gate to ensure it tests the local build.
 
 `npm run pre-push` runs the same core checks expected by CI:
 
@@ -49,7 +51,11 @@ Use `npm run test:e2e` for the complete browser suite or `npm run test:video-to-
 - Site browser tests run for site or shared-framework changes.
 - Converter browser tests run for converter or shared-framework changes.
 - Shared dependency, Next.js, TypeScript, styling, Playwright, analytics, and workflow changes run both browser suites.
-- `CI Gate` is the stable required check and accepts only successful or intentionally path-skipped jobs.
+- PR and merge-group diffs use the same tested selector (`scripts/ci/select-suites.mjs`). Moves include both old and new paths; unknown/shared paths select both suites. Documentation-only candidates still report quality and the required gate.
+- Build and quality run concurrently after path detection; browser jobs consume that candidate's verified static artifact. Quality remains mandatory at the final gate.
+- `CI Gate` requires successful detection and quality, successful selected jobs, and exactly skipped unselected jobs. Failed detection or missing outputs cannot silently skip acceptance.
+- npm's download cache is reused, but locked dependencies are installed fresh. CI skips the manual OG generator's Puppeteer download; Playwright still installs its own full required browser runtimes.
+- PR acceptance is repeated for the merge-group candidate because its combined Git tree may differ. No PR result or production artifact is reused across candidates.
 - Production remains one GitHub Pages artifact. Every main deployment verifies that `/video-to-gif` exists and that no duplicate `/studio` route is included.
 
 ## Knip policy
