@@ -13,7 +13,9 @@ test.describe('video to GIF accessibility', () => {
     const chooseVideo = page.getByRole('button', { name: 'Choose video' });
     await chooseVideo.focus();
     await expect(chooseVideo).toBeFocused();
+    const fileChooser = page.waitForEvent('filechooser');
     await page.keyboard.press('Enter');
+    await fileChooser;
   });
 
   test('announces upload errors and keeps recovery keyboard accessible', async ({ page }) => {
@@ -29,5 +31,9 @@ test.describe('video to GIF accessibility', () => {
     const startOver = page.getByRole('button', { name: 'Start over' });
     await startOver.focus();
     await expect(startOver).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(alert).toHaveCount(0);
+    await page.getByLabel('Upload video').setInputFiles('tests/fixtures/bob-ross-15s.webm');
+    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible();
   });
 });

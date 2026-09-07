@@ -1,10 +1,9 @@
-import { CheckCircle2, ChevronLeft, Download, RotateCcw } from 'lucide-react';
-import { trackStudioEvent, studioFileSizeBucket } from '@/lib/studio/analytics';
 import { formatFileSize } from '@/lib/studio/file-validation';
-import { formatTime } from '@/lib/studio/presets';
 import { sizeTargetOutcome } from '@/lib/studio/size-target';
+import { trackStudioEvent } from '@/lib/studio/analytics';
 import type { StudioExportResult } from '@/lib/studio/types';
-import { MetadataItem, WizardHeader } from './shared';
+import { Disclosure } from './Disclosure';
+import { DownloadLink } from './DownloadLink';
 
 export function SuccessScreen({
   result,
@@ -12,99 +11,75 @@ export function SuccessScreen({
   setNextTool,
   onBack,
   onReset,
+  onSmaller,
 }: {
   result: StudioExportResult;
   nextTool: string;
   setNextTool: (value: string) => void;
   onBack: () => void;
   onReset: () => void;
+  onSmaller: () => void;
 }) {
   return (
-    <div className="space-y-6">
-      <WizardHeader eyebrow="Success" title="GIF Created Successfully!" helper="Your GIF is ready!" />
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-        <div>
-          {/* The final animated GIF is already encoded in a local blob URL; image optimization cannot improve it. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={result.url}
-            alt="Generated GIF preview"
-            className="w-full rounded-xl border border-gray-800 bg-black"
-          />
-          <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-            <MetadataItem label="Size" value={formatFileSize(result.fileSize)} />
-            <MetadataItem label="Dimensions" value={`${result.width}x${result.height}`} />
-            <MetadataItem label="Duration" value={formatTime(result.duration)} />
-            <MetadataItem label="Frames" value={String(result.frameCount)} />
-            <MetadataItem label="Encoder" value="gifenc" />
-          </dl>
-        </div>
-        <section className="rounded-xl border border-gray-800 bg-black/10 p-4">
-          <div className="mb-4 flex items-center gap-2 text-green-300">
-            <CheckCircle2 className="h-5 w-5" />
-            <h2 className="text-lg font-bold">GIF ready</h2>
-          </div>
-          <div className="space-y-3">
-            {result.sizeTarget !== 'auto' ? (
-              <p role="status" className="text-sm text-gray-300">
-                {sizeTargetOutcome(result.fileSize, result.sizeTarget) === 'met'
-                  ? `This GIF meets your ${result.sizeTarget} MB target.`
-                  : `This GIF exceeds your ${result.sizeTarget} MB target. Edit the clip to shorten it or lower the FPS or resolution.`}
-              </p>
-            ) : null}
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex w-full items-center justify-center gap-2 border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 transition-colors hover:border-gray-500 hover:text-white"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Edit clip
-            </button>
-            <a
-              href={result.url}
-              download="ytgify-video-to-gif.gif"
-              onClick={() =>
-                trackStudioEvent('studio_download_clicked', {
-                  size_target: result.sizeTarget,
-                  size_target_outcome: sizeTargetOutcome(result.fileSize, result.sizeTarget),
-                  output_file_size_bucket: studioFileSizeBucket(result.fileSize),
-                })
-              }
-              className="inline-flex w-full items-center justify-center gap-2 bg-[#E91E8C] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#d51a80]"
-            >
-              <Download className="h-4 w-4" />
-              Download GIF
-            </a>
-            <button
-              type="button"
-              onClick={onReset}
-              className="inline-flex w-full items-center justify-center gap-2 border border-gray-700 px-5 py-3 text-sm font-semibold text-gray-200 transition-colors hover:border-gray-500 hover:text-white"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Make another
-            </button>
-          </div>
-          <label className="mt-5 block text-sm font-semibold text-gray-300">
-            What should YTgify add next?
-            <select
-              value={nextTool}
-              onChange={(event) => {
-                setNextTool(event.target.value);
-                if (event.target.value) {
-                  trackStudioEvent('studio_next_tool_selected', { next_tool: event.target.value });
-                }
-              }}
-              className="mt-2 w-full border border-gray-700 bg-gray-900 px-3 py-2 text-white outline-none focus:border-[#E91E8C]"
-            >
-              <option value="">Choose one</option>
-              <option value="gif_optimizer">GIF optimizer</option>
-              <option value="captioned_gif_maker">Captioned GIF maker</option>
-              <option value="screen_to_gif">Screen to GIF</option>
-              <option value="share_links">Share links</option>
-            </select>
-          </label>
-        </section>
+    <div className="space-y-4">
+      <h1 className="text-2xl font-bold">GIF ready</h1>
+      {/* Encoded local GIF, not a remote image to optimize. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={result.url}
+        alt="Generated GIF preview"
+        className="mx-auto max-h-64 w-auto max-w-full rounded-xl border border-gray-800 object-contain"
+      />
+      <p className="text-center text-sm text-gray-300">
+        {formatFileSize(result.fileSize)} · {result.width}x{result.height} · {result.duration.toFixed(1)}s
+      </p>
+      <DownloadLink result={result} />
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          onClick={onSmaller}
+          className="min-h-11 rounded-xl border border-gray-700 px-3 text-sm font-semibold"
+        >
+          Make smaller
+        </button>
+        <button
+          type="button"
+          onClick={onBack}
+          className="min-h-11 rounded-xl border border-gray-700 px-3 text-sm font-semibold"
+        >
+          Edit clip
+        </button>
       </div>
+      {result.sizeTarget !== 'auto' ? (
+        <p role="status" className="text-sm text-gray-400">
+          {sizeTargetOutcome(result.fileSize, result.sizeTarget) === 'met'
+            ? `This GIF meets your ${result.sizeTarget} MB target.`
+            : `This GIF exceeds your ${result.sizeTarget} MB target. Choose Make smaller or shorten the clip.`}
+        </p>
+      ) : null}
+      <button type="button" onClick={onReset} className="min-h-11 w-full text-sm font-semibold text-[#9ff3ea]">
+        Make another
+      </button>
+      <Disclosure title="GIF details & feedback">
+        <p className="text-sm text-gray-400">Frames: {result.frameCount}</p>
+        <label className="block text-sm text-gray-300">
+          What should YTgify add next?
+          <select
+            value={nextTool}
+            onChange={(event) => {
+              setNextTool(event.target.value);
+              if (event.target.value) trackStudioEvent('studio_next_tool_selected', { next_tool: event.target.value });
+            }}
+            className="mt-2 min-h-11 w-full rounded-lg border border-gray-700 bg-gray-900 px-3"
+          >
+            <option value="">Choose one</option>
+            <option value="gif_optimizer">GIF optimizer</option>
+            <option value="captioned_gif_maker">Captioned GIF maker</option>
+            <option value="screen_to_gif">Screen to GIF</option>
+            <option value="share_links">Share links</option>
+          </select>
+        </label>
+      </Disclosure>
     </div>
   );
 }
