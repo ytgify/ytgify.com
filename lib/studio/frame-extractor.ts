@@ -1,6 +1,7 @@
 import { renderCaptions } from './captions';
 import { isSuspiciousDuplicate, recoverDuplicateFrame } from './frame-quality';
 import { seekVideo } from './frame-seeking';
+import { createFrameTiming } from './frame-timing';
 import { prepareVideo } from './prepare-video';
 import type { StudioCaptionSettings, StudioExportProgress, StudioFrame, StudioTrimSelection } from './types';
 
@@ -36,8 +37,8 @@ export async function extractVideoFrames({
     throw new Error('canvas_failed');
   }
 
-  const totalFrames = Math.max(1, Math.ceil(trim.duration * fps));
-  const frameDelay = Math.round(1000 / fps);
+  const timing = createFrameTiming(trim.duration, fps);
+  const totalFrames = timing.length;
   const frames: StudioFrame[] = [];
   const originalTime = video.currentTime;
   let previousFrame: ImageData | null = null;
@@ -50,7 +51,7 @@ export async function extractVideoFrames({
     for (let index = 0; index < totalFrames; index += 1) {
       if (signal?.aborted) throw new Error('cancelled');
 
-      const frameTime = Math.min(trim.endTime, trim.startTime + index / fps);
+      const frameTime = Math.min(trim.endTime, trim.startTime + timing[index].time);
       const seekResult = await seekVideo(video, frameTime, signal);
 
       ctx.clearRect(0, 0, width, height);
@@ -89,7 +90,7 @@ export async function extractVideoFrames({
 
       frames.push({
         imageData,
-        delay: frameDelay,
+        delay: timing[index].delay,
       });
       previousFrame = imageData;
 

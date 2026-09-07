@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { readGifDelays } from './helpers/gif-timing';
 
 const chromeDemoFixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.webm');
 const chromeDemoMp4Fixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.mp4');
@@ -380,41 +381,59 @@ test.describe('public video-to-GIF converter', () => {
 });
 
 test.describe('video-to-GIF browser matrix', () => {
-  test('exports a real fixture without overflow or console errors', async ({ page, browserName }, testInfo) => {
-    const consoleErrors: string[] = [];
-    page.on('console', (message) => {
-      if (message.type() === 'error') consoleErrors.push(message.text());
-    });
-    page.on('pageerror', (error) => consoleErrors.push(error.message));
+  for (const fps of [5, 10, 15])
+    for (const duration of [3, 3.1]) {
+      test(`exports a real fixture at ${fps} FPS for ${duration}s without overflow or console errors`, async ({
+        page,
+        browserName,
+      }, testInfo) => {
+        const consoleErrors: string[] = [];
+        page.on('console', (message) => {
+          if (message.type() === 'error') consoleErrors.push(message.text());
+        });
+        page.on('pageerror', (error) => consoleErrors.push(error.message));
 
-    await page.goto('/video-to-gif');
-    await page
-      .getByLabel('Upload video')
-      .setInputFiles(browserName === 'webkit' ? chromeDemoMp4Fixture : chromeDemoFixture);
-    await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 20000 });
-    await page.getByRole('button', { name: '3s' }).click();
-    await openDetails(page, 'Advanced settings');
-    await page.getByRole('button', { name: /^5 fps/ }).click();
-    await page.getByRole('button', { name: '240p', exact: true }).click();
-    await openDetails(page, 'Add a caption');
-    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
-    await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 60000 });
+        await page.goto('/video-to-gif');
+        await page
+          .getByLabel('Upload video')
+          .setInputFiles(browserName === 'webkit' ? chromeDemoMp4Fixture : chromeDemoFixture);
+        await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 20000 });
+        await page.getByRole('textbox', { name: 'Duration', exact: true }).fill(String(duration));
+        await page.getByRole('textbox', { name: 'Duration', exact: true }).press('Enter');
+        await openDetails(page, 'Advanced settings');
+        await page.getByRole('button', { name: new RegExp(`^${fps} fps`) }).click();
+        await page.getByRole('button', { name: '240p', exact: true }).click();
+        await openDetails(page, 'Add a caption');
+        await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
+        await expect(page.getByRole('heading', { name: 'GIF ready' })).toBeVisible({ timeout: 60000 });
 
-    const downloadPromise = page.waitForEvent('download');
-    await page.getByRole('link', { name: 'Download GIF' }).click();
-    const download = await downloadPromise;
-    const downloadedPath = await download.path();
-    expect(downloadedPath).not.toBeNull();
-    await expectValidAnimatedGif(downloadedPath!, { width: 276, height: 240 });
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('link', { name: 'Download GIF' }).click();
+        const download = await downloadPromise;
+        const downloadedPath = await download.path();
+        expect(downloadedPath).not.toBeNull();
+        await expectValidAnimatedGif(downloadedPath!, { width: 276, height: 240 });
+        const delays = readGifDelays(await readFile(downloadedPath!));
+        expect(delays).toHaveLength(Math.ceil(duration * fps));
+        expect(delays.reduce((sum, delay) => sum + delay, 0)).toBe(Math.round(duration * 100));
+        expect(Math.max(...delays) - Math.min(...delays)).toBeLessThanOrEqual(1);
+        expect(Math.min(...delays)).toBeGreaterThanOrEqual(2);
+        await testInfo.attach('encoded-gif', { path: downloadedPath!, contentType: 'image/gif' });
+        await testInfo.attach('frame-delays-centiseconds', {
+          body: JSON.stringify(delays),
+          contentType: 'application/json',
+        });
 
-    const dimensions = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-    }));
-    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
-    if (testInfo.project.name === 'mobile-chromium') expect(page.viewportSize()).toEqual({ width: 390, height: 844 });
-    expect(consoleErrors).toEqual([]);
-  });
+        const dimensions = await page.evaluate(() => ({
+          clientWidth: document.documentElement.clientWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+        }));
+        expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+        if (testInfo.project.name === 'mobile-chromium')
+          expect(page.viewportSize()).toEqual({ width: 390, height: 844 });
+        expect(consoleErrors).toEqual([]);
+      });
+    }
 });
 
 async function startTimeValue(page: import('@playwright/test').Page): Promise<number> {
