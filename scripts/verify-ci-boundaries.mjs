@@ -65,6 +65,11 @@ assert.throws(() => changedPaths('', 'HEAD'));
 
 // Exercise real Git add/delete/rename and PR merge-base behavior without touching
 // the working checkout. Queue candidates use the same diff with an ancestor base.
+// Hooks export repository-local Git variables. Remove them before entering the
+// fixture so Git cannot initialize or configure the caller's repository.
+const gitEnvironment = execFileSync('git', ['rev-parse', '--local-env-vars'], { encoding: 'utf8' }).trim().split('\n');
+const savedEnvironment = new Map(gitEnvironment.map((key) => [key, process.env[key]]));
+for (const key of gitEnvironment) delete process.env[key];
 const original = process.cwd();
 const fixture = mkdtempSync(join(tmpdir(), 'ytgify-ci-'));
 try {
@@ -90,6 +95,9 @@ try {
   assert.deepEqual(changedPaths(git('rev-parse', 'HEAD'), head), ['app/page.tsx']);
 } finally {
   process.chdir(original);
+  for (const [key, value] of savedEnvironment) {
+    if (value !== undefined) process.env[key] = value;
+  }
   rmSync(fixture, { recursive: true, force: true });
 }
 const workflow = readFileSync('.github/workflows/ci.yml', 'utf8');
