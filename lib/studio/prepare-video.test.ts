@@ -41,6 +41,40 @@ describe('iOS video readiness', () => {
     expect(video.pause).toHaveBeenCalledOnce();
     expect(vi.getTimerCount()).toBe(0);
   });
+  it('waits for pixels at the current seek position before pausing warm-up', async () => {
+    let presented!: VideoFrameRequestCallback;
+    const video = Object.assign(source(), {
+      currentTime: 1.1,
+      seeking: false,
+      requestVideoFrameCallback: vi.fn((callback: VideoFrameRequestCallback) => {
+        presented = callback;
+        return 7;
+      }),
+      cancelVideoFrameCallback: vi.fn(),
+    });
+    const pending = prepare(video);
+    await Promise.resolve();
+    presented(0, { mediaTime: 0 } as VideoFrameCallbackMetadata);
+    expect(video.pause).not.toHaveBeenCalled();
+    presented(0, { mediaTime: 1.1 } as VideoFrameCallbackMetadata);
+    await pending;
+    expect(video.pause).toHaveBeenCalledOnce();
+    expect(video.cancelVideoFrameCallback).toHaveBeenCalledWith(7);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+  it('bounds and cancels a warm-up whose frame is never presented', async () => {
+    const video = Object.assign(source(), {
+      requestVideoFrameCallback: vi.fn().mockReturnValue(9),
+      cancelVideoFrameCallback: vi.fn(),
+    });
+    const pending = expect(prepare(video)).rejects.toThrow('extraction_timeout');
+    await vi.advanceTimersByTimeAsync(5000);
+    await pending;
+    expect(video.cancelVideoFrameCallback).toHaveBeenCalledWith(9);
+    expect(video.pause).toHaveBeenCalledOnce();
+    expect(video.muted).toBe(false);
+    expect(vi.getTimerCount()).toBe(0);
+  });
   it('bounds a stalled decoder', async () => {
     const video = source();
     video.play.mockReturnValue(new Promise(() => {}));

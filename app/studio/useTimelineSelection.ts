@@ -27,7 +27,9 @@ export function useTimelineSelection(
 
   const seekPreviewToSelection = useCallback(() => {
     const video = videoRef.current;
-    if (!video) return;
+    // iOS can stall permanently if a metadata-only video is seeked before
+    // decoding its first frame. Cue it when loadeddata arrives instead.
+    if (!video || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return;
     try {
       video.currentTime = previewStart;
     } catch {
@@ -35,7 +37,12 @@ export function useTimelineSelection(
     }
   }, [previewStart, videoRef]);
 
-  useEffect(() => seekPreviewToSelection(), [seekPreviewToSelection]);
+  useEffect(() => {
+    const video = videoRef.current;
+    seekPreviewToSelection();
+    video?.addEventListener('loadeddata', seekPreviewToSelection);
+    return () => video?.removeEventListener('loadeddata', seekPreviewToSelection);
+  }, [seekPreviewToSelection, videoRef]);
 
   const clampTime = useCallback(
     (value: number) => (Number.isFinite(value) ? Math.max(0, Math.min(value, metadata.duration)) : 0),
