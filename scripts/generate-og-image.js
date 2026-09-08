@@ -35,7 +35,7 @@ async function generateOGImage() {
   console.log('🎨 Generating OG Image for YTgify...\n');
 
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: true,
   });
 
   const page = await browser.newPage();
