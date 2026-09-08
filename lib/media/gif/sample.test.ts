@@ -15,7 +15,8 @@ test('explicit frame reduction aggregates variable delays and preserves the fini
   expect(gifQuality(source, sampled).mean).toBeLessThan(0.98);
 });
 
-test('optimizer can reduce duplicate frames only when explicitly enabled', () => {
+// Two full optimizer searches need more than Vitest's 5s default on CI CPUs.
+test('optimizer can reduce duplicate frames only when explicitly enabled', { timeout: 30_000 }, () => {
   const source = decodeGif(new Uint8Array(readFileSync('tests/fixtures/gif/original-motion.gif')));
   source.frames.forEach((frame) => {
     frame.rgba = source.frames[0].rgba;

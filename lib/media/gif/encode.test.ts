@@ -7,7 +7,8 @@ import { compressGif } from './compress';
 import { transformGif } from './geometry';
 import oracle from '../../../tests/fixtures/gif/decoded-oracle.json';
 
-test('round-trip exports preserve independent pixels, timing and loop metadata', () => {
+// This corpus test encodes 24 files and invokes an independent decoder on CI.
+test('round-trip exports preserve independent pixels, timing and loop metadata', { timeout: 30_000 }, () => {
   const folder = '.ytgify-runtime/gif-roundtrips';
   mkdirSync(folder, { recursive: true });
   for (const fixture of oracle) {

@@ -1,0 +1,42 @@
+{
+  "native-export": {
+    "startTime": "2026-09-08T17:42:55.035Z",
+    "duration": 16502.434999999998,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "native-cap": {
+    "startTime": "2026-09-08T17:29:09.486Z",
+    "duration": 34055.405,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "native-exit": {
+    "startTime": "2026-09-08T17:30:05.151Z",
+    "duration": 3035.847,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "journeys": {
+    "startTime": "2026-09-08T17:36:11.998Z",
+    "duration": 12169.097,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "followup-browser": {
+    "startTime": "2026-09-08T17:44:59.406Z",
+    "duration": 26127.504,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
