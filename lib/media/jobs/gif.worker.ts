@@ -1,3 +1,4 @@
+import { canProbeMp4 } from '../mp4/platform';
 import { decodeGif } from '../gif/decode';
 import { compressGif } from '../gif/compress';
 import { transformGif } from '../gif/geometry';
@@ -37,6 +38,9 @@ self.addEventListener('message', async (event: MessageEvent<GifJob>) => {
         mime: 'image/gif',
       };
     } else if (operation.kind === 'mp4') {
+      if (!canProbeMp4(navigator.userAgent, navigator.platform)) {
+        throw new Error('MP4 encoding is unavailable in Linux WebKit. Try a recent desktop Chrome.');
+      }
       const { encodeMp4 } = await import('../mp4/encode');
       result = {
         ...result,

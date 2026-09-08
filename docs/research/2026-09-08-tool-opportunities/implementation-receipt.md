@@ -54,6 +54,7 @@ G0–G5 have implementation evidence for the experimental desktop scope below. F
 ## Support and interpretation
 
 - Experimental support target: desktop Chrome on macOS, including native **tab** capture. Firefox and Playwright WebKit export checks also pass on this machine; those engine runs are not native Safari/iOS evidence.
+- Linux WebKit closes its page during the H.264 attempt in CI. It is explicitly rejected before the codec probe with an actionable Chrome alternative; GIF processing remains available.
 - Mobile layouts are checked in emulation. Native iOS/Android save behavior, lower-memory hardware, manual OS permission dialogs, window capture and entire-screen capture remain unaccepted support tiers. Their availability is not inferred from a desktop pass.
 - The native test uses Chromium's documented [tab-only source-selection switch](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.h), selecting only the controlled test tab. It uses the real capture API and encoder, not a fake stream. Separate canvas-stream tests supplement this evidence.
 - Compression protects quality before size. At original dimensions, five of these already-optimized natural clips retained their original bytes; one improved by approximately 10%. Allowing smaller dimensions is an explicit choice, and no ranking or compression-ratio guarantee is made.
