@@ -206,6 +206,8 @@ jobs:
 
       - name: Verify enabled analytics privacy with a local test key
         run: npm run test:gif-privacy
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3217
 
       - name: Upload enabled analytics privacy evidence
         if: always()
