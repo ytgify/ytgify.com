@@ -11,13 +11,5 @@
   ],
   "project": ["**/*.{ts,tsx,js,mjs}"],
   "ignore": ["content/**/*", "docs/goals/**/.goalbuddy-board/**/*"],
-  "ignoreDependencies": [
-    "@next/mdx",
-    "gifenc",
-    "gray-matter",
-    "puppeteer",
-    "remark-frontmatter",
-    "remark-gfm",
-    "remark-mdx-frontmatter"
-  ]
+  "ignoreDependencies": ["@next/mdx", "gifenc", "gray-matter", "puppeteer", "remark-frontmatter", "remark-gfm"]
 }
