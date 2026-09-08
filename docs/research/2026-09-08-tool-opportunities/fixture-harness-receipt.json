@@ -1,0 +1,133 @@
+{
+  "status": "fixture harness passed; product gates remain open",
+  "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+  "python": "3.14.4",
+  "pillow": "12.2.0",
+  "fixtures": [
+    {
+      "id": "disposal-0",
+      "frames": 3,
+      "bytes": 280,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "disposal-1",
+      "frames": 3,
+      "bytes": 280,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "disposal-2",
+      "frames": 3,
+      "bytes": 280,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "disposal-3",
+      "frames": 3,
+      "bytes": 280,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "local-palette-alpha",
+      "frames": 2,
+      "bytes": 244,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "loop-absent",
+      "frames": 2,
+      "bytes": 358,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "loop-finite",
+      "frames": 2,
+      "bytes": 377,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "loop-infinite",
+      "frames": 2,
+      "bytes": 377,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "variable-delays",
+      "frames": 5,
+      "bytes": 875,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "gif87a-no-delay",
+      "frames": 1,
+      "bytes": 184,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "interlaced-odd",
+      "frames": 1,
+      "bytes": 214,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "transparent-single-pixel",
+      "frames": 1,
+      "bytes": 49,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "compressible",
+      "frames": 12,
+      "bytes": 28065,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "original-tutorial",
+      "frames": 24,
+      "bytes": 46671,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    },
+    {
+      "id": "original-motion",
+      "frames": 24,
+      "bytes": 153750,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    },
+    {
+      "id": "original-sticker",
+      "frames": 24,
+      "bytes": 29612,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    }
+  ],
+  "negativeControls": [
+    "actual palette corruption",
+    "actual delay corruption",
+    "actual loop corruption",
+    "one-byte-over budget"
+  ],
+  "elapsedSeconds": 0.285,
+  "limitations": [
+    "Invalid fixtures inventoried, not product-rejection tested",
+    "No compressor implemented",
+    "Desktop inspection runtime is not browser performance",
+    "Real mobile hardware not tested"
+  ]
+}
