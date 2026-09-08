@@ -1,0 +1,99 @@
+{
+  "file": "docs/qa/evidence/2026-09-08-ios-safari/plain.gif",
+  "captions": "plain",
+  "bytes": 30482,
+  "sha256": "2176fabaf96e5683345653581a04433881e89c76f3255c0f894c2a428063882d",
+  "durationMs": 3000,
+  "frames": [
+    {
+      "sourceFrame": 11,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 13,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 15,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 17,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 19,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 21,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 23,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 25,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 27,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 29,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 31,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 33,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 35,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 37,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    },
+    {
+      "sourceFrame": 39,
+      "delayMs": 200,
+      "topInk": 0,
+      "bottomInk": 0
+    }
+  ]
+}

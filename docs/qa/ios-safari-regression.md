@@ -72,30 +72,79 @@ so it stays tested in converter CI. The unit suite also rejects wrong selections
 frozen frames, timing drift, missing captions, invalid modes, and truncated files.
 Run `npm run test:unit` or the usual converter browser command to check these.
 
-## September 8, 2026 run
+## September 8, 2026 native acceptance
 
-Application base: `71695f62ab1a0e2496bede35ab5397a99decf7ec` (merged PR #35).
-Production URL: `http://localhost:3235/video-to-gif`.
-Device: YTgify-Native-E2E, iPhone 17 Pro, iOS 26.5,
-`F332F7E5-BF32-4561-96A5-811E4CDB70D3`.
+Tested the PR #37 runtime changes on base `dda6ba76609133a493dcd568db6b9a59d5b18a56`,
+served as a production build at `http://localhost:3235/video-to-gif`.
+Device: YTgify-Native-E2E, iPhone 17 Pro, iOS 26.5 Simulator,
+`F332F7E5-BF32-4561-96A5-811E4CDB70D3`. Native UI steps used XCUITest after the
+pointer driver repeatedly failed. This is a completed local Simulator run, not
+unattended native CI or physical-device coverage.
 
-**Partial native result:** successfully imported the fixture into Photos, used
-Safari's native Photo Library picker, uploaded without playing first, and edited
-to 1.1–4.1 seconds. Export/download/reopen and caption keyboard checks are not yet
-verified in this run. The Simulator initially failed with LaunchdSimError 133;
-a second boot succeeded. Computer-use pointer input repeatedly failed with
-`noWindowsAvailable` / `windowNotFoundAtPosition`, including after full-screen
-and client resets. Keyboard Page Down worked, but did not restore pointer input.
-The device is left on the editor for continuation. No native saved output is
-claimed. Earlier September 7 native evidence remains in its separate QA report.
+The native run found two failures that desktop happy-path exports had missed:
 
-**Automated evidence:** 66 unit tests passed, including the verifier's positive
-and negative controls. Its CLI passed on all eight real plain/captioned downloads
-from Chromium, Firefox, WebKit, and mobile Chromium. This evidence is distinct
-from the unfinished native save-flow check. The full production-shaped browser
-suite also passed all 93 tests using the local static build.
+- Seeking the metadata-only preview before its first decoded frame could leave
+  Safari permanently seeking. Fresh uploads timed out during extraction. Preview
+  seeking now waits for frame data and cues the selection on `loadeddata`.
+- With that stall fixed, an actual saved GIF still contained source frame zero
+  in its first two output frames. `play()` had resolved before the right pixels
+  were presented. Decoder warm-up now waits for a video-frame callback matching
+  the current seek position before pausing, within the existing five-second
+  cancellation/timeout boundary. Browsers without that API retain the fallback.
 
-Three acceptance risks are tracked explicitly: wrong/frozen/timed output (file
-assertions and negative controls); missing captions (positive/negative pixel
-checks); native picker/keyboard/save integration (picker/trim observed, remaining
-steps blocked by host UI automation and not marked passed).
+### Completed native journey
+
+Used the six-second fixture through Safari's native Photo Library picker, without
+playing the preview first. Selected 1.1–4.1 seconds, 240p, and 5 FPS. Exported and
+accepted Safari's Download confirmation. Then returned through Edit clip, checked
+that trim/settings persisted, entered TOP TEST and BOTTOM TEST with the software
+keyboard visible, dismissed it, and exported/downloaded again. Both caption fields
+were reachable with Safari's keyboard Next/Previous controls; Create GIF was
+reachable after keyboard dismissal. Both saved files were reopened in Files
+Quick Look, including an assertion of the captioned file's native accessibility
+label. The plain file's bytes remained unchanged after the second download.
+
+Safari's image context menu also exposed Save to Photos. Saved the captioned GIF
+there and reopened it in Photos. The resulting `Media/DCIM/100APPLE/IMG_0008.GIF`
+passed the verifier and was byte-identical to the captioned Files download; see
+the [Photos screenshot](evidence/2026-09-08-ios-safari/photos-reopened.png) and
+provenance record.
+
+Preserved the actual native files, screenshots, verifier receipts, and
+[provenance](evidence/2026-09-08-ios-safari/provenance.json) in
+[evidence/2026-09-08-ios-safari](evidence/2026-09-08-ios-safari).
+
+| Output                                                        | Native Downloads filename |   Saved size | Verification                                                     |
+| ------------------------------------------------------------- | ------------------------- | -----------: | ---------------------------------------------------------------- |
+| [Plain GIF](evidence/2026-09-08-ios-safari/plain.gif)         | ytgify-video-to-gif 2.gif | 30,482 bytes | [Receipt](evidence/2026-09-08-ios-safari/plain-receipt.json)     |
+| [Captioned GIF](evidence/2026-09-08-ios-safari/captioned.gif) | ytgify-video-to-gif 3.gif | 70,073 bytes | [Receipt](evidence/2026-09-08-ios-safari/captioned-receipt.json) |
+
+Both are 320 × 240, with exactly 15 frames at 200 ms each, totaling 3,000 ms.
+Source frame IDs are exactly 11,13,15,…,39. Every plain frame has zero caption
+pixels. Every captioned frame has 434 top and 662 bottom white caption pixels.
+The earlier failed download is not presented as acceptance evidence.
+
+Native screenshots: [software keyboard](evidence/2026-09-08-ios-safari/caption-keyboard.png),
+[plain reopened](evidence/2026-09-08-ios-safari/plain-reopened.png), and
+[captioned reopened](evidence/2026-09-08-ios-safari/captioned-reopened.png).
+
+### Acceptance checks
+
+1. **Decoder stall or cancellation:** the fresh native upload completes without
+   preview playback. A new four-browser regression simulates metadata-only video
+   and checks that neither trim changes nor early play events seek prematurely,
+   then verifies the deferred selection is applied. Unit tests bound a missing
+   presented frame and retain cancellation/cleanup checks.
+2. **Stale frames, wrong trim/timing, or missing captions:** both real native
+   downloads pass the CLI pixel/timing/completeness checks. The CLI rejected the
+   stale-first-frame intermediate result. Four-browser plain/captioned exports
+   also pass; negative controls reject frozen output and missing captions.
+3. **Native picker, keyboard, and saved-file integration:** observed native Photo
+   Library selection, software keyboard entry, download confirmation, and Files
+   Quick Look for both outputs. Saved file hashes match the preserved artifacts.
+
+Validation: 68 unit tests, all 97 browser tests, and all pre-push quality/build/
+route/smoke gates passed. Native XCUITest logs and `.xcresult` bundles remain in
+the ignored `.ytgify-runtime/ios-driver` directory. The native UI sequence still
+requires supervision around Simulator animations; the stable readiness and
+saved-content regressions run in the existing browser CI matrix.

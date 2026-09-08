@@ -3,8 +3,10 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { registerVisualContentTests } from './helpers/visual-content';
 import { readGifDelays } from './helpers/gif-timing';
+import { registerMediaReadinessTests } from './helpers/media-readiness';
 
 registerVisualContentTests();
+registerMediaReadinessTests();
 
 const chromeDemoFixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.webm');
 const chromeDemoMp4Fixture = path.join(process.cwd(), 'tests/fixtures/ytgify-chrome-demo.mp4');

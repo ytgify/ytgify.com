@@ -1,0 +1,37 @@
+{
+  "device": "iPhone 17 Pro",
+  "os": "iOS 26.5 Simulator",
+  "udid": "F332F7E5-BF32-4561-96A5-811E4CDB70D3",
+  "url": "http://localhost:3235/video-to-gif",
+  "sourceFixture": "tests/fixtures/visual-timeline.mp4",
+  "sourceSha256": "b75f0e60ff9923ec46cfbdd4aaa906ace1560e915ea35d2f9e8ab50256fb6c92",
+  "baseCommit": "dda6ba76609133a493dcd568db6b9a59d5b18a56",
+  "runtimeChanges": ["app/studio/useTimelineSelection.ts", "lib/studio/prepare-video.ts"],
+  "driver": "XCUITest, native Safari Photo Library picker and download confirmation; Files Quick Look",
+  "outputs": [
+    {
+      "artifact": "plain.gif",
+      "nativeFile": "File Provider Storage/Downloads/ytgify-video-to-gif 2.gif",
+      "modifiedAt": "2026-09-08T15:54:40.634224+00:00",
+      "sha256": "2176fabaf96e5683345653581a04433881e89c76f3255c0f894c2a428063882d",
+      "reopenedIn": "Files Quick Look",
+      "quickLookAccessibilityLabel": "ytgify-video-to-gif 2"
+    },
+    {
+      "artifact": "captioned.gif",
+      "nativeFile": "File Provider Storage/Downloads/ytgify-video-to-gif 3.gif",
+      "modifiedAt": "2026-09-08T16:00:56.156575+00:00",
+      "sha256": "62859d89830158ce638f2f4cbf2930d0c2597311105f74ec9e86a7f84261c950",
+      "reopenedIn": "Files Quick Look",
+      "quickLookAccessibilityLabel": "ytgify-video-to-gif 3"
+    }
+  ],
+  "photosCopy": {
+    "nativeFile": "Media/DCIM/100APPLE/IMG_0008.GIF",
+    "savedVia": "Safari image context menu: Save to Photos",
+    "sha256": "62859d89830158ce638f2f4cbf2930d0c2597311105f74ec9e86a7f84261c950",
+    "byteIdenticalTo": "captioned.gif",
+    "reopenedIn": "Photos, Today 9:06 AM",
+    "verifierPassed": true
+  }
+}
