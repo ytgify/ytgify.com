@@ -153,7 +153,8 @@ jobs:
   video-to-gif-browser-tests:
     name: Video-to-GIF Browser Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Real multi-browser exports take ~11m, plus browser setup and the privacy rebuild.
+    timeout-minutes: 25
     needs: [detect-changes, build-test-app]
     if: >-
       always() && !cancelled() && needs.build-test-app.result == 'success' &&
