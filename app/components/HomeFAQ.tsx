@@ -4,7 +4,7 @@ export const homeFAQItems: FAQItem[] = [
   {
     question: 'How do I turn a YouTube video into a GIF?',
     answer:
-      'Install YTgify in Chrome, open a YouTube video, choose the moment you want, set the GIF length and quality, then export and download the GIF. The workflow stays in your browser.',
+      'Use the free YTgify YouTube to GIF converter in Chrome. Open a YouTube video, choose the moment you want, set the GIF length and quality, then export and download an animated GIF with no watermark. The workflow stays in your browser.',
   },
   {
     question: 'Is YTgify free to use?',

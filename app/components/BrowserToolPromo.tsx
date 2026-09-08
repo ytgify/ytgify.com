@@ -15,10 +15,11 @@ export default function BrowserToolPromo() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#4fd1c5]">Free browser tool</p>
             <h2 id="browser-tool-heading" className="mt-2 text-2xl font-bold text-white">
-              Already have a video file?
+              MP4 to GIF — free online converter
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-400">
-              Convert your own MP4, MOV, or WebM clip to a GIF locally — trim, caption, and download with no watermark.
+              Already have a video file? Use our animated GIF maker to trim, caption, and convert MP4, MOV, or WebM
+              clips in your browser. No watermark, account, or installation required.
             </p>
             <p className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-gray-500">
               <ShieldCheck className="h-4 w-4 text-[#4fd1c5]" /> Your source video stays in your browser

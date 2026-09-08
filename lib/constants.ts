@@ -37,4 +37,4 @@ export const SITE_URL = 'https://ytgify.com';
 export const SITE_NAME = 'YTgify';
 export const SITE_TITLE = 'YouTube to GIF Converter - Free, No Watermark | YTgify';
 export const SITE_DESCRIPTION =
-  'Turn YouTube videos into GIFs for free with YTgify. Create, caption, and download no-watermark GIFs in your browser without uploading your video.';
+  'Convert YouTube to GIF with no watermark using the free YTgify Chrome extension. Create, caption, and download animated GIFs directly in the YouTube player.';
