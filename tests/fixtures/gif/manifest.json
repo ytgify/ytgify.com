@@ -309,6 +309,87 @@
       "provenance": "Original deterministic test artwork; CC0-1.0"
     },
     {
+      "id": "out-of-bounds",
+      "file": "out-of-bounds.gif",
+      "sha256": "7020a73534234e4fd9e9631f43e50c6106d207884a22e456922ea1d37b66622e",
+      "bytes": 66,
+      "decodeForOracle": false,
+      "features": ["patch-outside-canvas"],
+      "rawDelaysCs": [],
+      "expectedOutcome": "reject-before-unbounded-decode",
+      "loop": null,
+      "expectedRgbaSha256": [],
+      "provenance": "Original deterministic test artwork; CC0-1.0"
+    },
+    {
+      "id": "too-many-frames",
+      "file": "too-many-frames.gif",
+      "sha256": "566e87ea735d8423b8c24979087cf8ba53b6e7bcddc87796d33ea23154f8d59f",
+      "bytes": 13849,
+      "decodeForOracle": false,
+      "features": ["frame-count-limit"],
+      "rawDelaysCs": [],
+      "expectedOutcome": "reject-before-unbounded-decode",
+      "loop": null,
+      "expectedRgbaSha256": [],
+      "provenance": "Original deterministic test artwork; CC0-1.0"
+    },
+    {
+      "id": "malformed-lzw",
+      "file": "malformed-lzw.gif",
+      "sha256": "3301e6857dd8cbf5645626c7632136508a5cb9768e6f97142c065702bbd61d75",
+      "bytes": 192,
+      "decodeForOracle": false,
+      "features": ["invalid-lzw-minimum-code-size"],
+      "rawDelaysCs": [],
+      "expectedOutcome": "reject-before-unbounded-decode",
+      "loop": null,
+      "expectedRgbaSha256": [],
+      "provenance": "Original deterministic test artwork; CC0-1.0"
+    },
+    {
+      "id": "crop-grid",
+      "file": "crop-grid.gif",
+      "sha256": "35e4d613c5c2af177b4dcc716ebd4f902d8c1e7dcaa69b4f2b29f746bd5fdd93",
+      "bytes": 709,
+      "decodeForOracle": true,
+      "features": ["crop-grid", "frame-ids"],
+      "rawDelaysCs": [10, 10, 10, 10],
+      "expectedOutcome": "decode",
+      "width": 16,
+      "height": 12,
+      "frameCount": 4,
+      "disposalModes": [1],
+      "loop": 0,
+      "expectedRgbaSha256": [
+        "0c4748f7a8beda27a9fa78273587f8404ad97c7d1b84803aa46711000ba8fe81",
+        "8c7db791a7807184c0d835c84db1f32b76f81cabee352936be3491bd14c431f6",
+        "82a86b700d87675a9b979d56e4e42957c1fde64b2371ea140f0fdd45d45b70d6",
+        "dbb42a5756dc48b091582f6c9a651e60f4e322b3855e81298f873799c58fe941"
+      ],
+      "provenance": "Original deterministic test artwork; CC0-1.0"
+    },
+    {
+      "id": "already-optimized",
+      "file": "already-optimized.gif",
+      "sha256": "26d6010487023bbb1e83ee4459047cdef509711d197c33e14cb25a96643e53cf",
+      "bytes": 279,
+      "decodeForOracle": true,
+      "features": ["optimized-holdout"],
+      "rawDelaysCs": [10, 10],
+      "expectedOutcome": "decode",
+      "width": 64,
+      "height": 48,
+      "frameCount": 2,
+      "disposalModes": [0],
+      "loop": 0,
+      "expectedRgbaSha256": [
+        "cf4ee44d75b2fe0ec67dbc956d82ecdd2f2617e6135c10e77bdd3080f576611a",
+        "43f2714d3efb93cb37e651c1b435e670c9e0b1f056b04c978181c4d51b7fa86d"
+      ],
+      "provenance": "Original deterministic test artwork; CC0-1.0"
+    },
+    {
       "id": "original-tutorial",
       "file": "original-tutorial.gif",
       "sha256": "b06893a11174dd0b147fd3c6dbdd0a906efbd474978fd350960dfce930f23557",

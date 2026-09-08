@@ -94,6 +94,28 @@ def diagnostics():
     bomb[6:10] = b"\xff\xff\xff\xff"
     register("huge-canvas", bytes(bomb), [], [], None, ["65535-square-canvas", "reject-before-allocation"], False)
     register("false-signature", b"not a gif", [], [], None, ["deceptive-extension"], False)
+    out_of_bounds = write_gif(16, 12, [frame(1, 6, 4, left=15, top=10)])
+    register("out-of-bounds", out_of_bounds, [], [], None, ["patch-outside-canvas"], False)
+    register("too-many-frames", write_gif(1, 1, [frame(1, 1, 1)] * 601), [], [], None,
+             ["frame-count-limit"], False)
+    broken_lzw = bytearray(good)
+    descriptor = broken_lzw.index(b",", 25)
+    broken_lzw[descriptor + 10] = 1
+    register("malformed-lzw", bytes(broken_lzw), [], [], None, ["invalid-lzw-minimum-code-size"], False)
+    grid = []
+    goldens = []
+    for tick in range(4):
+        pixels = [(x // 4 + y // 3 + tick) % 4 for y in range(12) for x in range(16)]
+        grid.append(dict(width=16, height=12, pixels=pixels))
+        expected = Image.new("RGBA", (16, 12))
+        expected.putdata([(*PALETTE[p], 255) for p in pixels])
+        goldens.append(expected)
+    register("crop-grid", write_gif(16, 12, grid, 0), goldens, [10] * 4, 0, ["crop-grid", "frame-ids"])
+    optimized_path = OUT / "already-optimized.gif"
+    canvas(1, 64, 48).save(optimized_path, save_all=True, append_images=[canvas(2, 64, 48)],
+                         duration=100, loop=0, optimize=True)
+    register("already-optimized", optimized_path.read_bytes(), [canvas(1, 64, 48), canvas(2, 64, 48)],
+             [10, 10], 0, ["optimized-holdout"])
 
 
 def authored_artwork():

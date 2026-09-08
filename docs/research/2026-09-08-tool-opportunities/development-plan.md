@@ -1,6 +1,6 @@
 # GIF tools: development graph and acceptance contract
 
-Status: proposed implementation plan, September 8, 2026. No new tool has been implemented or accepted by this document. Existing media inspection is a baseline, not proof that compression works.
+Status: original acceptance contract, September 8, 2026. Implementation and current gate evidence are tracked in [implementation-receipt.md](implementation-receipt.md); this planning document does not itself certify a release.
 
 ## Product decisions
 

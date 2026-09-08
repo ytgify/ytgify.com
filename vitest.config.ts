@@ -1,9 +1,10 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     environment: 'node',
     include: ['**/*.test.ts'],
+    exclude: [...configDefaults.exclude, '.ytgify-runtime/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json-summary'],

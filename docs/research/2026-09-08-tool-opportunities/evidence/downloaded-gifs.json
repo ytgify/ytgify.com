@@ -1,0 +1,167 @@
+{
+  "pillowRoundTripsPassed": 24,
+  "downloadedNaturalGifs": [
+    {
+      "file": "natural-5-0.05.gif",
+      "sha256": "10e5c71b5de6817dbd71b96effe5b5d36ec0315da0333d86c36bcf61aea28a49",
+      "bytes": 345344,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-5-0.5.gif",
+      "sha256": "10e5c71b5de6817dbd71b96effe5b5d36ec0315da0333d86c36bcf61aea28a49",
+      "bytes": 345344,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-5-0.8.gif",
+      "sha256": "10e5c71b5de6817dbd71b96effe5b5d36ec0315da0333d86c36bcf61aea28a49",
+      "bytes": 345344,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-1-0.05.gif",
+      "sha256": "08240176fa88fc9074cb771506c0c48be36ba80953f9376005f5ccc96af50e44",
+      "bytes": 441009,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-1-0.5.gif",
+      "sha256": "08240176fa88fc9074cb771506c0c48be36ba80953f9376005f5ccc96af50e44",
+      "bytes": 441009,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-1-0.8.gif",
+      "sha256": "08240176fa88fc9074cb771506c0c48be36ba80953f9376005f5ccc96af50e44",
+      "bytes": 441009,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-2-0.05.gif",
+      "sha256": "e977d072d2f7fdd8e30084dfc4f442fb9c1c421b1c6559a64a8e461142a141f7",
+      "bytes": 344779,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-2-0.5.gif",
+      "sha256": "e977d072d2f7fdd8e30084dfc4f442fb9c1c421b1c6559a64a8e461142a141f7",
+      "bytes": 344779,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-2-0.8.gif",
+      "sha256": "e977d072d2f7fdd8e30084dfc4f442fb9c1c421b1c6559a64a8e461142a141f7",
+      "bytes": 344779,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-6-0.05.gif",
+      "sha256": "9f6188e1054b73ca90f0d90ef03ea9e53ca22548e472ed1d76ec345df6b87dac",
+      "bytes": 252628,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-6-0.5.gif",
+      "sha256": "9f6188e1054b73ca90f0d90ef03ea9e53ca22548e472ed1d76ec345df6b87dac",
+      "bytes": 252628,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-6-0.8.gif",
+      "sha256": "9f6188e1054b73ca90f0d90ef03ea9e53ca22548e472ed1d76ec345df6b87dac",
+      "bytes": 252628,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-3-0.05.gif",
+      "sha256": "a2ccfda86836b953f593cdec694bdd55e4d7e4ab2aa261d23943423355e97660",
+      "bytes": 341950,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-3-0.5.gif",
+      "sha256": "a2ccfda86836b953f593cdec694bdd55e4d7e4ab2aa261d23943423355e97660",
+      "bytes": 341950,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-3-0.8.gif",
+      "sha256": "a2ccfda86836b953f593cdec694bdd55e4d7e4ab2aa261d23943423355e97660",
+      "bytes": 341950,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-4-0.05.gif",
+      "sha256": "8012972fc636801b01545ab9755f02fafbbb21e4836681e53d1b6a3f5932a9ef",
+      "bytes": 355109,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-4-0.5.gif",
+      "sha256": "8012972fc636801b01545ab9755f02fafbbb21e4836681e53d1b6a3f5932a9ef",
+      "bytes": 355109,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    },
+    {
+      "file": "natural-4-0.8.gif",
+      "sha256": "8012972fc636801b01545ab9755f02fafbbb21e4836681e53d1b6a3f5932a9ef",
+      "bytes": 355109,
+      "frames": 20,
+      "width": 256,
+      "height": 144,
+      "durationMs": 2000
+    }
+  ]
+}

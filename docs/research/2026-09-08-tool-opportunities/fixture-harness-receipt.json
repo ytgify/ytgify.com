@@ -96,6 +96,20 @@
       "authoredGoldens": true
     },
     {
+      "id": "crop-grid",
+      "frames": 4,
+      "bytes": 709,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
+      "id": "already-optimized",
+      "frames": 2,
+      "bytes": 279,
+      "independentDecodersAgree": true,
+      "authoredGoldens": true
+    },
+    {
       "id": "original-tutorial",
       "frames": 24,
       "bytes": 46671,
@@ -115,6 +129,48 @@
       "bytes": 29612,
       "independentDecodersAgree": true,
       "authoredGoldens": false
+    },
+    {
+      "id": "natural-bunny-1",
+      "frames": 20,
+      "bytes": 441009,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    },
+    {
+      "id": "natural-bunny-2",
+      "frames": 20,
+      "bytes": 344779,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    },
+    {
+      "id": "natural-bunny-3",
+      "frames": 20,
+      "bytes": 341950,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    },
+    {
+      "id": "natural-bunny-4",
+      "frames": 20,
+      "bytes": 355109,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    },
+    {
+      "id": "natural-bunny-5",
+      "frames": 20,
+      "bytes": 383720,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
+    },
+    {
+      "id": "natural-bunny-6",
+      "frames": 20,
+      "bytes": 252628,
+      "independentDecodersAgree": true,
+      "authoredGoldens": false
     }
   ],
   "negativeControls": [
@@ -123,10 +179,10 @@
     "actual loop corruption",
     "one-byte-over budget"
   ],
-  "elapsedSeconds": 0.285,
+  "elapsedSeconds": 1.185,
   "limitations": [
     "Invalid fixtures inventoried, not product-rejection tested",
-    "No compressor implemented",
+    "Fixture-only receipt; product exports are checked separately",
     "Desktop inspection runtime is not browser performance",
     "Real mobile hardware not tested"
   ]

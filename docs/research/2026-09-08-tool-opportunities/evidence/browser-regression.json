@@ -1,0 +1,33 @@
+{
+  "stats": {
+    "startTime": "2026-09-08T17:18:29.187Z",
+    "duration": 286298.01,
+    "expected": 136,
+    "skipped": 1,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "projects": [
+    {
+      "name": "chrome-media",
+      "use": {}
+    },
+    {
+      "name": "chromium",
+      "use": {}
+    },
+    {
+      "name": "firefox",
+      "use": {}
+    },
+    {
+      "name": "webkit",
+      "use": {}
+    },
+    {
+      "name": "mobile-chromium",
+      "use": {}
+    }
+  ],
+  "note": "The one skipped test is the dedicated enabled-PostHog test, which passed separately with PRIVACY_QA=1. Native capture runs separately."
+}

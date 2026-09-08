@@ -75,6 +75,8 @@ def negative_controls():
 def main():
     started = time.perf_counter()
     manifest = json.loads((CORPUS / "manifest.json").read_text())
+    if (CORPUS / "natural-manifest.json").exists():
+        manifest["fixtures"] += json.loads((CORPUS / "natural-manifest.json").read_text())["fixtures"]
     valid = [entry for entry in manifest["fixtures"] if entry["decodeForOracle"]]
     paths = [str(CORPUS / entry["file"]) for entry in valid]
     second = json.loads(subprocess.check_output(["node", str(ROOT / "scripts/gif-fixtures/inspect-gifuct.mjs"), *paths]))
@@ -103,7 +105,7 @@ def main():
     receipt = dict(status="fixture harness passed; product gates remain open", platform=platform.platform(),
                    python=platform.python_version(), pillow=PIL.__version__, fixtures=results,
                    negativeControls=negative_controls(), elapsedSeconds=round(time.perf_counter() - started, 3),
-                   limitations=["Invalid fixtures inventoried, not product-rejection tested", "No compressor implemented",
+                   limitations=["Invalid fixtures inventoried, not product-rejection tested", "Fixture-only receipt; product exports are checked separately",
                                 "Desktop inspection runtime is not browser performance", "Real mobile hardware not tested"])
     with tempfile.TemporaryDirectory() as temporary:
         # Prove the receipt serializes without relying on browser state or generated UI.

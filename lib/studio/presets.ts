@@ -39,8 +39,3 @@ export function applyDurationPreset(
 function roundTime(value: number): number {
   return Math.round(value * 10) / 10;
 }
-
-export function formatTime(value: number): string {
-  if (!Number.isFinite(value)) return '0.0s';
-  return `${value.toFixed(1)}s`;
-}

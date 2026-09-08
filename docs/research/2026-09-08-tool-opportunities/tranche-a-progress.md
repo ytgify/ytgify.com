@@ -1,5 +1,7 @@
 # Tranche A — initial implementation receipt
 
+Historical first checkpoint. See [implementation-receipt.md](implementation-receipt.md) for the subsequent implementation and current evidence.
+
 Started September 8, 2026, on `codex/gif-tools-foundation`, a fresh worktree based on `origin/main` commit `a338f3f`. No product implementation or release gate is claimed complete.
 
 ## Work delivered

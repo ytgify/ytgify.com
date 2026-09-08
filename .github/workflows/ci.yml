@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, codex/gif-tools-experimental]
   merge_group:
     branches: [main]
 
@@ -65,6 +65,20 @@ jobs:
 
       - name: Run unit tests with coverage
         run: npm run test:unit:coverage
+
+      - name: Verify real GIF fixtures with independent decoders
+        run: |
+          python3 -m venv /tmp/ytgify-gif-oracle
+          /tmp/ytgify-gif-oracle/bin/pip install -r scripts/gif-fixtures/requirements.txt
+          /tmp/ytgify-gif-oracle/bin/python scripts/gif-fixtures/verify.py > gif-oracle-receipt.json
+
+      - name: Upload GIF oracle evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: gif-oracle-evidence
+          path: gif-oracle-receipt.json
+          retention-days: 14
 
       - name: Upload coverage
         if: always()
@@ -156,6 +170,14 @@ jobs:
       - name: Install browser matrix
         run: npx playwright install chromium firefox webkit --with-deps
 
+      - name: Install media inspection and native Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          npx playwright install chrome
+          python3 -m venv /tmp/ytgify-gif-oracle
+          /tmp/ytgify-gif-oracle/bin/pip install -r scripts/gif-fixtures/requirements.txt
+
       - name: Start static test server
         run: |
           npx serve out -l 3217 > /tmp/ytgify-serve.log 2>&1 &
@@ -169,7 +191,29 @@ jobs:
       - name: Run video-to-GIF workflow, accessibility, and SEO tests
         run: npm run test:video-to-gif
         env:
+          GIF_ORACLE_PYTHON: /tmp/ytgify-gif-oracle/bin/python
           PLAYWRIGHT_BASE_URL: http://localhost:3217
+
+      - name: Upload real media exports and browser reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: gif-tools-browser-evidence
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+
+      - name: Verify enabled analytics privacy with a local test key
+        run: npm run test:gif-privacy
+
+      - name: Upload enabled analytics privacy evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: gif-tools-privacy-evidence
+          path: test-results/
+          retention-days: 14
 
   ci-gate:
     name: CI Gate

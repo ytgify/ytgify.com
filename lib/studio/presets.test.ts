@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyDurationPreset, formatTime, makeTrimSelection } from './presets';
+import { applyDurationPreset, makeTrimSelection } from './presets';
 
 describe('Studio trim presets', () => {
   it('normalizes selections to the source duration', () => {
@@ -35,10 +35,5 @@ describe('Studio trim presets', () => {
     expect(
       applyDurationPreset(Number.NaN, { startTime: Number.NaN, endTime: Number.NaN, duration: Number.NaN }, 6),
     ).toEqual({ startTime: 0, endTime: 6, duration: 6 });
-  });
-
-  it('formats finite times consistently', () => {
-    expect(formatTime(3.26)).toBe('3.3s');
-    expect(formatTime(Number.NaN)).toBe('0.0s');
   });
 });

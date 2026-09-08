@@ -1,0 +1,474 @@
+{
+  "compressionCases": [
+    {
+      "fixture": "natural-bunny-5.gif",
+      "ratio": 0.05,
+      "targetBytes": 19186,
+      "originalBytes": 383720,
+      "outputBytes": 345344,
+      "meanIndependentSSIM": 0.97938005,
+      "minimumIndependentSSIM": 0.975155,
+      "sha256": "10e5c71b5de6817dbd71b96effe5b5d36ec0315da0333d86c36bcf61aea28a49"
+    },
+    {
+      "fixture": "natural-bunny-5.gif",
+      "ratio": 0.5,
+      "targetBytes": 191860,
+      "originalBytes": 383720,
+      "outputBytes": 345344,
+      "meanIndependentSSIM": 0.97938005,
+      "minimumIndependentSSIM": 0.975155,
+      "sha256": "10e5c71b5de6817dbd71b96effe5b5d36ec0315da0333d86c36bcf61aea28a49"
+    },
+    {
+      "fixture": "natural-bunny-5.gif",
+      "ratio": 0.8,
+      "targetBytes": 306976,
+      "originalBytes": 383720,
+      "outputBytes": 345344,
+      "meanIndependentSSIM": 0.97938005,
+      "minimumIndependentSSIM": 0.975155,
+      "sha256": "10e5c71b5de6817dbd71b96effe5b5d36ec0315da0333d86c36bcf61aea28a49"
+    },
+    {
+      "fixture": "natural-bunny-1.gif",
+      "ratio": 0.05,
+      "targetBytes": 22050,
+      "originalBytes": 441009,
+      "outputBytes": 441009,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "08240176fa88fc9074cb771506c0c48be36ba80953f9376005f5ccc96af50e44"
+    },
+    {
+      "fixture": "natural-bunny-1.gif",
+      "ratio": 0.5,
+      "targetBytes": 220504,
+      "originalBytes": 441009,
+      "outputBytes": 441009,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "08240176fa88fc9074cb771506c0c48be36ba80953f9376005f5ccc96af50e44"
+    },
+    {
+      "fixture": "natural-bunny-1.gif",
+      "ratio": 0.8,
+      "targetBytes": 352807,
+      "originalBytes": 441009,
+      "outputBytes": 441009,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "08240176fa88fc9074cb771506c0c48be36ba80953f9376005f5ccc96af50e44"
+    },
+    {
+      "fixture": "natural-bunny-2.gif",
+      "ratio": 0.05,
+      "targetBytes": 17238,
+      "originalBytes": 344779,
+      "outputBytes": 344779,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "e977d072d2f7fdd8e30084dfc4f442fb9c1c421b1c6559a64a8e461142a141f7"
+    },
+    {
+      "fixture": "natural-bunny-2.gif",
+      "ratio": 0.5,
+      "targetBytes": 172389,
+      "originalBytes": 344779,
+      "outputBytes": 344779,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "e977d072d2f7fdd8e30084dfc4f442fb9c1c421b1c6559a64a8e461142a141f7"
+    },
+    {
+      "fixture": "natural-bunny-2.gif",
+      "ratio": 0.8,
+      "targetBytes": 275823,
+      "originalBytes": 344779,
+      "outputBytes": 344779,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "e977d072d2f7fdd8e30084dfc4f442fb9c1c421b1c6559a64a8e461142a141f7"
+    },
+    {
+      "fixture": "natural-bunny-6.gif",
+      "ratio": 0.05,
+      "targetBytes": 12631,
+      "originalBytes": 252628,
+      "outputBytes": 252628,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "9f6188e1054b73ca90f0d90ef03ea9e53ca22548e472ed1d76ec345df6b87dac"
+    },
+    {
+      "fixture": "natural-bunny-6.gif",
+      "ratio": 0.5,
+      "targetBytes": 126314,
+      "originalBytes": 252628,
+      "outputBytes": 252628,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "9f6188e1054b73ca90f0d90ef03ea9e53ca22548e472ed1d76ec345df6b87dac"
+    },
+    {
+      "fixture": "natural-bunny-6.gif",
+      "ratio": 0.8,
+      "targetBytes": 202102,
+      "originalBytes": 252628,
+      "outputBytes": 252628,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "9f6188e1054b73ca90f0d90ef03ea9e53ca22548e472ed1d76ec345df6b87dac"
+    },
+    {
+      "fixture": "natural-bunny-3.gif",
+      "ratio": 0.05,
+      "targetBytes": 17097,
+      "originalBytes": 341950,
+      "outputBytes": 341950,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "a2ccfda86836b953f593cdec694bdd55e4d7e4ab2aa261d23943423355e97660"
+    },
+    {
+      "fixture": "natural-bunny-3.gif",
+      "ratio": 0.5,
+      "targetBytes": 170975,
+      "originalBytes": 341950,
+      "outputBytes": 341950,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "a2ccfda86836b953f593cdec694bdd55e4d7e4ab2aa261d23943423355e97660"
+    },
+    {
+      "fixture": "natural-bunny-3.gif",
+      "ratio": 0.8,
+      "targetBytes": 273560,
+      "originalBytes": 341950,
+      "outputBytes": 341950,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "a2ccfda86836b953f593cdec694bdd55e4d7e4ab2aa261d23943423355e97660"
+    },
+    {
+      "fixture": "natural-bunny-4.gif",
+      "ratio": 0.05,
+      "targetBytes": 17755,
+      "originalBytes": 355109,
+      "outputBytes": 355109,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "8012972fc636801b01545ab9755f02fafbbb21e4836681e53d1b6a3f5932a9ef"
+    },
+    {
+      "fixture": "natural-bunny-4.gif",
+      "ratio": 0.5,
+      "targetBytes": 177554,
+      "originalBytes": 355109,
+      "outputBytes": 355109,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "8012972fc636801b01545ab9755f02fafbbb21e4836681e53d1b6a3f5932a9ef"
+    },
+    {
+      "fixture": "natural-bunny-4.gif",
+      "ratio": 0.8,
+      "targetBytes": 284087,
+      "originalBytes": 355109,
+      "outputBytes": 355109,
+      "meanIndependentSSIM": 1.0,
+      "minimumIndependentSSIM": 1.0,
+      "sha256": "8012972fc636801b01545ab9755f02fafbbb21e4836681e53d1b6a3f5932a9ef"
+    }
+  ],
+  "mp4Cases": [
+    {
+      "fixture": "interlaced-odd.gif",
+      "cycles": 1,
+      "bytes": 795,
+      "codec": "h264",
+      "width": 18,
+      "height": 16,
+      "duration": 0.1,
+      "independentPixels": {
+        "frames": 1,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 37.39668174962293,
+        "meanRgbMeanAbsoluteError": 37.39668174962293
+      },
+      "sha256": "bc173ee182abebf8f1a8da88339d02e3da9a5bd863db792c8fcf0ca2104513c1"
+    },
+    {
+      "fixture": "interlaced-odd.gif",
+      "cycles": 3,
+      "bytes": 881,
+      "codec": "h264",
+      "width": 18,
+      "height": 16,
+      "duration": 0.3,
+      "independentPixels": {
+        "frames": 3,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 37.39668174962293,
+        "meanRgbMeanAbsoluteError": 37.39668174962293
+      },
+      "sha256": "cb273d51711d4bc82efdf8f3a2fedb1628581734949c60e871442ffb6c1d49fd"
+    },
+    {
+      "fixture": "local-palette-alpha.gif",
+      "cycles": 1,
+      "bytes": 859,
+      "codec": "h264",
+      "width": 16,
+      "height": 16,
+      "duration": 0.2,
+      "independentPixels": {
+        "frames": 2,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.498263888888889,
+        "meanRgbMeanAbsoluteError": 3.8046875
+      },
+      "sha256": "d125e45722efc759c86149e5ab21d273ac0e15c4f9a440799cd17e902fa0a621"
+    },
+    {
+      "fixture": "local-palette-alpha.gif",
+      "cycles": 3,
+      "bytes": 1092,
+      "codec": "h264",
+      "width": 16,
+      "height": 16,
+      "duration": 0.6,
+      "independentPixels": {
+        "frames": 6,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.498263888888889,
+        "meanRgbMeanAbsoluteError": 3.8046875
+      },
+      "sha256": "79fdf717faea4a4a54e4f78eefb2062a7e2508b078f3e62518b8b0b28e1dfef0"
+    },
+    {
+      "fixture": "natural-bunny-2.gif",
+      "cycles": 1,
+      "bytes": 102650,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 2.0,
+      "independentPixels": {
+        "frames": 20,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 7.349093967013889,
+        "meanRgbMeanAbsoluteError": 6.638475206163195
+      },
+      "sha256": "6318ee78650ce908816e42ceaaf94147d085ec8ec702d313d069f4e279956d36"
+    },
+    {
+      "fixture": "natural-bunny-2.gif",
+      "cycles": 3,
+      "bytes": 306568,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 6.0,
+      "independentPixels": {
+        "frames": 60,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 7.349093967013889,
+        "meanRgbMeanAbsoluteError": 6.638475206163195
+      },
+      "sha256": "d8b0947218bdf9ba81969726c783824677d22b79ac45dbd5091797e1ed799c3d"
+    },
+    {
+      "fixture": "natural-bunny-4.gif",
+      "cycles": 1,
+      "bytes": 103419,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 2.0,
+      "independentPixels": {
+        "frames": 20,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.601625795717593,
+        "meanRgbMeanAbsoluteError": 6.510770218460648
+      },
+      "sha256": "949d130f4c2cf1e021ffc6e0b09e63ce12bc30f763253863c519bc97502e9976"
+    },
+    {
+      "fixture": "natural-bunny-4.gif",
+      "cycles": 3,
+      "bytes": 308875,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 6.0,
+      "independentPixels": {
+        "frames": 60,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.601625795717593,
+        "meanRgbMeanAbsoluteError": 6.510770218460649
+      },
+      "sha256": "2ba1181c03879e09cafc4b2a66dafdf2c6a588b12ae5cca1f5138f77fcbca90c"
+    },
+    {
+      "fixture": "natural-bunny-3.gif",
+      "cycles": 1,
+      "bytes": 97308,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 2.0,
+      "independentPixels": {
+        "frames": 20,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.7814760561342595,
+        "meanRgbMeanAbsoluteError": 6.326363570601852
+      },
+      "sha256": "e19f803b304d0fb24ed1d1f061b451d0f5005b7a9e87ee30c1b20216a874b8a6"
+    },
+    {
+      "fixture": "natural-bunny-3.gif",
+      "cycles": 3,
+      "bytes": 290542,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 6.0,
+      "independentPixels": {
+        "frames": 60,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.7814760561342595,
+        "meanRgbMeanAbsoluteError": 6.326363570601852
+      },
+      "sha256": "456fa0bc0eb9b90025e67c3b766ea42e83f85ba50d29fc15675f2a119007c2a6"
+    },
+    {
+      "fixture": "natural-bunny-6.gif",
+      "cycles": 1,
+      "bytes": 92404,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 2.0,
+      "independentPixels": {
+        "frames": 20,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.993263527199074,
+        "meanRgbMeanAbsoluteError": 4.90216064453125
+      },
+      "sha256": "fad073bba83608b60574860d35ba3852319f17057a1d8f1548f83c3513c9216d"
+    },
+    {
+      "fixture": "natural-bunny-6.gif",
+      "cycles": 3,
+      "bytes": 275830,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 6.0,
+      "independentPixels": {
+        "frames": 60,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.993263527199074,
+        "meanRgbMeanAbsoluteError": 4.90216064453125
+      },
+      "sha256": "7c983cab0e67f68d0f5643a660cbdbc531a8c8bcda3fc546af814f9a1dbd8872"
+    },
+    {
+      "fixture": "natural-bunny-5.gif",
+      "cycles": 1,
+      "bytes": 136960,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 2.0,
+      "independentPixels": {
+        "frames": 20,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 7.256157769097222,
+        "meanRgbMeanAbsoluteError": 6.747529206452546
+      },
+      "sha256": "0cf6a2c95ac940952f5f5da7a09b044a6435c422297d8f263237005517f78379"
+    },
+    {
+      "fixture": "natural-bunny-5.gif",
+      "cycles": 3,
+      "bytes": 409498,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 6.0,
+      "independentPixels": {
+        "frames": 60,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 7.256157769097222,
+        "meanRgbMeanAbsoluteError": 6.747529206452546
+      },
+      "sha256": "e48f297b1ac2ea1352008dad4c38798a51e562a0c81e72953c6437cfdcb0263a"
+    },
+    {
+      "fixture": "natural-bunny-1.gif",
+      "cycles": 1,
+      "bytes": 107960,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 2.0,
+      "independentPixels": {
+        "frames": 20,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.194715711805555,
+        "meanRgbMeanAbsoluteError": 6.119593641493056
+      },
+      "sha256": "6f4723984951282a93cc6512658abe288027241f09c4629b242a745b1b40442b"
+    },
+    {
+      "fixture": "natural-bunny-1.gif",
+      "cycles": 3,
+      "bytes": 322498,
+      "codec": "h264",
+      "width": 256,
+      "height": 144,
+      "duration": 6.0,
+      "independentPixels": {
+        "frames": 60,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 6.194715711805555,
+        "meanRgbMeanAbsoluteError": 6.119593641493055
+      },
+      "sha256": "8d526f67e1e09cea041f728dd6019ef9e6390fa4eaeb71de63a6831f8b505963"
+    },
+    {
+      "fixture": "variable-delays.gif",
+      "cycles": 1,
+      "bytes": 1055,
+      "codec": "h264",
+      "width": 16,
+      "height": 16,
+      "duration": 0.52,
+      "independentPixels": {
+        "frames": 5,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 1.7777777777777777,
+        "meanRgbMeanAbsoluteError": 1.3180555555555555
+      },
+      "sha256": "761f0e5b5198d35c6f1478fcfa72ab27574c4cee7da5055b31994c7b55c2477d"
+    },
+    {
+      "fixture": "variable-delays.gif",
+      "cycles": 3,
+      "bytes": 1714,
+      "codec": "h264",
+      "width": 16,
+      "height": 16,
+      "duration": 1.56,
+      "independentPixels": {
+        "frames": 15,
+        "monotonicTimestamps": true,
+        "maximumRgbMeanAbsoluteError": 1.7777777777777777,
+        "meanRgbMeanAbsoluteError": 1.2048611111111112
+      },
+      "sha256": "56b7503602bcefc000cbe70080378a29acacc2ccdd8d2dcbe1170b8d21173850"
+    }
+  ]
+}

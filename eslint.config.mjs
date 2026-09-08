@@ -42,6 +42,7 @@ const eslintConfig = [
   {
     ignores: [
       'node_modules/**',
+      '.ytgify-runtime/**',
       '.next/**',
       'out/**',
       'build/**',

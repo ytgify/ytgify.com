@@ -50,6 +50,16 @@ export default function SiteFooter() {
               <BookOpen size={20} />
             </a>
           </div>
+          {Object.entries({
+            'gif-compressor': 'GIF Compressor',
+            'resize-gif': 'Resize and Crop GIF',
+            'gif-to-mp4': 'GIF to MP4',
+            'screen-to-gif': 'Screen to GIF',
+          }).map(([route, label]) => (
+            <a key={route} href={`/${route}`} className="text-[#a0a0a0] hover:text-white">
+              {label}
+            </a>
+          ))}
           <Link href="/blog" className="text-[#a0a0a0] hover:text-white transition-colors">
             Blog
           </Link>
