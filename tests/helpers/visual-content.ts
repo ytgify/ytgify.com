@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -61,6 +62,7 @@ async function exportFrames(page: Page, testInfo: TestInfo, name: string) {
   const download = await pending;
   const file = (await download.path())!;
   await testInfo.attach(`${name}.gif`, { path: file, contentType: 'image/gif' });
+  execFileSync(process.execPath, ['scripts/ios/verify-saved-gif.mjs', file, name]);
   const bytes = await readFile(file);
   const gif = parseGIF(Uint8Array.from(bytes).buffer);
   expect([gif.lsd.width, gif.lsd.height]).toEqual([320, 240]);
