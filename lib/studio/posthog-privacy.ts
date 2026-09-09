@@ -1,6 +1,7 @@
 import type { CaptureResult } from 'posthog-js';
+import { toolEventProperties } from '../media/analytics';
 
-const privateCreatorPaths = new Set(['/studio', '/video-to-gif']);
+const privateCreatorPaths = new Set(['/studio', '/video-to-gif', '/gif-compressor']);
 const privateCreatorProperties = [
   '$raw_user_agent',
   '$geoip_postal_code',
@@ -10,6 +11,15 @@ const privateCreatorProperties = [
 
 export function filterPrivateCreatorEvent(event: CaptureResult | null): CaptureResult | null {
   if (!event || !isPrivateCreatorEvent(event)) return event;
+  if (event.event === 'gif_tool_activity') {
+    const safe = toolEventProperties(event.properties || {});
+    const transport = Object.fromEntries(
+      ['token', 'distinct_id']
+        .filter((key) => typeof event.properties?.[key] === 'string')
+        .map((key) => [key, event.properties![key]]),
+    );
+    return safe ? { ...event, properties: { ...safe, ...transport, $geoip_disable: true } } : null;
+  }
   return event.event.startsWith('studio_') ? sanitizeCreatorEvent(event) : null;
 }
 

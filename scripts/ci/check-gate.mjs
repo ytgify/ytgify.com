@@ -5,12 +5,13 @@ export function checkGate(needs) {
   if (detection?.result !== 'success' || needs.quality?.result !== 'success') {
     throw new Error('Path detection and quality must succeed');
   }
-  const { site, tool } = detection.outputs || {};
-  if (![site, tool].every((value) => value === 'true' || value === 'false')) {
+  const { site, tool, compressor } = detection.outputs || {};
+  if (![site, tool, compressor].every((value) => value === 'true' || value === 'false')) {
     throw new Error('Missing or invalid suite selection');
   }
   const expected = {
-    'build-test-app': site === 'true' || tool === 'true',
+    'build-test-app': site === 'true' || tool === 'true' || compressor === 'true',
+    'gif-compressor-browser-tests': compressor === 'true',
     'site-browser-tests': site === 'true',
     'video-to-gif-browser-tests': tool === 'true',
   };

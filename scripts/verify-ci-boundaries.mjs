@@ -35,7 +35,9 @@ for (const path of [
   cases.push([[path], true, true]);
 }
 for (const [paths, site, tool] of cases) {
-  assert.deepEqual(selectSuites(paths), { site, tool }, paths.join(', '));
+  const selected = selectSuites(paths);
+  assert.equal(selected.site, site);
+  assert.equal(selected.tool, tool);
 }
 
 for (const [site, tool] of [
@@ -44,22 +46,28 @@ for (const [site, tool] of [
   [false, true],
   [true, true],
 ]) {
-  const needs = {
-    'detect-changes': { result: 'success', outputs: { site: String(site), tool: String(tool) } },
-    quality: { result: 'success' },
-    'build-test-app': { result: site || tool ? 'success' : 'skipped' },
-    'site-browser-tests': { result: site ? 'success' : 'skipped' },
-    'video-to-gif-browser-tests': { result: tool ? 'success' : 'skipped' },
-  };
-  checkGate(needs);
-  for (const job of Object.keys(needs)) {
-    for (const result of ['failure', 'cancelled', 'unexpected']) {
-      assert.throws(() => checkGate({ ...needs, [job]: { ...needs[job], result } }));
+  for (const compressor of [false, true]) {
+    const needs = {
+      'detect-changes': {
+        result: 'success',
+        outputs: { site: String(site), tool: String(tool), compressor: String(compressor) },
+      },
+      quality: { result: 'success' },
+      'gif-compressor-browser-tests': { result: compressor ? 'success' : 'skipped' },
+      'build-test-app': { result: site || tool || compressor ? 'success' : 'skipped' },
+      'site-browser-tests': { result: site ? 'success' : 'skipped' },
+      'video-to-gif-browser-tests': { result: tool ? 'success' : 'skipped' },
+    };
+    checkGate(needs);
+    for (const job of Object.keys(needs)) {
+      for (const result of ['failure', 'cancelled', 'unexpected']) {
+        assert.throws(() => checkGate({ ...needs, [job]: { ...needs[job], result } }));
+      }
+      const flipped = needs[job].result === 'success' ? 'skipped' : 'success';
+      assert.throws(() => checkGate({ ...needs, [job]: { ...needs[job], result: flipped } }));
     }
-    const flipped = needs[job].result === 'success' ? 'skipped' : 'success';
-    assert.throws(() => checkGate({ ...needs, [job]: { ...needs[job], result: flipped } }));
+    assert.throws(() => checkGate({ ...needs, 'detect-changes': { result: 'success', outputs: {} } }));
   }
-  assert.throws(() => checkGate({ ...needs, 'detect-changes': { result: 'success', outputs: {} } }));
 }
 assert.throws(() => changedPaths('', 'HEAD'));
 
@@ -89,7 +97,7 @@ try {
   git('update-index', '--add', '--cacheinfo', '100644', blob, 'app/page.tsx');
   git('commit', '-qm', 'move');
   const head = git('rev-parse', 'HEAD');
-  assert.deepEqual(selectSuites(changedPaths(beforeMove, head)), { site: true, tool: true });
+  assert.deepEqual(selectSuites(changedPaths(beforeMove, head)), { site: true, tool: true, compressor: false });
   git('checkout', '-q', base);
   git('commit', '--allow-empty', '-qm', 'base advanced');
   assert.deepEqual(changedPaths(git('rev-parse', 'HEAD'), head), ['app/page.tsx']);
@@ -115,6 +123,16 @@ for (const entry of [
 }
 assert.ok(!workflow.includes('paths-ignore:'));
 assert.ok(
-  workflow.includes('needs: [detect-changes, quality, build-test-app, site-browser-tests, video-to-gif-browser-tests]'),
+  workflow
+    .replace(/\s/g, '')
+    .includes(
+      'needs:[detect-changes,quality,build-test-app,site-browser-tests,video-to-gif-browser-tests,gif-compressor-browser-tests,]',
+    ),
 );
 console.log(`${cases.length} path cases, all gate states, and real Git move/base fixtures passed.`);
+
+assert.deepEqual(selectSuites(['app/gif-compressor/page.tsx']), { site: false, tool: false, compressor: true });
+assert.deepEqual(selectSuites(['lib/media/gif/compress.ts']), { site: false, tool: false, compressor: true });
+assert.deepEqual(selectSuites(['package-lock.json']), { site: true, tool: true, compressor: true });
+
+assert.deepEqual(selectSuites(['lib/studio/posthog-privacy.ts']), { site: false, tool: true, compressor: true });

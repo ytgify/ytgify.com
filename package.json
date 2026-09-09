@@ -26,7 +26,9 @@
     "verify:ci-boundaries": "node scripts/verify-ci-boundaries.mjs",
     "pre-push": "bash scripts/pre-push.sh",
     "pre-commit": "lint-staged && npm run test:unit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:gif-compressor": "playwright test tests/gif-tools.spec.ts tests/gif-corpus-exports.spec.ts tests/gif-lifecycle.spec.ts tests/gif-replacement.spec.ts",
+    "test:gif-privacy": "NEXT_PUBLIC_POSTHOG_KEY=phc_local_test_only NEXT_PUBLIC_POSTHOG_HOST=http://localhost:3217/posthog npm run build && PRIVACY_QA=1 PLAYWRIGHT_SKIP_BUILD=1 playwright test tests/gif-privacy.spec.ts --project=chromium --workers=1"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -41,7 +43,8 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "remark-frontmatter": "^5.0.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "ssim.js": "3.5.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

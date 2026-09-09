@@ -1,6 +1,7 @@
 import { calculateOutputDimensions } from './resolution';
 import type { StudioOutputSettings, StudioTrimSelection, StudioVideoMetadata } from './types';
 
+/** @internal Exposed for deterministic contract tests. */
 export const STUDIO_FRAME_MEMORY_BUDGET_BYTES = 80 * 1024 * 1024;
 
 export interface StudioExportBudget {

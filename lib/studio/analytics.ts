@@ -78,6 +78,7 @@ export function trackStudioEvent(eventName: StudioEventName, properties: StudioE
   });
 }
 
+/** @internal Exposed for deterministic contract tests. */
 export function dispatchStudioEvent(
   eventName: StudioEventName,
   properties: StudioEventProperties,
@@ -89,6 +90,7 @@ export function dispatchStudioEvent(
   return safe;
 }
 
+/** @internal Exposed for deterministic contract tests. */
 export function sanitizeProperties(
   eventName: StudioEventName,
   properties: StudioEventProperties,
