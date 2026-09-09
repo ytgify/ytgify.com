@@ -25,6 +25,7 @@ jobs:
     outputs:
       site: ${{ steps.filter.outputs.site }}
       tool: ${{ steps.filter.outputs.tool }}
+      media: ${{ steps.filter.outputs.media }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -39,6 +40,7 @@ jobs:
 
   quality:
     name: Quality Checks
+    needs: [detect-changes]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -67,13 +69,14 @@ jobs:
         run: npm run test:unit:coverage
 
       - name: Verify real GIF fixtures with independent decoders
+        if: needs.detect-changes.outputs.tool == 'true'
         run: |
           python3 -m venv /tmp/ytgify-gif-oracle
           /tmp/ytgify-gif-oracle/bin/pip install -r scripts/gif-fixtures/requirements.txt
           /tmp/ytgify-gif-oracle/bin/python scripts/gif-fixtures/verify.py > gif-oracle-receipt.json
 
       - name: Upload GIF oracle evidence
-        if: always()
+        if: always() && needs.detect-changes.outputs.tool == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: gif-oracle-evidence
@@ -190,8 +193,9 @@ jobs:
           exit 1
 
       - name: Run video-to-GIF workflow, accessibility, and SEO tests
-        run: npm run test:video-to-gif
+        run: node scripts/ci/run-media-tests.mjs
         env:
+          SELECTED_MEDIA: ${{ needs.detect-changes.outputs.media }}
           GIF_ORACLE_PYTHON: /tmp/ytgify-gif-oracle/bin/python
           PLAYWRIGHT_BASE_URL: http://localhost:3217
 

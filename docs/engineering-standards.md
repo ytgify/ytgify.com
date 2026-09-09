@@ -76,3 +76,30 @@ For meaningful work, record the three most realistic failure modes and evidence 
 `npm run test:gif-privacy` makes a dedicated local test-key build and intercepts the enabled PostHog SDK's network requests. Rebuild normally afterward; never deploy the test-key artifact. Native capture uses the opt-in `native-capture` project and a controlled tab only. Run each native case serially with other browser work so document focus remains valid. Engine emulation is not evidence of native mobile saving.
 
 The experimental acceptance ledger and unresolved production/device gates are in `docs/research/2026-09-08-tool-opportunities/implementation-receipt.md`. Generated `.ytgify-runtime` evidence and rollback artifacts are excluded from lint, type and unit-source discovery.
+
+## GIF tool CI selection
+
+CI selects media browser tests by the candidate diff: compressor, resize/crop,
+GIF-to-MP4, screen recording, or the existing video editor. Geometry changes run
+both compressor and resize; editor changes also run screen recording because its
+output enters that editor. Shared media/worker/fixture changes select all media;
+shared app, dependency, configuration, and unknown paths select site and media.
+Cross-tool journeys and shared cancellation, invalid-input, metadata, and layout
+checks remain selected for affected tools. All 104 existing browser cases remain
+available; selection does not reduce fixture quality assertions or browser support.
+
+Quality/unit checks remain mandatory. The independent GIF fixture oracle runs
+only for media changes. The selected media job also retains enabled analytics
+privacy verification. To inspect selection locally, run
+`SELECTED_MEDIA=resize node scripts/ci/run-media-tests.mjs --list`; combine names
+with commas. Set `PLAYWRIGHT_BASE_URL` to test the running QA server without a build.
+Real export checks require the Python packages in
+`scripts/gif-fixtures/requirements.txt` and FFmpeg; point `GIF_ORACLE_PYTHON` at the
+prepared Python interpreter.
+
+PR CI serves the actual static production artifact. A separate preview deployment
+is not required for every tool change. Hosting/header/base-path changes and first
+release warrant a deployed smoke check for route loading, worker assets, and one
+small export. Native screen-selection permission dialogs remain a manual check;
+CI uses a real canvas MediaStream and MediaRecorder with a controlled permission
+boundary.

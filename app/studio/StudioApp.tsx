@@ -15,12 +15,9 @@ export default function StudioApp({ initialFile, embedded = false }: { initialFi
   const Container = embedded ? 'section' : 'main';
   const studio = useStudioController();
   const { handleFile } = studio;
-  const imported = useRef<File | null>(null);
   useEffect(() => {
-    if (initialFile && imported.current !== initialFile) {
-      imported.current = initialFile;
-      void handleFile(initialFile);
-    }
+    // Reimport after effect replay: cleanup revokes the previous video URL.
+    if (initialFile) void handleFile(initialFile);
   }, [initialFile, handleFile]);
   const wizardRef = useRef<HTMLElement>(null);
   const previousStep = useRef(studio.displayStep);

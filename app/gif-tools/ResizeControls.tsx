@@ -115,7 +115,19 @@ export default function ResizeControls({
         ))}
       </div>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={locked} onChange={(event) => setLocked(event.target.checked)} />
+        <input
+          type="checkbox"
+          checked={locked}
+          onChange={(event) => {
+            const checked = event.target.checked;
+            setLocked(checked);
+            if (checked)
+              onChange({
+                ...value,
+                height: Math.max(1, Math.round((value.width * value.cropHeight) / value.cropWidth)),
+              });
+          }}
+        />
         Lock crop aspect ratio
       </label>
       <label className="block text-sm">
@@ -129,6 +141,14 @@ export default function ResizeControls({
           <option value="contain">Fit with transparent padding</option>
         </select>
       </label>
+      <p className="text-sm text-gray-300">
+        Output: {value.width} × {value.height} pixels. Click Resize GIF to apply these settings.
+      </p>
+      {value.fit === 'contain' && locked ? (
+        <p className="text-sm text-gray-400">
+          Unlock the aspect ratio and choose different output proportions to add transparent padding.
+        </p>
+      ) : null}
     </div>
   );
 }

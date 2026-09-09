@@ -43,7 +43,6 @@ export function useScreenRecorder() {
     preparation.current?.abort();
     trackToolEvent('screen-to-gif', 'start');
     setError('');
-    setFile(null);
     setStatus('choosing');
     try {
       if (!navigator.mediaDevices?.getDisplayMedia || typeof MediaRecorder === 'undefined')
@@ -109,6 +108,8 @@ export function useScreenRecorder() {
       };
       captured.getVideoTracks().forEach((track) => track.addEventListener('ended', stop, { once: true }));
       active.start(250);
+      // Keep the previous clip until its replacement is actually recording.
+      setFile(null);
       setElapsed(0);
       const began = performance.now();
       ticker.current = setInterval(() => setElapsed(Math.min(30, Math.floor((performance.now() - began) / 1000))), 250);
@@ -118,7 +119,7 @@ export function useScreenRecorder() {
       if (id !== generation.current) return;
       trackToolEvent('screen-to-gif', 'error');
       release();
-      setStatus('idle');
+      setStatus(file ? 'ready' : 'idle');
       setError(
         caught instanceof DOMException && caught.name === 'InvalidStateError'
           ? 'Bring this tab to the front, then start screen recording again.'

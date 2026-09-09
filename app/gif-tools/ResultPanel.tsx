@@ -1,4 +1,5 @@
 'use client';
+import { formatMediaSize } from '@/lib/media/file-size';
 import { trackToolEvent } from '@/lib/media/analytics';
 import type { GifTool } from './catalog';
 import type { GifJobResult } from '@/lib/media/jobs/protocol';
@@ -32,7 +33,7 @@ export default function ResultPanel({
       )}
       <p>
         {result.width} × {result.height} · {result.mime === 'image/gif' ? `${result.frameCount} frames · ` : ''}{' '}
-        {size.toLocaleString()} bytes · {(result.duration / 1000).toFixed(2)} seconds
+        {formatMediaSize(size)} · {(result.duration / 1000).toFixed(2)} seconds
         {result.mime === 'image/gif' ? ' per cycle' : ''}
       </p>
       <p className="text-sm text-gray-300">

@@ -1,4 +1,5 @@
 'use client';
+import { formatMediaSize } from '@/lib/media/file-size';
 
 import { trackToolEvent } from '@/lib/media/analytics';
 import { gifTools, type GifTool } from './catalog';
@@ -32,7 +33,7 @@ export default function GifToolApp({ tool }: { tool: GifTool }) {
         <>
           <p className="text-sm text-gray-300">
             {metadata.width} × {metadata.height} · {metadata.frameCount} frames ·{' '}
-            {(metadata.duration / 1000).toFixed(2)} seconds per cycle · {file.size.toLocaleString()} bytes
+            {(metadata.duration / 1000).toFixed(2)} seconds per cycle · {formatMediaSize(file.size)}
           </p>
           {metadata.normalizedTiming ? (
             <p className="text-sm text-amber-200">
