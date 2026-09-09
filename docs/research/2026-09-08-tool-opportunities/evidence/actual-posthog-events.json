@@ -1,0 +1,86 @@
+[
+  {
+    "uuid": "01a0820d-aea0-705e-99e3-cfbcb81dd4ff",
+    "event": "gif_tool_activity",
+    "properties": {
+      "tool": "gif-compressor",
+      "outcome": "view",
+      "token": "phc_local_test_only",
+      "distinct_id": "01a0820d-ae0a-7127-b436-ade9c4f76664",
+      "$geoip_disable": true
+    },
+    "offset": 2852
+  },
+  {
+    "uuid": "01a0820d-b344-7736-a219-5c20850ce131",
+    "event": "gif_tool_activity",
+    "properties": {
+      "tool": "gif-compressor",
+      "outcome": "start",
+      "token": "phc_local_test_only",
+      "distinct_id": "01a0820d-ae0a-7127-b436-ade9c4f76664",
+      "$geoip_disable": true
+    },
+    "offset": 1664
+  },
+  {
+    "uuid": "01a0820d-b373-788c-9750-0929bc659bf6",
+    "event": "gif_tool_activity",
+    "properties": {
+      "tool": "gif-compressor",
+      "outcome": "cancel",
+      "token": "phc_local_test_only",
+      "distinct_id": "01a0820d-ae0a-7127-b436-ade9c4f76664",
+      "$geoip_disable": true
+    },
+    "offset": 1617
+  },
+  {
+    "uuid": "01a0820d-b397-7f7a-b874-27e89012dcc7",
+    "event": "gif_tool_activity",
+    "properties": {
+      "tool": "gif-compressor",
+      "outcome": "start",
+      "token": "phc_local_test_only",
+      "distinct_id": "01a0820d-ae0a-7127-b436-ade9c4f76664",
+      "$geoip_disable": true
+    },
+    "offset": 1581
+  },
+  {
+    "uuid": "01a0820d-b3ec-7e32-8070-85aadfaabab4",
+    "event": "gif_tool_activity",
+    "properties": {
+      "tool": "gif-compressor",
+      "outcome": "success",
+      "token": "phc_local_test_only",
+      "distinct_id": "01a0820d-ae0a-7127-b436-ade9c4f76664",
+      "$geoip_disable": true
+    },
+    "offset": 1496
+  },
+  {
+    "uuid": "01a0820d-b41c-7da4-819d-68e9ac745046",
+    "event": "gif_tool_activity",
+    "properties": {
+      "tool": "gif-compressor",
+      "outcome": "download",
+      "token": "phc_local_test_only",
+      "distinct_id": "01a0820d-ae0a-7127-b436-ade9c4f76664",
+      "$geoip_disable": true
+    },
+    "offset": 1448
+  },
+  {
+    "uuid": "01a0820d-b435-7829-8f89-c40f00759ea1",
+    "event": "gif_tool_activity",
+    "properties": {
+      "tool": "gif-compressor",
+      "outcome": "error",
+      "token": "phc_local_test_only",
+      "distinct_id": "01a0820d-ae0a-7127-b436-ade9c4f76664",
+      "$geoip_disable": true
+    },
+    "offset": 1423
+  }
+]

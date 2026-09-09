@@ -16,25 +16,45 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
+    ...(process.env.NATIVE_CAPTURE === '1'
+      ? [
+          {
+            name: 'native-capture',
+            testMatch: /native-capture\.spec\.ts/,
+            use: {
+              ...devices['Desktop Chrome'],
+              channel: 'chrome',
+              headless: false,
+              launchOptions: { args: ['--auto-select-tab-capture-source-by-title=YTgify controlled capture'] },
+            },
+          },
+        ]
+      : []),
+    {
+      name: 'chrome-media',
+      testMatch: /(gif-tools|gif-corpus-exports|gif-journeys)\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    },
     {
       name: 'chromium',
+      testIgnore: /(native-capture|gif-corpus-exports|gif-journeys)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      testMatch: /studio\.spec\.ts/,
+      testMatch: /(studio|gif-tools)\.spec\.ts/,
       grepInvert: /public video-to-GIF converter/,
       use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      testMatch: /studio\.spec\.ts/,
+      testMatch: /(studio|gif-tools)\.spec\.ts/,
       grepInvert: /public video-to-GIF converter/,
       use: { ...devices['Desktop Safari'] },
     },
     {
       name: 'mobile-chromium',
-      testMatch: /studio\.spec\.ts/,
+      testMatch: /(studio|gif-tools)\.spec\.ts/,
       grepInvert: /public video-to-GIF converter/,
       use: {
         ...devices['Desktop Chrome'],

@@ -46,6 +46,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.3,
     },
+    ...['gif-compressor', 'resize-gif', 'gif-to-mp4', 'screen-to-gif'].map((route) => ({
+      url: `${SITE_URL}/${route}`,
+      lastModified: new Date('2026-09-08'),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
     ...blogPosts,
   ];
 }

@@ -1,0 +1,13 @@
+{
+  "cancellationMs": 36,
+  "processingHeartbeatMs": 101.40000000596046,
+  "heaps": [4865696, 4931840, 4986112, 5034048, 5056780, 5101016, 5121272, 5152772, 5170020, 5178276],
+  "residentBytes": [
+    552239104, 555597824, 556105728, 555483136, 557924352, 562085888, 562167808, 562790400, 565788672, 517914624
+  ],
+  "observation": {
+    "maximumHeartbeatGapMs": 105.3999999910593,
+    "liveBlobUrls": 2
+  },
+  "memoryScope": "heaps: main renderer JavaScript bytes; residentBytes: summed OS RSS for this test browser processes reported by CDP; neither is the app-owned pixel budget"
+}

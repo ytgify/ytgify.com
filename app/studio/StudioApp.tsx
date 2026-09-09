@@ -11,8 +11,14 @@ import { UploadScreen } from './components/UploadScreen';
 import { WizardFrame } from './components/WizardFrame';
 import { useStudioController } from './useStudioController';
 
-export default function StudioApp() {
+export default function StudioApp({ initialFile, embedded = false }: { initialFile?: File; embedded?: boolean }) {
+  const Container = embedded ? 'section' : 'main';
   const studio = useStudioController();
+  const { handleFile } = studio;
+  useEffect(() => {
+    // Reimport after effect replay: cleanup revokes the previous video URL.
+    if (initialFile) void handleFile(initialFile);
+  }, [initialFile, handleFile]);
   const wizardRef = useRef<HTMLElement>(null);
   const previousStep = useRef(studio.displayStep);
   useEffect(() => {
@@ -23,7 +29,7 @@ export default function StudioApp() {
   }, [studio.displayStep]);
 
   return (
-    <main data-ph-no-capture className="min-h-screen bg-[#0a0a0a] grid-pattern text-white">
+    <Container data-ph-no-capture className="min-h-screen bg-[#0a0a0a] grid-pattern text-white">
       <div className="mx-auto flex w-full max-w-[1120px] flex-col gap-6 px-5 py-6 sm:px-8 lg:py-8">
         <header className="flex items-center justify-between gap-4 border-b border-gray-800/80 pb-5">
           <Link href="/" className="flex items-center gap-2.5 text-white" aria-label="YTgify home">
@@ -125,6 +131,6 @@ export default function StudioApp() {
           ) : null}
         </section>
       </div>
-    </main>
+    </Container>
   );
 }

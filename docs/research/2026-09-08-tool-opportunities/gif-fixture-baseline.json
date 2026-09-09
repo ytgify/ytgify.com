@@ -1,0 +1,49 @@
+{
+  "inspectedOn": "2026-09-08",
+  "method": "gifuct-js parseGIF and decompressFrames without RGBA patches",
+  "status": "Existing-file inventory only; no new tool exports tested",
+  "files": [
+    {
+      "path": "public/examples/free-gratis.gif",
+      "bytes": 287625,
+      "sha256": "695aa34c4f9d783cd6c2ec26a6784870868277d83a23f0047c467255169d8c5d",
+      "width": 256,
+      "height": 144,
+      "frames": 30,
+      "decoderReportedCycleMs": 3000,
+      "disposalModes": [1],
+      "hasTransparencyFlag": true,
+      "rawTimingAndLoopVerified": false,
+      "independentCompositingVerified": false,
+      "redistributionProvenanceVerified": false
+    },
+    {
+      "path": "public/examples/boom-baby.gif",
+      "bytes": 308310,
+      "sha256": "d4c25b7e21bdc73d3f7f425c42493777c2eb5929a5e3b2b41f4a7c570e2dac21",
+      "width": 256,
+      "height": 144,
+      "frames": 25,
+      "decoderReportedCycleMs": 2500,
+      "disposalModes": [1],
+      "hasTransparencyFlag": true,
+      "rawTimingAndLoopVerified": false,
+      "independentCompositingVerified": false,
+      "redistributionProvenanceVerified": false
+    },
+    {
+      "path": "public/examples/witness-me.gif",
+      "bytes": 446528,
+      "sha256": "8d2deb26129bb61fb811515569c7de7b3aa38458b1e40d9eadca45525670ee1a",
+      "width": 256,
+      "height": 144,
+      "frames": 30,
+      "decoderReportedCycleMs": 3000,
+      "disposalModes": [1],
+      "hasTransparencyFlag": true,
+      "rawTimingAndLoopVerified": false,
+      "independentCompositingVerified": false,
+      "redistributionProvenanceVerified": false
+    }
+  ]
+}

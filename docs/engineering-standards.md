@@ -9,6 +9,7 @@ These rules keep the landing site and browser-based video-to-GIF converter indep
 - Tests may reach 500 effective lines when a cohesive workflow benefits from staying together.
 - Existing oversized files use exact debt-ratchet ceilings in `eslint.config.mjs`. Those ceilings must never increase. Refactors should lower or delete them.
 - Prefer feature ownership: converter UI belongs under `app/studio`, reusable media logic under `lib/studio`, and converter browser coverage in `tests/studio.spec.ts`.
+- Animated GIF parsing, geometry, compression and MP4 adapters belong under `lib/media`; shared file-tool UI belongs under `app/gif-tools`, and native recording UI under `app/screen-to-gif`.
 - Keep browser/platform adapters separate from framework-independent calculations and encoders.
 
 ## Required local gates
@@ -67,3 +68,38 @@ When Knip reports an issue, prefer deleting unused code or narrowing exports bef
 ## Acceptance evidence
 
 For meaningful work, record the three most realistic failure modes and evidence against each one. Examples include focused tests, a fixture export, a desktop/mobile browser pass, production-output inspection, an analytics query, or a deployed smoke check. State residual risk when a failure mode cannot be tested directly.
+
+## GIF tool acceptance runtime
+
+`npm run test:gif-tools` exercises actual GIF/MP4 downloads and cross-tool journeys. Install FFmpeg/FFprobe and Pillow (`scripts/gif-fixtures/requirements.txt`); `GIF_ORACLE_PYTHON` selects the Python runtime containing Pillow. The `chrome-media` project uses installed Chrome because the bundled Chromium build can lack H.264 encoding.
+
+`npm run test:gif-privacy` makes a dedicated local test-key build and intercepts the enabled PostHog SDK's network requests. Rebuild normally afterward; never deploy the test-key artifact. Native capture uses the opt-in `native-capture` project and a controlled tab only. Run each native case serially with other browser work so document focus remains valid. Engine emulation is not evidence of native mobile saving.
+
+The experimental acceptance ledger and unresolved production/device gates are in `docs/research/2026-09-08-tool-opportunities/implementation-receipt.md`. Generated `.ytgify-runtime` evidence and rollback artifacts are excluded from lint, type and unit-source discovery.
+
+## GIF tool CI selection
+
+CI selects media browser tests by the candidate diff: compressor, resize/crop,
+GIF-to-MP4, screen recording, or the existing video editor. Geometry changes run
+both compressor and resize; editor changes also run screen recording because its
+output enters that editor. Shared media/worker/fixture changes select all media;
+shared app, dependency, configuration, and unknown paths select site and media.
+Cross-tool journeys and shared cancellation, invalid-input, metadata, and layout
+checks remain selected for affected tools. All 104 existing browser cases remain
+available; selection does not reduce fixture quality assertions or browser support.
+
+Quality/unit checks remain mandatory. The independent GIF fixture oracle runs
+only for media changes. The selected media job also retains enabled analytics
+privacy verification. To inspect selection locally, run
+`SELECTED_MEDIA=resize node scripts/ci/run-media-tests.mjs --list`; combine names
+with commas. Set `PLAYWRIGHT_BASE_URL` to test the running QA server without a build.
+Real export checks require the Python packages in
+`scripts/gif-fixtures/requirements.txt` and FFmpeg; point `GIF_ORACLE_PYTHON` at the
+prepared Python interpreter.
+
+PR CI serves the actual static production artifact. A separate preview deployment
+is not required for every tool change. Hosting/header/base-path changes and first
+release warrant a deployed smoke check for route loading, worker assets, and one
+small export. Native screen-selection permission dialogs remain a manual check;
+CI uses a real canvas MediaStream and MediaRecorder with a controlled permission
+boundary.

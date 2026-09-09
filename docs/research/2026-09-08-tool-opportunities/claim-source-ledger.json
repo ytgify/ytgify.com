@@ -1,0 +1,141 @@
+{
+  "sources": [
+    {
+      "title": "Search Console",
+      "url": "https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Aytgify.com",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "PostHog project",
+      "url": "https://us.posthog.com/project/422537",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Current converter",
+      "url": "https://ytgify.com/video-to-gif",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Keyword Planner",
+      "url": "https://ads.google.com/aw/keywordplanner/home",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Google metric definitions",
+      "url": "https://support.google.com/google-ads/answer/3022575",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Ezgif target compressor",
+      "url": "https://ezgif.com/target-size-compressor",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "CompressGIFs",
+      "url": "https://compressgifs.com/",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Ezgif resizer",
+      "url": "https://ezgif.com/resize",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Slack custom emoji",
+      "url": "https://slack.com/intl/en-gb/help/articles/206870177-Add-customised-emoji-and-aliases-to-your-workspace",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "EmoteMaker",
+      "url": "https://emotemaker.ai/animated-emote-maker",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Ezgif GIF to MP4",
+      "url": "https://ezgif.com/gif-to-mp4",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "gifcap",
+      "url": "https://github.com/joaomoreno/gifcap",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Google browser storage guidance",
+      "url": "https://web.dev/articles/storage-for-the-web",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "GIPHY upload",
+      "url": "https://support.giphy.com/hc/en-us/articles/360019977552-How-to-Upload",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Kapwing free plan",
+      "url": "https://www.kapwing.com/help/is-kapwing-free/",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "Ezgif hotlink FAQ",
+      "url": "https://ezgif.com/help/hotlinking",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    },
+    {
+      "title": "R2 pricing",
+      "url": "https://developers.cloudflare.com/r2/pricing/",
+      "access_date": "2026-09-08",
+      "publication_date": "Not established unless indicated in source",
+      "access_notes": "Authenticated UI for Google tools and PostHog; primary web pages for competitors and documentation"
+    }
+  ],
+  "first_party_baseline": "../2026-09-06-search-and-usage-analysis.md",
+  "live_posthog": {
+    "project": 422537,
+    "host": "ytgify.com",
+    "window": "2026-07-12 <= timestamp < 2026-09-08 UTC",
+    "exports": 26,
+    "exporters": 15,
+    "cross_day_exporters": 0,
+    "test_cohort_excluded": false
+  },
+  "planning": "update_plan tool unavailable; discovery, targeted follow-up, synthesis and verification performed",
+  "gaps": [
+    "Organic ranking difficulty",
+    "Current indexed status",
+    "Direct save/share demand",
+    "Keyword CSV blocked by Chrome"
+  ],
+  "stop_reason": "First priorities supported; next evidence requires product behavior and fixture tests"
+}

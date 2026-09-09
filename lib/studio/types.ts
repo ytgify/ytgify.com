@@ -4,10 +4,10 @@ type StudioProgressStage = 'preparing' | 'capturing' | 'captions' | 'encoding' |
 
 export type StudioFps = 5 | 10 | 15;
 export type StudioResolution = 240 | 360 | 480;
-export type StudioEncoderUsed = 'gifenc';
+type StudioEncoderUsed = 'gifenc';
 export type StudioSizeTarget = 'auto' | 5 | 10 | 25;
-export type StudioCaptionSize = 'standard' | 'large';
-export type StudioCaptionColor = 'white' | 'yellow';
+type StudioCaptionSize = 'standard' | 'large';
+type StudioCaptionColor = 'white' | 'yellow';
 
 export interface StudioVideoMetadata {
   duration: number;

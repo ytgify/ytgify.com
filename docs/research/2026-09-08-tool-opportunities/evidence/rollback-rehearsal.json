@@ -1,0 +1,27 @@
+{
+  "baselineCommit": "a338f3ff0813e7853c88b1c1a6312515d9c9772a",
+  "scope": "nonproduction local static-artifact switch; no deployment",
+  "candidate": {
+    "video-to-gif": 200,
+    "gif-compressor": 200,
+    "resize-gif": 200,
+    "gif-to-mp4": 200,
+    "screen-to-gif": 200
+  },
+  "rollback": {
+    "video-to-gif": 200,
+    "gif-compressor": 404,
+    "resize-gif": 404,
+    "gif-to-mp4": 404,
+    "screen-to-gif": 404
+  },
+  "restored": {
+    "video-to-gif": 200,
+    "gif-compressor": 200,
+    "resize-gif": 200,
+    "gif-to-mp4": 200,
+    "screen-to-gif": 200
+  },
+  "baselineHomeSha256": "8813561e7e6f191a1b83002a772df220b3b05b0acd75836e67ed417840cbb42a",
+  "candidateHomeSha256": "2da866711ab8064ef720393df0d5bf7cae687469bff6dbb677fd5ad62cad0233"
+}

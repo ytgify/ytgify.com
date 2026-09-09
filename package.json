@@ -17,7 +17,7 @@
     "test:unit": "vitest run",
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:video-to-gif": "playwright test tests/studio.spec.ts tests/video-to-gif-accessibility.spec.ts tests/video-to-gif-seo.spec.ts tests/converter-improvements.spec.ts",
+    "test:video-to-gif": "playwright test tests/studio.spec.ts tests/video-to-gif-accessibility.spec.ts tests/video-to-gif-seo.spec.ts tests/converter-improvements.spec.ts tests/gif-tools.spec.ts tests/gif-corpus-exports.spec.ts tests/gif-lifecycle.spec.ts tests/screen-recorder.spec.ts tests/gif-replacement.spec.ts tests/gif-journeys.spec.ts",
     "test:ui": "playwright test --ui",
     "test:browsers:install": "playwright install chromium firefox webkit",
     "test:smoke": "playwright test --project=chromium tests/smoke.spec.ts tests/video-to-gif-accessibility.spec.ts --grep 'page loads successfully|headline is visible|video to GIF accessibility' --workers=2",
@@ -26,7 +26,9 @@
     "verify:ci-boundaries": "node scripts/verify-ci-boundaries.mjs",
     "pre-push": "bash scripts/pre-push.sh",
     "pre-commit": "lint-staged && npm run test:unit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:gif-tools": "playwright test tests/gif-tools.spec.ts tests/gif-corpus-exports.spec.ts tests/gif-lifecycle.spec.ts tests/screen-recorder.spec.ts tests/gif-replacement.spec.ts tests/gif-journeys.spec.ts",
+    "test:gif-privacy": "NEXT_PUBLIC_POSTHOG_KEY=phc_local_test_only NEXT_PUBLIC_POSTHOG_HOST=http://localhost:3217/posthog npm run build && PRIVACY_QA=1 PLAYWRIGHT_SKIP_BUILD=1 playwright test tests/gif-privacy.spec.ts --project=chromium --workers=1"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -35,13 +37,15 @@
     "gifenc": "^1.0.3",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.552.0",
+    "mediabunny": "1.56.0",
     "next": "^16.3.4",
     "postcss": "8.5.28",
     "posthog-js": "^1.399.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "remark-frontmatter": "^5.0.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "ssim.js": "3.5.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",
