@@ -209,6 +209,6 @@ test.describe('Landing Page Smoke Tests', () => {
     const socialLinks = page.locator('footer a[target="_blank"][rel="noopener noreferrer"]').filter({
       has: page.locator('svg'),
     });
-    await expect(socialLinks).toHaveCount(5);
+    await expect(socialLinks).toHaveCount(3);
   });
 });

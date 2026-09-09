@@ -6,7 +6,6 @@ import DemoVideo from './components/DemoVideo';
 import ExampleGifsGallery from './components/ExampleGifsGallery';
 import SiteFooter from './components/SiteFooter';
 import { LegacyInstallSection } from './components/DiscontinuationNotice';
-import CreatorBrandSection from './components/CreatorBrandSection';
 import HomeFAQ, { homeFAQItems } from './components/HomeFAQ';
 import BrowserToolPromo from './components/BrowserToolPromo';
 import HomeNavLinks from './components/HomeNavLinks';
@@ -326,8 +325,6 @@ export default function Home() {
           </section>
 
           <HomeFAQ />
-
-          <CreatorBrandSection />
         </article>
 
         <SiteFooter />
