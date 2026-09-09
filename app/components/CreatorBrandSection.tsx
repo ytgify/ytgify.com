@@ -1,4 +1,4 @@
-import { BookOpen, ClipboardCheck, Github, Mic2, Scissors, TicketCheck, UserRound } from 'lucide-react';
+import { BookOpen, Bug, Github, Search, Layers, Landmark, UserRound } from 'lucide-react';
 import { GITHUB_REPO_URL } from '@/lib/constants';
 
 const primaryLinks = [
@@ -18,56 +18,43 @@ const primaryLinks = [
 
 const projectLinks = [
   {
-    href: 'https://neonwatty.com/',
-    label: 'neonwatty.com',
-    description: 'Writing, product notes, and project history.',
-    icon: BookOpen,
+    href: 'https://github.com/mean-weasel/bugdrop',
+    label: 'BugDrop',
+    description: 'Turn in-app feedback into GitHub Issues, with screenshots and annotations.',
+    icon: Bug,
   },
   {
-    href: 'https://bleepthat.sh/',
-    label: 'Bleep That',
-    description: 'A current media workflow from Jeremy.',
-    icon: Scissors,
+    href: 'https://github.com/meme-search/meme-search',
+    label: 'Meme Search',
+    description: 'An open-source meme search engine. Free to run on your own machine.',
+    icon: Search,
   },
   {
-    href: 'https://seatify.app/',
-    label: 'Seatify',
-    description: 'Another live app from the same builder.',
-    icon: TicketCheck,
+    href: 'https://lineagehq.github.io/lineage/',
+    label: 'Lineage',
+    description: 'A shared visual workspace for people and AI agents to shape creative work together.',
+    icon: Layers,
   },
   {
-    href: 'https://deckchecker.app/',
-    label: 'DeckChecker',
-    description: 'Slide-deck compliance and submission tracking for events.',
-    icon: ClipboardCheck,
-  },
-  {
-    href: 'https://sayfoil.com/',
-    label: 'Foil',
-    description: 'Voice-to-paste dictation for real Mac workflows.',
-    icon: Mic2,
-  },
-  {
-    href: 'https://github.com/neonwatty',
-    label: 'GitHub',
-    description: 'More open-source projects and experiments.',
-    icon: Github,
+    href: 'https://debtisfun.com/',
+    label: 'Debt Is Fun',
+    description: 'Explore university debt and endowments through interactive comparisons and shareable cards.',
+    icon: Landmark,
   },
 ];
 
 export default function CreatorBrandSection() {
   return (
-    <section
-      id="also-by-jeremy"
-      className="-mx-5 flex scroll-mt-8 flex-col justify-center border-b border-gray-800 bg-[#0d1117]/85 px-5 py-12 sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[78svh] lg:py-16"
-    >
+    <section aria-labelledby="about-builder" className="py-12 sm:py-16">
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12">
         <div>
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#E91E8C]/30 bg-gradient-to-br from-[#E91E8C]/20 to-[#7B2FBE]/20">
               <UserRound className="h-5 w-5 text-[#E91E8C]" />
             </div>
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">Also by the Builder</h2>
+            <h1 id="about-builder" className="text-3xl font-bold text-white sm:text-4xl">
+              About the Builder
+            </h1>
           </div>
 
           <p className="mb-6 text-lg leading-relaxed text-gray-300">
@@ -78,7 +65,7 @@ export default function CreatorBrandSection() {
               rel="noopener noreferrer"
               className="text-white underline decoration-[#E91E8C] decoration-2 underline-offset-4 transition-colors hover:text-[#E91E8C]"
             >
-              Jeremy&apos;s
+              Jeremy Watt&apos;s
             </a>{' '}
             small media and automation projects. For the full context, read the launch notes or browse the source.
           </p>
@@ -105,13 +92,21 @@ export default function CreatorBrandSection() {
         <div>
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h3 className="text-2xl font-bold text-white sm:text-3xl">More to Explore</h3>
+              <h2 className="text-2xl font-bold text-white sm:text-3xl">More projects</h2>
               <p className="mt-2 leading-relaxed text-gray-400">
                 Apps, writing, and open-source work from the same builder.
               </p>
             </div>
           </div>
 
+          <a
+            href="https://neonwatty.com/projects/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-6 inline-block text-sm font-semibold text-[#E91E8C] hover:underline"
+          >
+            Browse all projects →
+          </a>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {projectLinks.map(({ href, label, description, icon: Icon }) => (
               <a

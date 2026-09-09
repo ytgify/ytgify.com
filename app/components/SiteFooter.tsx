@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, BookOpen, Scissors, TicketCheck } from 'lucide-react';
+import { Github, BookOpen } from 'lucide-react';
 import { GITHUB_ORG_URL } from '@/lib/constants';
 
 export default function SiteFooter() {
@@ -56,24 +56,9 @@ export default function SiteFooter() {
           <Link href="/video-to-gif?entry=footer" className="text-[#a0a0a0] hover:text-white transition-colors">
             Video to GIF Converter
           </Link>
-          <a
-            href="https://bleepthat.sh/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[#a0a0a0] hover:text-white transition-colors"
-          >
-            <Scissors size={16} />
-            Bleep That
-          </a>
-          <a
-            href="https://seatify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[#a0a0a0] hover:text-white transition-colors"
-          >
-            <TicketCheck size={16} />
-            Seatify
-          </a>
+          <Link href="/about" className="text-[#a0a0a0] hover:text-white transition-colors">
+            About
+          </Link>
           <Link href="/#install" className="text-[#a0a0a0] hover:text-white transition-colors">
             Install Extension
           </Link>
