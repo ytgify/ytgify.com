@@ -1,4 +1,5 @@
 'use client';
+import { useRef } from 'react';
 import { formatMediaSize } from '@/lib/media/file-size';
 
 import { trackToolEvent } from '@/lib/media/analytics';
@@ -10,27 +11,37 @@ import ResultPanel from './ResultPanel';
 
 export default function GifToolApp({ tool }: { tool: GifTool }) {
   const controller = useGifTool(tool);
+  const picker = useRef<HTMLInputElement>(null);
   const { job, file, source, metadata, result, outputUrl, resultHeading, choose } = controller;
   return (
     <section
       aria-label={gifTools[tool].title}
       className="my-8 space-y-6 rounded-2xl border border-gray-700 bg-gray-950 p-5 sm:p-8"
     >
-      <label className="block font-semibold">
-        Choose a GIF
+      <div>
+        <button
+          type="button"
+          onClick={() => picker.current?.click()}
+          className="rounded-lg bg-[#9ff3ea] px-4 py-3 font-semibold text-gray-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9ff3ea]"
+        >
+          Choose a GIF
+        </button>
         <input
+          ref={picker}
           type="file"
           accept="image/gif,.gif"
-          className="mt-3 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-[#9ff3ea] file:px-4 file:py-3 file:font-semibold file:text-gray-950"
+          aria-label="Choose a GIF"
+          hidden
           onChange={(event) => {
             const next = event.target.files?.[0];
             event.target.value = '';
             if (next) choose(next);
           }}
         />
-      </label>
+      </div>
       {metadata && source && file ? (
         <>
+          <p className="break-all text-sm text-gray-300">Loaded GIF: {file.name}</p>
           <p className="text-sm text-gray-300">
             {metadata.width} × {metadata.height} · {metadata.frameCount} frames ·{' '}
             {(metadata.duration / 1000).toFixed(2)} seconds per cycle · {formatMediaSize(file.size)}
