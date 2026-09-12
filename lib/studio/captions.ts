@@ -10,7 +10,7 @@ const captionSizeRatios: Record<StudioCaptionSettings['size'], number> = {
   large: 0.095,
 };
 
-export interface CaptionLayout {
+interface CaptionLayout {
   fontSize: number;
   lineHeight: number;
   horizontalPadding: number;
@@ -64,6 +64,7 @@ export function renderCaptions(
   ctx.restore();
 }
 
+/** @internal Exposed for deterministic contract tests. */
 export function getCaptionLayout(width: number, height: number, captions: StudioCaptionSettings): CaptionLayout {
   const safeWidth = Math.max(1, width);
   const safeHeight = Math.max(1, height);

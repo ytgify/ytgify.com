@@ -22,19 +22,19 @@ export default defineConfig({
     },
     {
       name: 'firefox',
-      testMatch: /studio\.spec\.ts/,
+      testMatch: /(studio|gif-tools)\.spec\.ts/,
       grepInvert: /public video-to-GIF converter/,
       use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      testMatch: /studio\.spec\.ts/,
+      testMatch: /(studio|gif-tools)\.spec\.ts/,
       grepInvert: /public video-to-GIF converter/,
       use: { ...devices['Desktop Safari'] },
     },
     {
       name: 'mobile-chromium',
-      testMatch: /studio\.spec\.ts/,
+      testMatch: /(studio|gif-tools)\.spec\.ts/,
       grepInvert: /public video-to-GIF converter/,
       use: {
         ...devices['Desktop Chrome'],

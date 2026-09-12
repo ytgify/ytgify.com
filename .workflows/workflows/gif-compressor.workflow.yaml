@@ -1,0 +1,682 @@
+schema: agent-workflow/v1
+kind: Workflow
+metadata:
+  id: ytgify.gif-compressor
+  name: GIF compressor synthetic media
+  description: Upload a synthetic GIF, choose a smaller target, inspect preview
+    and download, reject invalid targets and recover.
+  lifecycle: candidate
+  candidateRevision: 4
+  tags:
+    - gif
+    - compressor
+    - synthetic
+    - local
+promotion:
+  immutableAfterPromotion: true
+  requires:
+    - successful-supervised-replay
+evaluation:
+  resetStepId: establish-fresh-start
+  cleanupStepId: restore-fresh-start
+  perspectiveScenarios:
+    - id: canonical-journey
+      stepIds:
+        - establish-fresh-start
+        - upload-synthetic
+        - compress-synthetic
+        - download-synthetic
+        - invalid-target
+        - recover-target
+        - restore-fresh-start
+        - load-feedback-fixture
+        - measure-feedback
+        - download-feedback
+        - reject-invalid-header
+        - recover-invalid-header
+        - reject-malformed-lzw
+        - recover-malformed-lzw
+        - boundary-negative-zero-1
+        - boundary-negative-zero-2
+        - boundary-outside-range-1
+        - boundary-outside-range-2
+        - boundary-minimum
+        - boundary-maximum
+        - repeat-select
+        - repeat-process-1
+        - repeat-process-2
+    - id: reset
+      stepIds:
+        - establish-fresh-start
+    - id: cleanup
+      stepIds:
+        - restore-fresh-start
+    - id: load-source
+      stepIds:
+        - upload-synthetic
+        - load-feedback-fixture
+    - id: loaded-state
+      stepIds:
+        - upload-synthetic
+        - load-feedback-fixture
+    - id: configure
+      stepIds:
+        - compress-synthetic
+        - measure-feedback
+    - id: submit
+      stepIds:
+        - compress-synthetic
+        - measure-feedback
+    - id: result
+      stepIds:
+        - compress-synthetic
+        - measure-feedback
+    - id: download
+      stepIds:
+        - download-synthetic
+        - download-feedback
+    - id: declared-error
+      stepIds:
+        - invalid-target
+        - reject-invalid-header
+        - reject-malformed-lzw
+        - boundary-negative-zero-1
+        - boundary-negative-zero-2
+        - boundary-outside-range-1
+        - boundary-outside-range-2
+    - id: recovery
+      stepIds:
+        - recover-target
+        - recover-invalid-header
+        - recover-malformed-lzw
+    - id: invalid-input
+      stepIds:
+        - invalid-target
+        - reject-invalid-header
+        - reject-malformed-lzw
+        - boundary-negative-zero-1
+        - boundary-negative-zero-2
+        - boundary-outside-range-1
+        - boundary-outside-range-2
+    - id: stale-result
+      stepIds:
+        - invalid-target
+        - reject-invalid-header
+        - reject-malformed-lzw
+        - repeat-select
+    - id: malformed-files
+      stepIds:
+        - reject-invalid-header
+        - reject-malformed-lzw
+    - id: boundary-values
+      stepIds:
+        - boundary-negative-zero-1
+        - boundary-negative-zero-2
+        - boundary-outside-range-1
+        - boundary-outside-range-2
+        - boundary-minimum
+        - boundary-maximum
+    - id: repeated-actions
+      stepIds:
+        - repeat-select
+        - repeat-process-1
+        - repeat-process-2
+target:
+  app: ytgify
+  supportedPlatforms:
+    - id: desktop-web
+      adapterCapability: browser
+      viewport: default-desktop
+    - id: mobile-web
+      adapterCapability: browser
+      viewport:
+        width: 393
+        height: 852
+  identity:
+    requirement: anonymous
+    note: This local getting-started workflow does not rely on account state.
+start:
+  isolation: fresh-page
+  route: /gif-compressor
+  expectedState: The initial product surface is visible and ready for inspection.
+  preflightCapabilities:
+    - screenshot
+execution:
+  topology: linear-with-bounded-conditions
+  agentFreedom: goal-bounded
+  onUnexpectedState: recover-and-log
+  environmentChange: taint-run
+  failureContinuation: stop
+  recoveryBudget:
+    maxActionsPerStep: 8
+    maxDurationSecondsPerStep: 120
+evidencePolicy:
+  default:
+    - declared-checkpoint-screenshots
+  onFailure:
+    - screenshot
+    - video-or-trace
+  retainVerifiedDownloads: false
+optionalStateHandlers: []
+steps:
+  - id: establish-fresh-start
+    name: Open the local compressor
+    action: Open the local compressor
+    routineActionBatches:
+      - id: establish-fresh-start-batch
+        actions:
+          - kind: navigate
+            description: Navigate to the declared starting route.
+            target: declared-start-url
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The Free GIF Compressor heading and Choose a GIF control are visible.
+    evidence:
+      - type: screenshot
+        checkpoint: establish-fresh-start
+        required: true
+  - id: upload-synthetic
+    name: Upload the synthetic compressible GIF
+    action: Upload the synthetic compressible GIF
+    dependsOn:
+      - establish-fresh-start
+    routineActionBatches:
+      - id: upload-synthetic-batch
+        actions:
+          - kind: activate-control
+            description: Choose the repository synthetic compressible.gif fixture.
+            target: Choose a GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The original preview and 28.1 KB source metadata are visible.
+      - 'Loaded GIF: compressible.gif is visible and no contradictory No file
+        chosen message is shown.'
+    evidence:
+      - type: screenshot
+        checkpoint: upload-synthetic
+        required: true
+  - id: compress-synthetic
+    name: Compress with the 10 KB preset
+    action: Compress with the 10 KB preset
+    dependsOn:
+      - upload-synthetic
+    routineActionBatches:
+      - id: compress-synthetic-batch
+        actions:
+          - kind: activate-control
+            description: Select the 10 KB target preset.
+            target: 10 KB
+          - kind: activate-control
+            description: Start compression.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Compression completes and shows a measured result with a Download GIF
+        link.
+    evidence:
+      - type: screenshot
+        checkpoint: compress-synthetic
+        required: true
+  - id: download-synthetic
+    name: Download and inspect the output
+    action: Download and inspect the output
+    dependsOn:
+      - compress-synthetic
+    routineActionBatches:
+      - id: download-synthetic-batch
+        actions:
+          - kind: activate-control
+            description: Download the synthetic compressed GIF.
+            target: Download GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The downloaded GIF is smaller than the source and retains dimensions,
+        frame timing, and loop metadata.
+    evidence:
+      - type: screenshot
+        checkpoint: download-synthetic
+        required: true
+  - id: invalid-target
+    name: Check invalid target validation
+    action: Check invalid target validation
+    dependsOn:
+      - download-synthetic
+    routineActionBatches:
+      - id: invalid-target-batch
+        actions:
+          - kind: activate-control
+            description: Clear the numeric target using the visible Target size (MB) field.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Attempt compression with an empty target.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - An empty target receives a clear validation message and compression does
+        not start.
+    evidence:
+      - type: screenshot
+        checkpoint: invalid-target
+        required: true
+  - id: recover-target
+    name: Recover with a valid target
+    action: Recover with a valid target
+    dependsOn:
+      - invalid-target
+    routineActionBatches:
+      - id: recover-target-batch
+        actions:
+          - kind: activate-control
+            description: Select the 10 KB target preset.
+            target: 10 KB
+          - kind: activate-control
+            description: Start compression.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Valid settings recover and produce a downloadable GIF.
+    evidence:
+      - type: screenshot
+        checkpoint: recover-target
+        required: true
+  - id: load-feedback-fixture
+    name: Load bounded feedback fixture
+    action: Load bounded feedback fixture
+    routineActionBatches:
+      - id: load-feedback-fixture-batch
+        actions:
+          - kind: activate-control
+            description: Choose the pinned synthetic feedback-256x256-40.gif fixture.
+            target: Choose a GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The loaded filename is feedback-256x256-40.gif, with 256 by 256
+        dimensions and 40 frames.
+    evidence:
+      - type: screenshot
+        checkpoint: load-feedback-fixture
+        required: true
+    dependsOn:
+      - recover-target
+  - id: measure-feedback
+    name: Measure compression feedback
+    action: Measure compression feedback
+    routineActionBatches:
+      - id: measure-feedback-batch
+        actions:
+          - kind: activate-control
+            description: Set Target size (MB) to 1.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Start compression and observe progress and result without scrolling
+              after the action.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Compression completes with a measured result; observed feedback timing
+        is recorded separately and is not inferred from a completed screenshot.
+    evidence:
+      - type: screenshot
+        checkpoint: measure-feedback
+        required: true
+      - type: screenshot
+        checkpoint: feedback-in-progress
+        required: false
+    dependsOn:
+      - load-feedback-fixture
+  - id: download-feedback
+    name: Inspect result-ready download visibility
+    action: Inspect result-ready download visibility
+    routineActionBatches:
+      - id: download-feedback-batch
+        actions:
+          - kind: activate-control
+            description: After retaining the unscrolled result-ready viewport, scroll
+              normally if needed and download the feedback GIF.
+            target: Download GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The measured result and download action are understandable; the actual
+        downloaded file is a readable GIF.
+    evidence:
+      - type: screenshot
+        checkpoint: download-feedback
+        required: true
+    dependsOn:
+      - measure-feedback
+  - id: reject-invalid-header
+    name: Reject invalid-header.gif
+    action: Reject invalid-header.gif
+    routineActionBatches:
+      - id: reject-invalid-header-batch
+        actions:
+          - kind: activate-control
+            description: Choose the pinned tiny synthetic invalid-header.gif fixture.
+            target: Choose a GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - A clear media error is visible, with no stale preview or downloadable
+        successful result.
+    evidence:
+      - type: screenshot
+        checkpoint: reject-invalid-header
+        required: true
+    dependsOn:
+      - download-feedback
+  - id: recover-invalid-header
+    name: Recover from invalid-header.gif
+    action: Recover from invalid-header.gif
+    routineActionBatches:
+      - id: recover-invalid-header-batch
+        actions:
+          - kind: activate-control
+            description: Choose the original compressible.gif fixture.
+            target: Choose a GIF
+          - kind: activate-control
+            description: Select the 10 KB target preset.
+            target: 10 KB
+          - kind: activate-control
+            description: Compress the recovered valid GIF.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The valid original loads and a fresh downloadable result is produced.
+    evidence:
+      - type: screenshot
+        checkpoint: recover-invalid-header
+        required: true
+    dependsOn:
+      - reject-invalid-header
+  - id: reject-malformed-lzw
+    name: Reject malformed-lzw.gif
+    action: Reject malformed-lzw.gif
+    routineActionBatches:
+      - id: reject-malformed-lzw-batch
+        actions:
+          - kind: activate-control
+            description: Choose the pinned tiny synthetic malformed-lzw.gif fixture.
+            target: Choose a GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - A clear media error is visible, with no stale preview or downloadable
+        successful result.
+    evidence:
+      - type: screenshot
+        checkpoint: reject-malformed-lzw
+        required: true
+    dependsOn:
+      - recover-invalid-header
+  - id: recover-malformed-lzw
+    name: Recover from malformed-lzw.gif
+    action: Recover from malformed-lzw.gif
+    routineActionBatches:
+      - id: recover-malformed-lzw-batch
+        actions:
+          - kind: activate-control
+            description: Choose the original compressible.gif fixture.
+            target: Choose a GIF
+          - kind: activate-control
+            description: Select the 10 KB target preset.
+            target: 10 KB
+          - kind: activate-control
+            description: Compress the recovered valid GIF.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The valid original loads and a fresh downloadable result is produced.
+    evidence:
+      - type: screenshot
+        checkpoint: recover-malformed-lzw
+        required: true
+    dependsOn:
+      - reject-malformed-lzw
+  - id: boundary-negative-zero-1
+    name: Reject out-of-range targets -0.000001 and 0 (part 1)
+    action: Reject out-of-range targets -0.000001 and 0 (part 1)
+    routineActionBatches:
+      - id: boundary-negative-zero-1-batch
+        actions:
+          - kind: activate-control
+            description: Set Target size (MB) to -0.000001.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Attempt compression with this out-of-range target.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The declared out-of-range value is rejected with the 1 byte to 25 MB
+        message, focus, and no stale download.
+    evidence:
+      - type: screenshot
+        checkpoint: boundary-negative-zero-1
+        required: true
+    dependsOn:
+      - recover-malformed-lzw
+  - id: boundary-negative-zero-2
+    name: Reject out-of-range targets -0.000001 and 0 (part 2)
+    action: Reject out-of-range targets -0.000001 and 0 (part 2)
+    routineActionBatches:
+      - id: boundary-negative-zero-2-batch
+        actions:
+          - kind: activate-control
+            description: Set Target size (MB) to 0.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Attempt compression with this out-of-range target.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The declared out-of-range value is rejected with the 1 byte to 25 MB
+        message, focus, and no stale download.
+    evidence:
+      - type: screenshot
+        checkpoint: boundary-negative-zero-2
+        required: true
+    dependsOn:
+      - boundary-negative-zero-1
+  - id: boundary-outside-range-1
+    name: Reject out-of-range targets 0.0000005 and 25.000001 (part 1)
+    action: Reject out-of-range targets 0.0000005 and 25.000001 (part 1)
+    routineActionBatches:
+      - id: boundary-outside-range-1-batch
+        actions:
+          - kind: activate-control
+            description: Set Target size (MB) to 0.0000005.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Attempt compression with this out-of-range target.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The declared out-of-range value is rejected with the 1 byte to 25 MB
+        message, focus, and no stale download.
+    evidence:
+      - type: screenshot
+        checkpoint: boundary-outside-range-1
+        required: true
+    dependsOn:
+      - boundary-negative-zero-2
+  - id: boundary-outside-range-2
+    name: Reject out-of-range targets 0.0000005 and 25.000001 (part 2)
+    action: Reject out-of-range targets 0.0000005 and 25.000001 (part 2)
+    routineActionBatches:
+      - id: boundary-outside-range-2-batch
+        actions:
+          - kind: activate-control
+            description: Set Target size (MB) to 25.000001.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Attempt compression with this out-of-range target.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The declared out-of-range value is rejected with the 1 byte to 25 MB
+        message, focus, and no stale download.
+    evidence:
+      - type: screenshot
+        checkpoint: boundary-outside-range-2
+        required: true
+    dependsOn:
+      - boundary-outside-range-1
+  - id: boundary-minimum
+    name: Accept valid target 0.000001 MB
+    action: Accept valid target 0.000001 MB
+    routineActionBatches:
+      - id: boundary-minimum-batch
+        actions:
+          - kind: activate-control
+            description: Set Target size (MB) to 0.000001.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Compress with the valid boundary value.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - One byte is accepted as valid; an unattainable target is honestly
+        labelled Target not met.
+    evidence:
+      - type: screenshot
+        checkpoint: boundary-minimum
+        required: true
+    dependsOn:
+      - boundary-outside-range-2
+  - id: boundary-maximum
+    name: Accept valid target 25 MB
+    action: Accept valid target 25 MB
+    routineActionBatches:
+      - id: boundary-maximum-batch
+        actions:
+          - kind: activate-control
+            description: Set Target size (MB) to 25.
+            target: Target size (MB)
+          - kind: activate-control
+            description: Compress with the valid boundary value.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - 25 MB is accepted with a readable original-sized or smaller result.
+    evidence:
+      - type: screenshot
+        checkpoint: boundary-maximum
+        required: true
+    dependsOn:
+      - boundary-minimum
+  - id: repeat-select
+    name: Repeat same-file selection sequentially
+    action: Repeat same-file selection sequentially
+    routineActionBatches:
+      - id: repeat-select-batch
+        actions:
+          - kind: activate-control
+            description: Choose compressible.gif and await loaded metadata.
+            target: Choose a GIF
+          - kind: activate-control
+            description: Choose compressible.gif again after the first selection settles.
+            target: Choose a GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Same-file reselection works and clears any prior result without losing
+        the valid source.
+    evidence:
+      - type: screenshot
+        checkpoint: repeat-select
+        required: true
+    dependsOn:
+      - boundary-maximum
+  - id: repeat-process-1
+    name: Repeat compression and downloads sequentially (part 1)
+    action: Repeat compression and downloads sequentially (part 1)
+    routineActionBatches:
+      - id: repeat-process-1-batch
+        actions:
+          - kind: activate-control
+            description: Select the 10 KB target preset.
+            target: 10 KB
+          - kind: activate-control
+            description: Compress and await completion.
+            target: Compress GIF
+          - kind: activate-control
+            description: Download the first completed result.
+            target: Download GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - This sequential compression produces a readable GIF download without
+        stale state or a stuck busy state.
+    evidence:
+      - type: screenshot
+        checkpoint: repeat-process-1
+        required: true
+    dependsOn:
+      - repeat-select
+  - id: repeat-process-2
+    name: Repeat compression and downloads sequentially (part 2)
+    action: Repeat compression and downloads sequentially (part 2)
+    routineActionBatches:
+      - id: repeat-process-2-batch
+        actions:
+          - kind: activate-control
+            description: Compress again only after the prior result has settled.
+            target: Compress GIF
+          - kind: activate-control
+            description: Download the second completed result.
+            target: Download GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - This sequential compression produces a readable GIF download without
+        stale state or a stuck busy state.
+    evidence:
+      - type: screenshot
+        checkpoint: repeat-process-2
+        required: true
+    dependsOn:
+      - repeat-process-1
+  - id: restore-fresh-start
+    name: Restore the fresh start
+    action: Restore the fresh start
+    dependsOn:
+      - repeat-process-2
+    routineActionBatches:
+      - id: restore-fresh-start-batch
+        actions:
+          - kind: navigate
+            description: Navigate back to the declared starting route.
+            target: declared-start-url
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The initial picker is visible and the previous preview and output are
+        cleared.
+    evidence:
+      - type: screenshot
+        checkpoint: restore-fresh-start
+        required: true
+completion:
+  successRequires:
+    - every-step-passed
+    - required-evidence-verified
+  cleanup:
+    alwaysAttempt: true
+    actions:
+      - Reset the browser surface after the final screenshot.

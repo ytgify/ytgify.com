@@ -8,3 +8,5 @@ test-results/
 public/downloads/
 docs/goals/
 .ytgify-runtime/
+.workflows/local/
+.agents/

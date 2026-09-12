@@ -1,0 +1,22 @@
+{
+  "schema": "workflow-skill-baseline/v1",
+  "pins": {
+    "packageName": "@lineagehq/workflows",
+    "packageVersion": "0.2.0-rc.15",
+    "protocolVersion": "1.0"
+  },
+  "hashes": {
+    ".agents/skills/agent-workflows/SKILL.md": "9fcc363f3df163068e99fdd7e9c6279b7b371f680fde0ca4876b4466d08d577d",
+    ".agents/skills/agent-workflows/agents/openai.yaml": "d09edb5031bd5f8a2d9c6e799d3c5c4f925d2d809545ec32552855d2cdce5a79",
+    ".agents/skills/agent-workflows/references/protocol.md": "9a602d659aed732feed60acc9c5697fcf7318485e7949cf2f21aac012a7202c5",
+    ".agents/skills/agent-workflows/references/evidence.md": "bcb248607983c95581bd5cef04be774803e0cfb6fbd7717cc630017fef2124ee",
+    ".agents/skills/agent-workflows/references/capability-gaps.md": "12541fd740a1fe187312791a41a75ce9f449262ed296c6a5afc50d7e7f83f70d",
+    ".agents/skills/agent-workflows/references/lifecycle.md": "70100507c64756cae8180b7b7da038aa2f815fdab766e8518c0fc16b45ff0c88",
+    ".agents/skills/agent-workflows/references/readiness.md": "1391d9355ed9bd296cd81146bf789d470c95afd292448b69168474ca6599cdd9",
+    ".agents/skills/agent-workflows/references/discovery.md": "9ca34665654902549817dc3afbeef254c705cf07884beb19bf956c1379dff111",
+    ".agents/skills/agent-workflows/references/collaboration.md": "7f3c07f23f9049d781a0411293d61f1ea7b2ac2ea3d325c1726baff1f802d37f",
+    ".agents/skills/agent-workflows/references/authentication.md": "4ac83a461ab40e1c45578226520f5c5c97192e2fe5b6f9573080041029d0898f",
+    ".agents/skills/agent-workflows/references/operations.md": "d6dc4db929e317bb7ba6be8d43a47f4a2ac217aed531fabcb45a2ee025b000e2",
+    ".agents/skills/agent-workflows/references/findings.md": "4ee2d425a1ea01e9a9f2f4e3197d0a8ab458e2eb4150a89774b7347772947c94"
+  }
+}

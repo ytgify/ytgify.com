@@ -1,6 +1,11 @@
 name: Setup Node.js
 description: Install Node 24 and the locked project dependencies
 
+inputs:
+  npm-token:
+    description: Token used to install private GitHub Packages dependencies
+    required: true
+
 runs:
   using: composite
   steps:
@@ -9,10 +14,13 @@ runs:
       with:
         node-version: '24'
         cache: npm
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@lineagehq'
 
     - name: Install dependencies
       shell: bash
       # Puppeteer is only used by the manual OG-image generator, not CI.
       env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
         PUPPETEER_SKIP_DOWNLOAD: true
       run: npm ci --no-audit

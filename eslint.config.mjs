@@ -47,6 +47,8 @@ const eslintConfig = [
       'build/**',
       'playwright-report/**',
       'test-results/**',
+      '.workflows/local/**',
+      '.agents/**',
       'next-env.d.ts',
     ],
   },

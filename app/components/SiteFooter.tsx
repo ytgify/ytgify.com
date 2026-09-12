@@ -50,6 +50,9 @@ export default function SiteFooter() {
               <BookOpen size={20} />
             </a>
           </div>
+          <Link href="/gif-compressor" className="text-gray-400 hover:text-white">
+            GIF Compressor
+          </Link>
           <Link href="/blog" className="text-[#a0a0a0] hover:text-white transition-colors">
             Blog
           </Link>
