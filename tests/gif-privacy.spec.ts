@@ -33,7 +33,7 @@ test('enabled PostHog sends only allowlisted tool outcomes across success, cance
     });
   });
   await page.route(
-    /google-analytics.com|analytics.google.com|googletagmanager.com|doubleclick.net|google.com\/measurement/,
+    /google-analytics\.com|analytics\.google\.com|googletagmanager\.com|doubleclick\.net|google\.com\/measurement/,
     (route) => route.abort(),
   );
   page.on('request', (request) => requests.push(`${request.url()} ${request.postData() || ''}`));
