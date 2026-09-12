@@ -14,6 +14,8 @@ export default function ToolSettings({
     file,
     setResult,
     target,
+    targetInput,
+    targetError,
     setTarget,
     allowResize,
     allowFrameReduction,
@@ -30,23 +32,31 @@ export default function ToolSettings({
         <label className="block text-sm">
           Target size (MB)
           <input
+            ref={targetInput}
             type="number"
             min="0.000001"
             max="25"
             step="any"
             value={target}
-            onChange={(event) => setTarget(Number(event.target.value))}
+            onChange={(event) => setTarget(event.target.value)}
+            aria-invalid={targetError ? true : undefined}
+            aria-describedby={targetError ? 'gif-target-error' : undefined}
             className="ml-3 w-28 rounded border border-gray-600 bg-gray-900 p-2"
           />
         </label>
+        {targetError ? (
+          <p id="gif-target-error" role="alert" className="text-sm text-red-300">
+            {targetError}
+          </p>
+        ) : null}
         <div className="flex flex-wrap gap-3">
           {[...(file && file.size < 1_000_000 ? [0.01, 0.025, 0.1] : []), 1, 5, 10].map((value) => (
             <button
               type="button"
               key={value}
-              aria-pressed={target === value}
+              aria-pressed={target.trim() !== '' && Number(target) === value}
               onClick={() => {
-                setTarget(value);
+                setTarget(String(value));
                 setResult(null);
               }}
               className="rounded border border-gray-600 px-3 py-2 text-sm aria-pressed:border-[#9ff3ea] aria-pressed:bg-[#9ff3ea] aria-pressed:font-semibold aria-pressed:text-gray-950"
@@ -55,7 +65,7 @@ export default function ToolSettings({
             </button>
           ))}
         </div>
-        {file && file.size <= target * 1_000_000 ? (
+        {file && file.size <= Number(target) * 1_000_000 ? (
           <p className="text-sm text-amber-200">
             Your GIF is already below this target ({formatMediaSize(file.size)}). Choose a target below its original
             size to try to make it smaller.

@@ -16,6 +16,58 @@ async function download(page: Page, info: TestInfo, kind = 'GIF') {
 function inspect(file: string) {
   return JSON.parse(execFileSync('node', ['scripts/gif-fixtures/inspect-gifuct.mjs', file]).toString())[0];
 }
+
+test('invalid targets stay editable and never start a worker', { tag: '@compressor' }, async ({ page }, info) => {
+  await page.setViewportSize(
+    info.project.name === 'mobile-chromium' ? { width: 393, height: 852 } : { width: 1440, height: 900 },
+  );
+  await page.addInitScript(() => {
+    const NativeWorker = Worker;
+    const state = { started: 0 };
+    Object.assign(window, { __targetWorkers: state });
+    window.Worker = class extends NativeWorker {
+      constructor(url: string | URL, options?: WorkerOptions) {
+        super(url, options);
+        state.started++;
+      }
+    };
+  });
+  await page.goto('/gif-compressor');
+  await upload(page, 'compressible.gif');
+  const target = page.getByLabel('Target size (MB)', { exact: true });
+  for (const value of ['', '0', '-1', '26', '0.0000009']) {
+    await target.fill(value);
+    await expect(target).toHaveValue(value);
+    await page.getByRole('button', { name: 'Compress GIF', exact: true }).click();
+    await expect(page.locator('p[role=alert]')).toHaveText('Enter a target between 1 byte and 25 MB.');
+    await expect(target).toBeFocused();
+    await expect(target).toHaveAttribute('aria-invalid', 'true');
+    if (value === '') {
+      await info.attach('empty-target-validation', {
+        body: await page.screenshot({ fullPage: false }),
+        contentType: 'image/png',
+      });
+    }
+    expect(
+      await page.evaluate(
+        () => (window as typeof window & { __targetWorkers: { started: number } }).__targetWorkers.started,
+      ),
+    ).toBe(1);
+    await expect(page.getByRole('link', { name: 'Download GIF', exact: true })).toHaveCount(0);
+  }
+  await page.getByRole('button', { name: '10 KB', exact: true }).click();
+  await expect(target).toHaveValue('0.01');
+  await expect(page.locator('p[role=alert]')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Compress GIF', exact: true }).click();
+  await expect(page.getByRole('link', { name: 'Download GIF', exact: true })).toBeVisible();
+  await info.attach('recovered-result', {
+    body: await page.screenshot({ fullPage: false }),
+    contentType: 'image/png',
+  });
+  const output = await download(page, info);
+  expect(readFileSync(output).length).toBeLessThan(readFileSync(fixture('compressible.gif')).length);
+  expect(inspect(output).rawDelaysCs).toEqual(inspect(fixture('compressible.gif')).rawDelaysCs);
+});
 async function upload(page: Page, name: string) {
   await page.getByLabel('Choose a GIF', { exact: true }).setInputFiles(fixture(name));
   await expect(page.getByRole('img', { name: 'Original animation', exact: true })).toBeVisible({ timeout: 15000 });

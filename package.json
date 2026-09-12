@@ -47,6 +47,7 @@
     "ssim.js": "3.5.0"
   },
   "devDependencies": {
+    "@lineagehq/workflows": "0.2.0-rc.15",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.13",

@@ -1,0 +1,42 @@
+schema: agent-workflow-config/v1
+project:
+  id: ytgify
+  appName: Ytgify
+  defaultTargetId: local
+  targets:
+    - id: local
+      label: Local
+      environment: local
+      baseUrl: http://localhost:3012
+      healthPath: /gif-compressor
+      localDogfood:
+        syntheticData: true
+        workflowIds:
+          - ytgify.gif-compressor
+          - ytgify.getting-started
+paths:
+  definitions: .workflows/workflows
+  runStore: .workflows/local
+platforms:
+  desktop-web:
+    adapter: browser
+    viewport: default-desktop
+  mobile-web:
+    adapter: browser
+    viewport:
+      width: 393
+      height: 852
+evidence:
+  screenshots: declared-checkpoints
+  failureRecording: video-or-trace
+  retainVerifiedDownloads: false
+studio:
+  host: localhost
+  port: auto
+  openBrowser: false
+security:
+  omitHeaders:
+    - authorization
+    - cookie
+    - set-cookie
+  rejectPathTraversal: true

@@ -23,7 +23,13 @@ export function useGifTool(tool: GifTool) {
     },
     [outputUrl],
   );
-  const [target, setTarget] = useState(1);
+  const [target, updateTarget] = useState('1');
+  const [targetError, setTargetError] = useState('');
+  const targetInput = useRef<HTMLInputElement>(null);
+  const setTarget = (value: string) => {
+    updateTarget(value);
+    setTargetError('');
+  };
   const [allowResize, setAllowResize] = useState(false);
   const [allowFrameReduction, setAllowFrameReduction] = useState(false);
   const resultHeading = useRef<HTMLHeadingElement>(null);
@@ -37,6 +43,7 @@ export function useGifTool(tool: GifTool) {
     if (result) resultHeading.current?.focus();
   }, [result]);
   const choose = (next: File) => {
+    setTargetError('');
     setFile(next);
     setSource('');
     setMetadata(null);
@@ -49,10 +56,17 @@ export function useGifTool(tool: GifTool) {
   const process = () => {
     if (!file) return;
     setResult(null);
+    const targetMB = Number(target);
+    if (!target.trim() || !Number.isFinite(targetMB) || targetMB < 0.000001 || targetMB > 25) {
+      setTargetError('Enter a target between 1 byte and 25 MB.');
+      targetInput.current?.focus();
+      return;
+    }
+    setTargetError('');
     trackToolEvent(tool, 'start');
     const operation: GifOperation = {
       kind: 'compress',
-      options: { targetBytes: Math.round(target * 1_000_000), allowResize, allowFrameReduction },
+      options: { targetBytes: Math.round(targetMB * 1_000_000), allowResize, allowFrameReduction },
     };
     void job.run(file, operation, (value) => {
       if (value.bytes) setOutputUrl(URL.createObjectURL(new Blob([new Uint8Array(value.bytes)], { type: value.mime })));
@@ -68,6 +82,8 @@ export function useGifTool(tool: GifTool) {
     result,
     outputUrl,
     target,
+    targetInput,
+    targetError,
     setTarget,
     allowResize,
     allowFrameReduction,

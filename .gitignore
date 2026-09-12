@@ -38,6 +38,11 @@ docs/goals/
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+/.npmrc
+
+# local Agent Workflows runtime state
+/.workflows/local/
+/.agents/skills/**/*.backup
 
 # vercel
 .vercel
