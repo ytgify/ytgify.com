@@ -4,9 +4,9 @@ import type { FAQItem } from '@/lib/schema';
 
 export const videoToGifFAQs: FAQItem[] = [
   {
-    question: 'How do I convert a video to a GIF?',
+    question: 'How do I convert MP4 to GIF online?',
     answer:
-      'Choose a local video, select a clip up to 10 seconds, pick the resolution and frame rate, add optional top or bottom text, then create and download the GIF.',
+      'Choose an MP4 file from your device, select a clip up to 10 seconds, pick the resolution and frame rate, and add optional text. Create, preview, and download your animated GIF for free with no watermark. MOV and WebM files are also supported when your browser can decode them.',
   },
   {
     question: 'Does YTgify upload my video?',
@@ -59,8 +59,9 @@ export function VideoToGifGuide() {
             Convert video to GIF in three steps
           </h2>
           <p className="mt-4 max-w-3xl leading-7 text-gray-400">
-            YTgify is a focused, free converter for short reactions, product demos, tutorials, and clips you are allowed
-            to edit. The source stays in the browser from selection through download.
+            Make an animated GIF from a video for a reaction, product demo, or tutorial. This online GIF maker works
+            with MP4, MOV, and WebM clips you own or have permission to edit. The source stays in your browser from
+            selection through download.
           </p>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {steps.map(({ icon: Icon, title, detail }) => (
@@ -113,7 +114,7 @@ export function VideoToGifGuide() {
 
         <aside className="rounded-2xl border border-[#E91E8C]/30 bg-[#E91E8C]/8 p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8">
           <div>
-            <h2 className="text-2xl font-bold text-white">Making a GIF from YouTube?</h2>
+            <h2 className="text-2xl font-bold text-white">YouTube to GIF with no watermark</h2>
             <p className="mt-2 max-w-2xl leading-7 text-gray-400">
               Use the YTgify Chrome extension to choose the moment directly inside the YouTube player.
             </p>

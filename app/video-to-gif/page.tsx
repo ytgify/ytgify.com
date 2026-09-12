@@ -7,7 +7,7 @@ import { VideoToGifGuide, videoToGifFAQs } from './VideoToGifGuide';
 
 const title = `Free Video to GIF Converter - Private, No Watermark | ${SITE_NAME}`;
 const description =
-  'Convert your own MP4, MOV, or WebM video to an animated GIF for free. Trim, caption, preview, and download locally in your browser with no watermark.';
+  'Convert your own MP4, MOV, or WebM video to GIF online. Free animated GIF maker with trimming, captions, and no watermark. No account or installation required.';
 
 export const metadata: Metadata = {
   title,

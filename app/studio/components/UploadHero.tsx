@@ -11,7 +11,7 @@ export function UploadHero() {
         Free Video to GIF Converter
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-7 text-gray-300 sm:text-lg">
-        Trim a moment, add an optional caption, and download your GIF.
+        Convert MP4 to GIF online. Trim a moment, add a caption, and download for free.
       </p>
     </div>
   );

@@ -18,7 +18,7 @@ test.describe('Landing Page Smoke Tests', () => {
     await expect(page).toHaveTitle('YouTube to GIF Converter - Free, No Watermark | YTgify');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
-      /Turn YouTube videos into GIFs for free/i,
+      /Convert YouTube to GIF with no watermark using the free YTgify Chrome extension/i,
     );
     await expect(page.getByRole('heading', { name: /Common questions, answered/i })).toBeVisible();
     await expect(page.getByText(/How do I turn a YouTube video into a GIF/i)).toBeVisible();
