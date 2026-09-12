@@ -4,6 +4,7 @@
 import { useRef, useState } from 'react';
 
 function localBlobUrl(url: string) {
+  // Preview sources are object URLs created in useGifTool; reject every external URL scheme.
   return url.startsWith('blob:') ? url : undefined;
 }
 
