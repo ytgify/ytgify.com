@@ -46,9 +46,13 @@ export default function ToolPage({ tool }: { tool: GifTool }) {
           </ol>
           <h2 className="mt-8 text-xl font-bold">Private, with clear limits</h2>
           <p className="mt-3 leading-7 text-gray-400">
-            Your GIF stays on your device. No account or installation is required. Choose a GIF up to 25 MB, 600 frames,
-            and a 60-second cycle. Detailed or large animations may reach the memory limit sooner. Mobile support is
-            still being validated.
+            Your GIF stays on your device. No account or installation is required. Files up to 10 MB are fully
+            supported. Larger GIFs may take longer or exceed your browser&apos;s available memory, but YTgify will
+            attempt to process them. Files above 25 MB receive a stronger warning.
+          </p>
+          <p className="mt-3 leading-7 text-gray-400">
+            YTgify stops when the GIF&apos;s dimensions, frame count, estimated working memory, or processing time would
+            put browser stability at risk. Mobile browsers may reach those limits sooner.
           </p>
           <p className="mt-3 leading-7 text-gray-400">
             Very short or missing frame delays are normalized to 100 milliseconds and reported before export.

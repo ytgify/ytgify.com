@@ -46,11 +46,17 @@ test(
       }, 100);
     });
     await page.goto('/gif-compressor');
+    await expect(page.getByTestId('processing-expectations')).toContainText(
+      'Processing speed depends on your device and browser',
+    );
+    await expect(page.getByTestId('processing-expectations')).toContainText('reaches 60 seconds stops');
     const input = page.getByLabel('Choose a GIF', { exact: true });
     await input.setInputFiles(path.resolve('tests/fixtures/gif/natural-bunny-4.gif'));
     await expect(page.getByRole('button', { name: 'Compress GIF', exact: true })).toBeVisible();
     await page.getByLabel('Target size (MB)').fill('0.000001');
     await page.getByRole('button', { name: 'Compress GIF', exact: true }).click();
+    await expect(page.getByRole('progressbar', { name: 'Processing progress', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Cancel processing', exact: true })).toBeVisible();
     const start = Date.now();
     await page.getByRole('button', { name: 'Cancel processing', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Compress GIF', exact: true })).toBeEnabled();

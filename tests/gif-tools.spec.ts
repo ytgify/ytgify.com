@@ -4,6 +4,10 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 
 const fixture = (name: string) => path.join(process.cwd(), 'tests/fixtures/gif', name);
+function paddedGif(name: string, bytes: number) {
+  const source = readFileSync(fixture('compressible.gif'));
+  return { name, mimeType: 'image/gif', buffer: Buffer.concat([source, Buffer.alloc(bytes - source.length)]) };
+}
 async function download(page: Page, info: TestInfo, kind = 'GIF') {
   const pending = page.waitForEvent('download');
   await page.getByRole('link', { name: `Download ${kind}`, exact: true }).click();
@@ -94,7 +98,13 @@ test(
 
 test('invalid GIF fails safely and the same picker recovers', { tag: ['@gif-shared'] }, async ({ page }) => {
   await page.goto('/gif-compressor');
-  for (const name of ['truncated.gif', 'huge-canvas.gif', 'out-of-bounds.gif', 'malformed-lzw.gif']) {
+  for (const name of [
+    'truncated.gif',
+    'huge-canvas.gif',
+    'too-many-frames.gif',
+    'out-of-bounds.gif',
+    'malformed-lzw.gif',
+  ]) {
     await page.getByLabel('Choose a GIF', { exact: true }).setInputFiles(fixture(name));
     await expect(page.locator('p[role=alert]')).toBeVisible();
     await expect(page.getByRole('img', { name: 'Original animation' })).toHaveCount(0);
@@ -102,6 +112,35 @@ test('invalid GIF fails safely and the same picker recovers', { tag: ['@gif-shar
   await upload(page, 'natural-bunny-5.gif');
   await page.getByRole('button', { name: 'Compress GIF', exact: true }).click();
   await expect(page.getByRole('link', { name: 'Download GIF', exact: true })).toBeVisible({ timeout: 30000 });
+});
+
+test('large sources warn and continue on a best-effort basis', { tag: '@compressor' }, async ({ page }, info) => {
+  await page.goto('/gif-compressor');
+  const picker = page.getByLabel('Choose a GIF', { exact: true });
+
+  await picker.setInputFiles(paddedGif('supported-boundary.gif', 10 * 1024 * 1024));
+  await expect(page.getByRole('img', { name: 'Original animation', exact: true })).toBeVisible();
+  await expect(page.getByTestId('source-size-notice')).toHaveCount(0);
+
+  await picker.setInputFiles(paddedGif('best-effort.gif', 10 * 1024 * 1024 + 1));
+  await expect(page.getByTestId('source-size-notice')).toContainText(
+    /Files up to 10 MB are fully supported.*YTgify will attempt to process them/,
+  );
+  await expect(page.getByRole('img', { name: 'Original animation', exact: true })).toBeVisible();
+  await info.attach('best-effort-source-warning', {
+    body: await page.screenshot({ fullPage: true }),
+    contentType: 'image/png',
+  });
+
+  await picker.setInputFiles(paddedGif('above-soft-warning.gif', 25_000_001));
+  await expect(page.getByTestId('source-size-notice')).toContainText(/above the current 25 MB soft warning threshold/);
+  await expect(page.getByRole('img', { name: 'Original animation', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Compress GIF', exact: true }).click();
+  await expect(page.getByRole('link', { name: 'Download GIF', exact: true })).toBeVisible({ timeout: 65_000 });
+  await info.attach('above-soft-threshold-result', {
+    body: await page.screenshot({ fullPage: true }),
+    contentType: 'image/png',
+  });
 });
 
 test('new routes have canonical metadata and work at narrow widths', { tag: ['@gif-shared'] }, async ({ page }) => {

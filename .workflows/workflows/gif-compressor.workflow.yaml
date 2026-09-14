@@ -3,10 +3,12 @@ kind: Workflow
 metadata:
   id: ytgify.gif-compressor
   name: GIF compressor synthetic media
-  description: Upload a synthetic GIF, choose a smaller target, inspect preview
-    and download, reject invalid targets and recover.
+  description: Upload a synthetic GIF, benchmark a named reference workload,
+    verify progress and cancellation, inspect preview and download, warn before
+    best-effort large-source work, enforce the emergency safety timeout, reject
+    unsafe work, and recover.
   lifecycle: candidate
-  candidateRevision: 4
+  candidateRevision: 7
   tags:
     - gif
     - compressor
@@ -31,7 +33,16 @@ evaluation:
         - restore-fresh-start
         - load-feedback-fixture
         - measure-feedback
+        - cancel-reference-workload
+        - recover-reference-workload
+        - verify-safety-timeout-contract
         - download-feedback
+        - supported-source-boundary
+        - best-effort-source-warning
+        - soft-threshold-source-warning
+        - reject-risky-canvas
+        - reject-risky-frame-count
+        - recover-risky-workload
         - reject-invalid-header
         - recover-invalid-header
         - reject-malformed-lzw
@@ -84,11 +95,15 @@ evaluation:
         - boundary-negative-zero-2
         - boundary-outside-range-1
         - boundary-outside-range-2
+        - reject-risky-canvas
+        - reject-risky-frame-count
     - id: recovery
       stepIds:
         - recover-target
+        - recover-reference-workload
         - recover-invalid-header
         - recover-malformed-lzw
+        - recover-risky-workload
     - id: invalid-input
       stepIds:
         - invalid-target
@@ -121,6 +136,49 @@ evaluation:
         - repeat-select
         - repeat-process-1
         - repeat-process-2
+    - id: large-input
+      stepIds:
+        - load-feedback-fixture
+        - measure-feedback
+        - cancel-reference-workload
+        - recover-reference-workload
+        - supported-source-boundary
+        - best-effort-source-warning
+        - soft-threshold-source-warning
+    - id: progress-feedback
+      stepIds:
+        - measure-feedback
+        - cancel-reference-workload
+        - recover-reference-workload
+        - best-effort-source-warning
+        - soft-threshold-source-warning
+    - id: completion
+      stepIds:
+        - measure-feedback
+        - recover-reference-workload
+        - download-feedback
+        - supported-source-boundary
+        - best-effort-source-warning
+        - soft-threshold-source-warning
+    - id: limit-behavior
+      stepIds:
+        - boundary-outside-range-2
+        - boundary-minimum
+        - boundary-maximum
+        - supported-source-boundary
+        - best-effort-source-warning
+        - soft-threshold-source-warning
+        - reject-risky-canvas
+        - reject-risky-frame-count
+        - recover-risky-workload
+    - id: reference-environment
+      stepIds:
+        - establish-fresh-start
+        - load-feedback-fixture
+        - measure-feedback
+    - id: safety-timeout
+      stepIds:
+        - verify-safety-timeout-contract
 target:
   app: ytgify
   supportedPlatforms:
@@ -286,8 +344,8 @@ steps:
         checkpoint: recover-target
         required: true
   - id: load-feedback-fixture
-    name: Load bounded feedback fixture
-    action: Load bounded feedback fixture
+    name: Load the named reference workload
+    action: Load the named reference workload
     routineActionBatches:
       - id: load-feedback-fixture-batch
         actions:
@@ -298,7 +356,7 @@ steps:
           - browser.control
     expected:
       - The loaded filename is feedback-256x256-40.gif, with 256 by 256
-        dimensions and 40 frames.
+        dimensions, 40 frames, a 4.00-second cycle, and 1,974,685 source bytes.
     evidence:
       - type: screenshot
         checkpoint: load-feedback-fixture
@@ -306,8 +364,8 @@ steps:
     dependsOn:
       - recover-target
   - id: measure-feedback
-    name: Measure compression feedback
-    action: Measure compression feedback
+    name: Benchmark the reference workload
+    action: Benchmark the reference workload
     routineActionBatches:
       - id: measure-feedback-batch
         actions:
@@ -321,8 +379,12 @@ steps:
         requestedCapabilities:
           - browser.control
     expected:
-      - Compression completes with a measured result; observed feedback timing
-        is recorded separately and is not inferred from a completed screenshot.
+      - Compression completes with a measured result; monotonic timing is recorded
+        separately and is not inferred from a completed screenshot.
+      - Evidence names the browser family and version, operating system, platform,
+        requested viewport, actual capture dimensions, reference fixture, and target.
+        Unavailable hardware details are stated as unavailable, and no result is
+        generalized to arbitrary client hardware.
     evidence:
       - type: screenshot
         checkpoint: measure-feedback
@@ -332,6 +394,77 @@ steps:
         required: false
     dependsOn:
       - load-feedback-fixture
+  - id: cancel-reference-workload
+    name: Cancel the running reference workload
+    action: Cancel the running reference workload
+    routineActionBatches:
+      - id: cancel-reference-workload-batch
+        actions:
+          - kind: activate-control
+            description: Start another compression of the loaded reference workload.
+            target: Compress GIF
+          - kind: observe
+            description: Observe the progress indicator, status, and cancellation control while work runs.
+            target: Processing progress and Cancel processing
+          - kind: activate-control
+            description: Cancel the running compression.
+            target: Cancel processing
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Progress and a cancellation control become visible promptly while processing runs.
+      - Cancellation returns the interface to a usable state within one second,
+        reports cancellation, and does not publish a stale result.
+    evidence:
+      - type: screenshot
+        checkpoint: reference-workload-in-progress
+        required: true
+      - type: screenshot
+        checkpoint: reference-workload-cancelled
+        required: true
+    dependsOn:
+      - measure-feedback
+  - id: recover-reference-workload
+    name: Recover after reference workload cancellation
+    action: Recover after reference workload cancellation
+    routineActionBatches:
+      - id: recover-reference-workload-batch
+        actions:
+          - kind: activate-control
+            description: Restart compression of the loaded reference workload.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - A fresh compression completes after cancellation and publishes a current
+        measured result with a Download GIF link.
+    evidence:
+      - type: screenshot
+        checkpoint: reference-workload-recovered
+        required: true
+    dependsOn:
+      - cancel-reference-workload
+  - id: verify-safety-timeout-contract
+    name: Verify the emergency processing cutoff contract
+    action: Verify the emergency processing cutoff contract
+    routineActionBatches:
+      - id: verify-safety-timeout-contract-batch
+        actions:
+          - kind: observe
+            description: Read the visible device-dependent processing and safety-timeout explanation.
+            target: Processing expectations
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The page says processing speed depends on the device and browser, progress
+        and cancellation remain available, and 60 seconds is an emergency stop
+        followed by recovery guidance rather than an acceptable-latency promise.
+    evidence:
+      - type: screenshot
+        checkpoint: safety-timeout-contract
+        required: true
+    dependsOn:
+      - recover-reference-workload
   - id: download-feedback
     name: Inspect result-ready download visibility
     action: Inspect result-ready download visibility
@@ -352,7 +485,139 @@ steps:
         checkpoint: download-feedback
         required: true
     dependsOn:
-      - measure-feedback
+      - verify-safety-timeout-contract
+  - id: supported-source-boundary
+    name: Complete the supported 10 MiB source boundary
+    action: Complete the supported 10 MiB source boundary
+    routineActionBatches:
+      - id: supported-source-boundary-batch
+        actions:
+          - kind: activate-control
+            description: Choose the repository-generated supported-10MiB.gif fixture.
+            target: Choose a GIF
+          - kind: activate-control
+            description: Set Target size (MB) to 1 and start compression.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The 10 MiB source loads without a large-source notice and produces a
+        downloadable result on the current platform.
+    evidence:
+      - type: screenshot
+        checkpoint: supported-source-boundary
+        required: true
+    dependsOn:
+      - download-feedback
+  - id: best-effort-source-warning
+    name: Warn and attempt a source above 10 MiB
+    action: Warn and attempt a source above 10 MiB
+    routineActionBatches:
+      - id: best-effort-source-warning-batch
+        actions:
+          - kind: activate-control
+            description: Choose the repository-generated best-effort-over-10MiB.gif fixture.
+            target: Choose a GIF
+          - kind: activate-control
+            description: Set Target size (MB) to 1 and start compression.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The supported-range warning is visible, processing is attempted, and a
+        downloadable result is produced because decoded workload remains safe.
+    evidence:
+      - type: screenshot
+        checkpoint: best-effort-source-warning
+        required: true
+    dependsOn:
+      - supported-source-boundary
+  - id: soft-threshold-source-warning
+    name: Warn and attempt a source above 25 MB
+    action: Warn and attempt a source above 25 MB
+    routineActionBatches:
+      - id: soft-threshold-source-warning-batch
+        actions:
+          - kind: activate-control
+            description: Choose the repository-generated best-effort-over-25MB.gif fixture.
+            target: Choose a GIF
+          - kind: activate-control
+            description: Set Target size (MB) to 1 and start compression.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The stronger 25 MB soft-threshold warning is visible, processing is
+        attempted, and a downloadable result is produced because decoded
+        workload remains safe.
+    evidence:
+      - type: screenshot
+        checkpoint: soft-threshold-source-warning
+        required: true
+    dependsOn:
+      - best-effort-source-warning
+  - id: reject-risky-canvas
+    name: Stop an unsafe decoded canvas
+    action: Stop an unsafe decoded canvas
+    routineActionBatches:
+      - id: reject-risky-canvas-batch
+        actions:
+          - kind: activate-control
+            description: Choose the repository huge-canvas.gif safety fixture.
+            target: Choose a GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Processing stops with an actionable decoded-workload error and no stale
+        preview or downloadable result.
+    evidence:
+      - type: screenshot
+        checkpoint: reject-risky-canvas
+        required: true
+    dependsOn:
+      - soft-threshold-source-warning
+  - id: reject-risky-frame-count
+    name: Stop an unsafe frame count
+    action: Stop an unsafe frame count
+    routineActionBatches:
+      - id: reject-risky-frame-count-batch
+        actions:
+          - kind: activate-control
+            description: Choose the repository too-many-frames.gif safety fixture.
+            target: Choose a GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Processing stops with an actionable frame-count or memory error and no
+        stale preview or downloadable result.
+    evidence:
+      - type: screenshot
+        checkpoint: reject-risky-frame-count
+        required: true
+    dependsOn:
+      - reject-risky-canvas
+  - id: recover-risky-workload
+    name: Recover after a decoded-workload safety stop
+    action: Recover after a decoded-workload safety stop
+    routineActionBatches:
+      - id: recover-risky-workload-batch
+        actions:
+          - kind: activate-control
+            description: Choose the original compressible.gif fixture.
+            target: Choose a GIF
+          - kind: activate-control
+            description: Select the 10 KB target and start compression.
+            target: Compress GIF
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - A safe source recovers and produces a fresh downloadable result.
+    evidence:
+      - type: screenshot
+        checkpoint: recover-risky-workload
+        required: true
+    dependsOn:
+      - reject-risky-frame-count
   - id: reject-invalid-header
     name: Reject invalid-header.gif
     action: Reject invalid-header.gif
@@ -372,7 +637,7 @@ steps:
         checkpoint: reject-invalid-header
         required: true
     dependsOn:
-      - download-feedback
+      - recover-risky-workload
   - id: recover-invalid-header
     name: Recover from invalid-header.gif
     action: Recover from invalid-header.gif

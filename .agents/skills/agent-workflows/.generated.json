@@ -2,13 +2,13 @@
   "schema": "workflow-skill-baseline/v1",
   "pins": {
     "packageName": "@lineagehq/workflows",
-    "packageVersion": "0.2.0-rc.15",
+    "packageVersion": "0.2.0-rc.16",
     "protocolVersion": "1.0"
   },
   "hashes": {
-    ".agents/skills/agent-workflows/SKILL.md": "9fcc363f3df163068e99fdd7e9c6279b7b371f680fde0ca4876b4466d08d577d",
+    ".agents/skills/agent-workflows/SKILL.md": "200f6304a3d9b8738a084cdfb26db02ddf2d8ea2e3b4b9f78c9353567c3b9a8a",
     ".agents/skills/agent-workflows/agents/openai.yaml": "d09edb5031bd5f8a2d9c6e799d3c5c4f925d2d809545ec32552855d2cdce5a79",
-    ".agents/skills/agent-workflows/references/protocol.md": "9a602d659aed732feed60acc9c5697fcf7318485e7949cf2f21aac012a7202c5",
+    ".agents/skills/agent-workflows/references/protocol.md": "e9eae7f4c4f5515762f10ea6fb9721f12ccc1d00478ac320a67fd34d9dd5f45f",
     ".agents/skills/agent-workflows/references/evidence.md": "bcb248607983c95581bd5cef04be774803e0cfb6fbd7717cc630017fef2124ee",
     ".agents/skills/agent-workflows/references/capability-gaps.md": "12541fd740a1fe187312791a41a75ce9f449262ed296c6a5afc50d7e7f83f70d",
     ".agents/skills/agent-workflows/references/lifecycle.md": "70100507c64756cae8180b7b7da038aa2f815fdab766e8518c0fc16b45ff0c88",

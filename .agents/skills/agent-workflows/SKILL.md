@@ -5,7 +5,7 @@ description: Operate supervised application walkthroughs using the Agent Workflo
 
 # Agent Workflows
 
-Use `@lineagehq/workflows@0.2.0-rc.15` with protocol `1.0`.
+Use `@lineagehq/workflows@0.2.0-rc.16` with protocol `1.0`.
 
 ## Choose the operation
 
@@ -39,6 +39,14 @@ Workflows has no approval gates for local or production execution. Complete requ
 ## Training platform default
 
 For “train this journey”, omit `--platform`: the runner launches every supported platform enabled in project configuration. Use `--platform desktop-web` or `--platform mobile-web` only when the user explicitly narrows training. Consume every entry in `data.runs` (or `error.details.runs` after a partial or failed launch), execute each launched run through cleanup, and report per-platform step counts and outcomes. Continue other platforms when one is blocked; report partial completion and the blocker. `status: launched` means runs were created, never that Training passed. A launch failure is recorded in that platform's response entry and must not be silently dropped. Evaluation evidence does not substitute for Training, and agent execution never implies human acceptance.
+
+## Evaluation questions and requirements
+
+Before evaluating a perspective, inspect its pinned `inquiryPolicy`, `requirementSnapshot`, and effective rubric hash. Requirements in that verified snapshot are evaluation inputs; chat statements, agent suggestions, dismissed questions, direct assumptions, and observations from another run are not requirements. A requirement never expands the trained journey, action set, scenarios, capabilities, evidence access, or lease.
+
+A perspective may propose a structured question only when exact evidence from the current run exposes undefined product intent covered by that lens and criterion. Use the returned run, scenario, step, criterion, question, and route identities exactly. Do not scan stores, guess IDs, inject markup, or answer for the human. Link an `undefined-product-intent` assessment to the verified question ID and keep it unassessed. Questions are product decisions, not application findings or approval gates; continue every unrelated evaluation step while they remain open. Read human discussion responses from `workflow questions show RUN_ID QUESTION_ID --json` or `workflow questions list WORKFLOW_ID --json`; discussion does not resolve the question or confer approval, a requirement decision, or acceptance. Human answers are recorded through Studio and affect only fresh evaluations that pin the resulting requirements catalog hash.
+
+For the Performance perspective, use only trained large-input, progress-feedback, completion, limit-behavior, and recovery mappings. Apply declared workload and latency values only from the pinned requirement snapshot. Prefer `reference-workload-completion-milliseconds` when completion depends on client hardware: the question and evidence must name the exact workload and observable browser environment, and the assessment must not generalize beyond them. Use legacy `maximum-completion-milliseconds` only when the product explicitly promises one absolute bound across the declared scope. Keep progress visibility, cancellation responsiveness, and an emergency processing cutoff as separate behaviors; a safety timeout is not acceptable latency. When a product threshold is absent, raise an exact question and leave that criterion unassessed. When browser timing, device resources, or network measurement cannot support the claim, record a capability gap; do not report an application finding or claim physical-device performance from viewport evidence.
 
 ## Completion receipt
 

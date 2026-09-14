@@ -4,7 +4,6 @@ import { GifError, MAX_WORKSPACE, workspaceBytes, type GifControl, type GifPatch
 const defaultControl = (): GifControl => ({ rawDelay: null, delay: 100, disposal: 0, transparent: null });
 
 export function parseGif(bytes: Uint8Array): ParsedGif {
-  if (bytes.length > 25_000_000) throw new GifError('input_limit', 'Choose a GIF smaller than 25 MB.');
   const reader = new GifReader(bytes);
   if (!['GIF87a', 'GIF89a'].includes(reader.text(6))) throw new GifError('invalid_gif', 'Choose a valid GIF file.');
   const width = reader.word();
