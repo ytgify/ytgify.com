@@ -1,6 +1,6 @@
 # Codex host protocol
 
-Package: `@lineagehq/workflows@0.2.0-rc.16`
+Package: `@lineagehq/workflows@0.2.0-rc.17`
 
 Protocol: `1.0`
 
@@ -85,7 +85,7 @@ For recorded training capability gaps, read [capability-gaps.md](capability-gaps
 
 - On `REVISION_CONFLICT`, inspect and rebuild the request against current state; do not reuse the request ID with changed input.
 - Retry an identical evidence request with the same request ID after interrupted response delivery. The runner reconstructs the exact response.
-- On `LEASE_EXPIRED`, stop browser mutation and inspect. The first fresh request at or after the exact expiry durably records the runner-owned expiry; this never asserts whether the external action executed. If that request is inspect, it returns the reconciliation state. Any other command records expiry, returns `LEASE_EXPIRED`, and must be followed by inspect. Lease-scoped evidence slots and optional authority are invalidated. Reconcile the named uncertain lease, then use a fresh lifecycle run rather than retrying the possibly executed action.
+- On `LEASE_EXPIRED`, stop browser mutation and inspect. The first fresh request at or after the exact expiry durably records the runner-owned expiry; this never asserts whether the external action executed. If that request is inspect, it returns the reconciliation state. Any other command records expiry, returns `LEASE_EXPIRED`, and must be followed by inspect. Lease-scoped evidence slots and optional authority are invalidated. Reconcile the named uncertain lease. A non-resumable evaluation is then closed as abandoned so it cannot enter a release-and-claim loop; preserve it and launch a fresh evaluation rather than retrying the possibly executed action.
 - On ownership or reconciliation errors, do not claim success from visible state alone.
 
 ## Fresh-agent handoff
