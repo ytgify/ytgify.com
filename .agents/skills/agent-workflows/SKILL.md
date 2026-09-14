@@ -5,7 +5,7 @@ description: Operate supervised application walkthroughs using the Agent Workflo
 
 # Agent Workflows
 
-Use `@lineagehq/workflows@0.2.0-rc.17` with protocol `1.0`.
+Use `@lineagehq/workflows@0.2.0-rc.18` with protocol `1.0`.
 
 ## Choose the operation
 

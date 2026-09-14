@@ -14,3 +14,37 @@ requirements:
         - ytgify.gif-compressor
       perspectiveIds:
         - performance
+  - key: reference-workload-completion-milliseconds
+    label: For feedback-256x256-40.gif (1,974,685 bytes, 256×256, 40 frames,
+      4.00-second cycle) compressed to 1 MB in Chrome on macOS at the requested
+      1440×900 viewport, what completion-time regression budget in milliseconds
+      should be acceptable for this named reference environment?
+    answer:
+      type: quantity
+      value: 15000
+      unit: milliseconds
+    scope:
+      kind: journey
+      workflowIds:
+        - ytgify.gif-compressor
+      platforms:
+        - desktop-web
+      perspectiveIds:
+        - performance
+  - key: reference-workload-completion-milliseconds
+    label: For feedback-256x256-40.gif (1,974,685 bytes, 256×256, 40 frames,
+      4.00-second cycle) compressed to 1 MB in Chrome on macOS at the requested
+      393×852 viewport, what completion-time regression budget in milliseconds
+      should be acceptable for this named reference environment?
+    answer:
+      type: quantity
+      value: 16000
+      unit: milliseconds
+    scope:
+      kind: journey
+      workflowIds:
+        - ytgify.gif-compressor
+      platforms:
+        - mobile-web
+      perspectiveIds:
+        - performance

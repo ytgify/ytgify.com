@@ -1,6 +1,6 @@
 # Codex host protocol
 
-Package: `@lineagehq/workflows@0.2.0-rc.17`
+Package: `@lineagehq/workflows@0.2.0-rc.18`
 
 Protocol: `1.0`
 
