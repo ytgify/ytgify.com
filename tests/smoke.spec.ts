@@ -2,6 +2,10 @@ import { test, expect } from '@playwright/test';
 import { DEMO_VIDEO_EMBED_URL } from '../lib/constants';
 
 test.describe('Landing Page Smoke Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (route) => route.abort());
+  });
+
   test('page loads successfully', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(/YTgify/);

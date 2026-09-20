@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('video to GIF accessibility', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (route) => route.abort());
+  });
+
   test('exposes a keyboard-reachable upload action and clear page structure', async ({ page }) => {
     await page.goto('/video-to-gif');
 
