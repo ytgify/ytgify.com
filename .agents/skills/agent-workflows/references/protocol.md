@@ -1,6 +1,6 @@
 # Codex host protocol
 
-Package: `@lineagehq/workflows@0.2.0-rc.19`
+Package: `@lineagehq/workflows@0.3.0`
 
 Protocol: `1.0`
 
@@ -59,12 +59,12 @@ On a clear marker failure with no uncertain lease, the runner records `authentic
 ## Sequence
 
 1. `inspect` with `{}`. It does not require `expectedRevision`; use only its immutable target and manifest viewport.
-2. Use the current CUA Chrome API and the documentation returned by its browser entry point. Select `chrome` explicitly, create a fresh controlled Chrome tab for this run, and retain that tab/session handle through cleanup. Do not reuse a pre-existing or user-owned tab for workflow execution or evidence capture. A separate Chrome skill is not required; do not stop because it is absent from the catalog. Follow the available API documentation for controls and uploads, without inventing methods.
-3. Set the manifest viewport and capture a `fullPage: false` probe from the same handle. Parse untouched raw bytes with `inspectScreenshotBytes` and record actual dimensions. A viewport mismatch alone does not block claim or functional execution. Advertise only demonstrated capabilities. If capture is unavailable or malformed, omit screenshot capability and continue independent actions; record affected screenshot-dependent steps as blocked. Never crop, resize, convert, or substitute bytes.
+2. If inspection pins `authentication.mode: user-session`, follow [authentication.md](authentication.md) and use only `workflow browser execute` / `workflow browser stage-upload`; the Studio broker owns the opaque session and leased tab, and generic CUA Chrome is forbidden. Otherwise use the current CUA Chrome API, select `chrome` explicitly, create a fresh controlled tab for this run, and retain it through cleanup. Do not reuse a pre-existing or user-owned tab.
+3. For a user-session run, the broker applies the immutable manifest viewport and writes its `fullPage: false` capture only to the runner-issued slot. For other runs, set the manifest viewport and capture a `fullPage: false` probe from the retained handle. Parse untouched raw bytes with `inspectScreenshotBytes`; advertise only demonstrated capabilities and never crop, resize, convert, or substitute bytes.
 4. `claim` with `{ "hostInstanceId": "host_..." }`, then register demonstrated browser operations independently from screenshot evidence. Structurally valid captures may advertise `evidenceTypes: ["screenshot"]` with a finite `constraints.maxBytes` even when actual dimensions differ from the manifest.
 5. For each step, `propose` one reversible action batch. Use only a returned lease whose decision is `allowed` and whose `expiresAt` has not passed.
    Verify its `leasePolicy` equals the inspection/manifest snapshot. New Training, replay, and evaluation launches use runner-selected `authorized-codex-browser-v1` rolling/hard/threshold 120/300/90 seconds. Explicit legacy Training policies remain 30/120/15 for `standard` and 120/300/90 for `supervised-codex-browser`; use the runner-returned policy hash. Use the selected timing policy; do not forge lease timestamps.
-6. Execute that batch with the documented CUA Chrome API on the retained tab. After every navigation, reassert the manifest viewport on that same tab before observation or evidence capture.
+6. Execute a user-session batch only through the authenticated broker. Execute other batches with the documented CUA Chrome API on the retained tab, reasserting the manifest viewport after navigation.
 
 Propose the actions needed for the current step. When using a declared routine action batch, copy its executor fields exactly so the runner can validate the batch. Other proposals receive leases without approval prompts. Available capabilities, step order, lease timing, and evidence requirements still apply.
 
