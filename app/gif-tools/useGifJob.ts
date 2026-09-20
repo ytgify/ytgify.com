@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { GifJobResult, GifOperation, GifReply } from '@/lib/media/jobs/protocol';
+import { GIF_PROCESSING_SAFETY_TIMEOUT_MS } from '@/lib/media/gif/processing-policy';
+import { sourceAdmissionError } from '@/lib/media/gif/source-policy';
 
 export function useGifJob() {
   const worker = useRef<Worker | null>(null);
@@ -38,7 +40,8 @@ export function useGifJob() {
       setBusy(true);
       setProgress({ value: 0, stage: 'Reading GIF' });
       try {
-        if (file.size > 25_000_000) throw new Error('Choose a GIF smaller than 25 MB.');
+        const admissionError = sourceAdmissionError(file.size);
+        if (admissionError) throw new Error(admissionError);
         if (typeof Worker === 'undefined')
           throw new Error('This browser does not support background processing. Try a recent desktop browser.');
         const bytes = await file.arrayBuffer();
@@ -54,7 +57,7 @@ export function useGifJob() {
         };
         timer.current = setTimeout(
           () => fail('Processing took too long. Choose a smaller GIF or a higher target.'),
-          60_000,
+          GIF_PROCESSING_SAFETY_TIMEOUT_MS,
         );
         active.onmessage = (event: MessageEvent<GifReply>) => {
           if (id !== generation.current || event.data.id !== id) return;

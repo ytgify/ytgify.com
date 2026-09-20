@@ -4,6 +4,7 @@ import { trackToolEvent } from '@/lib/media/analytics';
 import type { GifJobResult, GifOperation } from '@/lib/media/jobs/protocol';
 import type { GifTool } from './catalog';
 import { useGifJob } from './useGifJob';
+import { sourceSizeNotice } from '@/lib/media/gif/source-policy';
 export function useGifTool(tool: GifTool) {
   const job = useGifJob();
   useEffect(() => {
@@ -13,6 +14,7 @@ export function useGifTool(tool: GifTool) {
     if (job.error) trackToolEvent(tool, 'error');
   }, [job.error, tool]);
   const [file, setFile] = useState<File | null>(null);
+  const [sourceNotice, setSourceNotice] = useState('');
   const [source, setSource] = useState('');
   const [metadata, setMetadata] = useState<GifJobResult | null>(null);
   const [result, setResult] = useState<GifJobResult | null>(null);
@@ -45,6 +47,7 @@ export function useGifTool(tool: GifTool) {
   const choose = (next: File) => {
     setTargetError('');
     setFile(next);
+    setSourceNotice(sourceSizeNotice(next.size));
     setSource('');
     setMetadata(null);
     setResult(null);
@@ -77,6 +80,7 @@ export function useGifTool(tool: GifTool) {
   return {
     job,
     file,
+    sourceNotice,
     source,
     metadata,
     result,

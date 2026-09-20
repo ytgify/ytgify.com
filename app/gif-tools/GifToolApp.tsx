@@ -1,6 +1,7 @@
 'use client';
 import { useRef } from 'react';
 import { formatMediaSize } from '@/lib/media/file-size';
+import { GIF_PROCESSING_SAFETY_TIMEOUT_SECONDS } from '@/lib/media/gif/processing-policy';
 
 import { trackToolEvent } from '@/lib/media/analytics';
 import { gifTools, type GifTool } from './catalog';
@@ -12,7 +13,7 @@ import ResultPanel from './ResultPanel';
 export default function GifToolApp({ tool }: { tool: GifTool }) {
   const controller = useGifTool(tool);
   const picker = useRef<HTMLInputElement>(null);
-  const { job, file, source, metadata, result, outputUrl, resultHeading, choose } = controller;
+  const { job, file, source, sourceNotice, metadata, result, outputUrl, resultHeading, choose } = controller;
   return (
     <section
       aria-label={gifTools[tool].title}
@@ -39,6 +40,15 @@ export default function GifToolApp({ tool }: { tool: GifTool }) {
           }}
         />
       </div>
+      {file && sourceNotice ? (
+        <p
+          aria-live="polite"
+          data-testid="source-size-notice"
+          className="rounded-lg border border-amber-400/40 bg-amber-400/10 p-4 text-sm text-amber-100"
+        >
+          {sourceNotice}
+        </p>
+      ) : null}
       {metadata && source && file ? (
         <>
           <p className="break-all text-sm text-gray-300">Loaded GIF: {file.name}</p>
@@ -56,6 +66,11 @@ export default function GifToolApp({ tool }: { tool: GifTool }) {
           <ToolSettings tool={tool} controller={controller} />
         </>
       ) : null}
+      <p data-testid="processing-expectations" className="text-sm leading-6 text-gray-400">
+        Processing speed depends on your device and browser. Progress and cancellation remain available while work runs.
+        A job that reaches {GIF_PROCESSING_SAFETY_TIMEOUT_SECONDS} seconds stops so you can try a smaller GIF or a
+        higher target.
+      </p>
       {job.busy ? (
         <div className="space-y-3">
           <progress aria-label="Processing progress" max="100" value={job.progress.value} className="w-full" />
