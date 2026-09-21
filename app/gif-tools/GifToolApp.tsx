@@ -10,6 +10,45 @@ import ToolSettings from './ToolSettings';
 import GifPreview from './GifPreview';
 import ResultPanel from './ResultPanel';
 
+function SourcePicker({
+  picker,
+  choose,
+}: {
+  picker: React.RefObject<HTMLInputElement | null>;
+  choose: (file: File) => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-dashed border-white/20 bg-white/[0.035] p-5 sm:flex sm:items-center sm:justify-between sm:gap-5">
+      <div>
+        <p className="font-bold text-white">Start with an animated GIF</p>
+        <p className="mt-1 text-sm leading-6 text-gray-400">Your file is read locally and never leaves this browser.</p>
+      </div>
+      <button
+        type="button"
+        onClick={() => picker.current?.click()}
+        className="mt-4 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ff3f8e] to-[#9d54df] px-5 py-3 font-bold text-white shadow-[0_12px_30px_rgba(233,30,140,0.25)] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9ff3ea] sm:mt-0"
+      >
+        <span aria-hidden="true" className="text-xl leading-none">
+          +
+        </span>
+        Choose a GIF
+      </button>
+      <input
+        ref={picker}
+        type="file"
+        accept="image/gif,.gif"
+        aria-label="Choose a GIF"
+        hidden
+        onChange={(event) => {
+          const next = event.target.files?.[0];
+          event.target.value = '';
+          if (next) choose(next);
+        }}
+      />
+    </div>
+  );
+}
+
 export default function GifToolApp({ tool }: { tool: GifTool }) {
   const controller = useGifTool(tool);
   const picker = useRef<HTMLInputElement>(null);
@@ -17,29 +56,14 @@ export default function GifToolApp({ tool }: { tool: GifTool }) {
   return (
     <section
       aria-label={gifTools[tool].title}
-      className="my-8 space-y-6 rounded-2xl border border-gray-700 bg-gray-950 p-5 sm:p-8"
+      data-testid="gif-compressor-workspace"
+      className="relative my-10 space-y-6 overflow-hidden rounded-[2rem] border border-white/10 bg-[#101116]/95 p-5 shadow-[0_30px_100px_rgba(0,0,0,0.45)] sm:p-8"
     >
-      <div>
-        <button
-          type="button"
-          onClick={() => picker.current?.click()}
-          className="rounded-lg bg-[#9ff3ea] px-4 py-3 font-semibold text-gray-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9ff3ea]"
-        >
-          Choose a GIF
-        </button>
-        <input
-          ref={picker}
-          type="file"
-          accept="image/gif,.gif"
-          aria-label="Choose a GIF"
-          hidden
-          onChange={(event) => {
-            const next = event.target.files?.[0];
-            event.target.value = '';
-            if (next) choose(next);
-          }}
-        />
-      </div>
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#ff4f9a] to-transparent"
+      />
+      <SourcePicker picker={picker} choose={choose} />
       {file && sourceNotice ? (
         <p
           aria-live="polite"
@@ -51,36 +75,50 @@ export default function GifToolApp({ tool }: { tool: GifTool }) {
       ) : null}
       {metadata && source && file ? (
         <>
-          <p className="break-all text-sm text-gray-300">Loaded GIF: {file.name}</p>
-          <p className="text-sm text-gray-300">
-            {metadata.width} × {metadata.height} · {metadata.frameCount} frames ·{' '}
-            {(metadata.duration / 1000).toFixed(2)} seconds per cycle · {formatMediaSize(file.size)}
-          </p>
+          <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/20 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="min-w-0 break-all text-sm font-semibold text-white">Loaded GIF: {file.name}</p>
+            <p className="flex-shrink-0 text-sm text-gray-400">
+              {metadata.width} × {metadata.height} · {metadata.frameCount} frames ·{' '}
+              {(metadata.duration / 1000).toFixed(2)} seconds per cycle · {formatMediaSize(file.size)}
+            </p>
+          </div>
           {metadata.normalizedTiming ? (
             <p className="text-sm text-amber-200">
               Missing or very short frame delays are interpreted as 100 ms. New encodings use that timing; an unchanged
               original keeps its original bytes.
             </p>
           ) : null}
-          <GifPreview key={source} url={source} label="Original" />
-          <ToolSettings tool={tool} controller={controller} />
+          <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(19rem,0.9fr)]">
+            <GifPreview key={source} url={source} label="Original" />
+            <div className="rounded-2xl border border-white/10 bg-black/25 p-5 sm:p-6">
+              <ToolSettings tool={tool} controller={controller} />
+            </div>
+          </div>
         </>
       ) : null}
-      <p data-testid="processing-expectations" className="text-sm leading-6 text-gray-400">
+      <p
+        data-testid="processing-expectations"
+        className="rounded-xl border border-white/[0.07] bg-black/20 px-4 py-3 text-xs leading-5 text-gray-400"
+      >
         Processing speed depends on your device and browser. Progress and cancellation remain available while work runs.
         A job that reaches {GIF_PROCESSING_SAFETY_TIMEOUT_SECONDS} seconds stops so you can try a smaller GIF or a
         higher target.
       </p>
       {job.busy ? (
-        <div className="space-y-3">
-          <progress aria-label="Processing progress" max="100" value={job.progress.value} className="w-full" />
+        <div className="space-y-3 rounded-2xl border border-[#9ff3ea]/20 bg-[#9ff3ea]/5 p-4">
+          <progress
+            aria-label="Processing progress"
+            max="100"
+            value={job.progress.value}
+            className="h-2 w-full accent-[#9ff3ea]"
+          />
           <button
             type="button"
             onClick={() => {
               job.cancel();
               trackToolEvent(tool, 'cancel');
             }}
-            className="rounded border border-gray-500 px-4 py-2"
+            className="rounded-lg border border-gray-500 px-4 py-2 text-sm font-semibold"
           >
             Cancel processing
           </button>
@@ -102,7 +140,7 @@ export default function GifToolApp({ tool }: { tool: GifTool }) {
       ) : null}
       {result?.bytes && file ? (
         <div>
-          <h2 ref={resultHeading} tabIndex={-1} className="mb-4 text-xl font-bold">
+          <h2 ref={resultHeading} tabIndex={-1} className="mb-4 text-2xl font-black tracking-tight">
             Result
           </h2>
           <ResultPanel result={result} originalSize={file.size} url={outputUrl} tool={tool} />

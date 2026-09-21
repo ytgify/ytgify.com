@@ -20,6 +20,23 @@ async function download(page: Page, info: TestInfo, kind = 'GIF') {
 function inspect(file: string) {
   return JSON.parse(execFileSync('node', ['scripts/gif-fixtures/inspect-gifuct.mjs', file]).toString())[0];
 }
+async function gotoCompressor(page: Page) {
+  await page.goto('/gif-compressor', { waitUntil: 'domcontentloaded' });
+}
+
+test('compressor loads without a third-party font dependency and presents the local workflow', async ({ page }) => {
+  const remoteFonts: string[] = [];
+  page.on('request', (request) => {
+    if (/fonts\.(googleapis|gstatic)\.com/.test(request.url())) remoteFonts.push(request.url());
+  });
+
+  await page.goto('/gif-compressor', { waitUntil: 'load' });
+
+  await expect(page.getByRole('heading', { level: 1, name: /Make your GIF lighter/i })).toBeVisible();
+  await expect(page.getByText(/No uploads/)).toBeVisible();
+  await expect(page.getByTestId('gif-compressor-workspace')).toContainText('Start with an animated GIF');
+  expect(remoteFonts).toEqual([]);
+});
 
 test('invalid targets stay editable and never start a worker', { tag: '@compressor' }, async ({ page }, info) => {
   await page.setViewportSize(
@@ -36,7 +53,7 @@ test('invalid targets stay editable and never start a worker', { tag: '@compress
       }
     };
   });
-  await page.goto('/gif-compressor');
+  await gotoCompressor(page);
   await upload(page, 'compressible.gif');
   const target = page.getByLabel('Target size (MB)', { exact: true });
   for (const value of ['', '0', '-1', '26', '0.0000009']) {
@@ -80,7 +97,7 @@ test(
   'compressor downloads a smaller real GIF, preserves pixels and reports impossible targets',
   { tag: ['@compressor'] },
   async ({ page }, info) => {
-    await page.goto('/gif-compressor');
+    await gotoCompressor(page);
     await upload(page, 'compressible.gif');
     await page.getByLabel('Target size (MB)').fill('0.000001');
     await page.getByRole('button', { name: 'Compress GIF', exact: true }).click();
@@ -97,7 +114,7 @@ test(
 );
 
 test('invalid GIF fails safely and the same picker recovers', { tag: ['@gif-shared'] }, async ({ page }) => {
-  await page.goto('/gif-compressor');
+  await gotoCompressor(page);
   for (const name of [
     'truncated.gif',
     'huge-canvas.gif',
@@ -115,7 +132,7 @@ test('invalid GIF fails safely and the same picker recovers', { tag: ['@gif-shar
 });
 
 test('large sources warn and continue on a best-effort basis', { tag: '@compressor' }, async ({ page }, info) => {
-  await page.goto('/gif-compressor');
+  await gotoCompressor(page);
   const picker = page.getByLabel('Choose a GIF', { exact: true });
 
   await picker.setInputFiles(paddedGif('supported-boundary.gif', 10 * 1024 * 1024));
@@ -146,7 +163,7 @@ test('large sources warn and continue on a best-effort basis', { tag: '@compress
 test('new routes have canonical metadata and work at narrow widths', { tag: ['@gif-shared'] }, async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   for (const route of ['gif-compressor']) {
-    await page.goto(`/${route}`);
+    await page.goto(`/${route}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', `https://ytgify.com/${route}`);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -157,7 +174,7 @@ test(
   'size presets show selection, explain already-small files and clear stale results',
   { tag: '@compressor' },
   async ({ page }, info) => {
-    await page.goto('/gif-compressor');
+    await gotoCompressor(page);
     await page.getByLabel('Choose a GIF', { exact: true }).setInputFiles(fixture('compressible.gif'));
     await expect(page.getByText(/seconds per cycle · 28.1 KB/)).toBeVisible();
     await expect(page.getByRole('button', { name: '1 MB', exact: true })).toHaveAttribute('aria-pressed', 'true');
