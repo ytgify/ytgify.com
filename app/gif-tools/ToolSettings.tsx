@@ -26,14 +26,16 @@ export default function ToolSettings({
   } = controller;
   if (!metadata) return null;
   return (
-    <fieldset disabled={job.busy} onChange={() => setResult(null)} className="space-y-4 disabled:opacity-60">
-      <legend className="mb-3 font-semibold">Output settings</legend>
+    <fieldset disabled={job.busy} onChange={() => setResult(null)} className="space-y-5 disabled:opacity-60">
+      <legend className="mb-4 text-lg font-black">Tune the output</legend>
       <>
-        <label className="block text-sm">
-          Target size (MB)
+        <label className="block text-sm font-semibold text-gray-200">
+          Target size
+          <span className="ml-1 font-normal text-gray-500">(MB)</span>
           <input
             ref={targetInput}
             type="number"
+            aria-label="Target size (MB)"
             min="0.000001"
             max="25"
             step="any"
@@ -41,7 +43,7 @@ export default function ToolSettings({
             onChange={(event) => setTarget(event.target.value)}
             aria-invalid={targetError ? true : undefined}
             aria-describedby={targetError ? 'gif-target-error' : undefined}
-            className="ml-3 w-28 rounded border border-gray-600 bg-gray-900 p-2"
+            className="mt-2 block w-full rounded-xl border border-white/15 bg-[#0b0c10] px-3 py-2.5 text-base font-semibold text-white outline-none transition-colors focus:border-[#9ff3ea]"
           />
         </label>
         {targetError ? (
@@ -49,7 +51,7 @@ export default function ToolSettings({
             {targetError}
           </p>
         ) : null}
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-3 gap-2">
           {[...(file && file.size < 1_000_000 ? [0.01, 0.025, 0.1] : []), 1, 5, 10].map((value) => (
             <button
               type="button"
@@ -59,7 +61,7 @@ export default function ToolSettings({
                 setTarget(String(value));
                 setResult(null);
               }}
-              className="rounded border border-gray-600 px-3 py-2 text-sm aria-pressed:border-[#9ff3ea] aria-pressed:bg-[#9ff3ea] aria-pressed:font-semibold aria-pressed:text-gray-950"
+              className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2 text-xs font-semibold text-gray-300 transition-colors hover:border-white/25 aria-pressed:border-[#9ff3ea] aria-pressed:bg-[#9ff3ea] aria-pressed:text-gray-950"
             >
               {formatMediaSize(value * 1_000_000)}
             </button>
@@ -71,24 +73,34 @@ export default function ToolSettings({
             size to try to make it smaller.
           </p>
         ) : null}
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={allowResize} onChange={(event) => setAllowResize(event.target.checked)} />
+        <label className="flex items-start gap-3 rounded-xl border border-white/[0.08] bg-white/[0.025] p-3 text-sm leading-5 text-gray-300">
+          <input
+            className="mt-0.5 accent-[#ff4f9a]"
+            type="checkbox"
+            checked={allowResize}
+            onChange={(event) => setAllowResize(event.target.checked)}
+          />
           Allow smaller dimensions (75% or 50%)
         </label>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-start gap-3 rounded-xl border border-white/[0.08] bg-white/[0.025] p-3 text-sm leading-5 text-gray-300">
           <input
+            className="mt-0.5 accent-[#ff4f9a]"
             type="checkbox"
             checked={allowFrameReduction}
             onChange={(event) => setAllowFrameReduction(event.target.checked)}
           />
           Allow lower frame rate (keeps total duration)
         </label>
-        <p className="text-sm text-gray-400">
+        <p className="text-xs leading-5 text-gray-500">
           Choose a target, then click Compress GIF to apply it. We keep the original if no smaller candidate passes the
           quality check.
         </p>
       </>
-      <button type="button" onClick={process} className="rounded-xl bg-[#9ff3ea] px-6 py-3 font-semibold text-gray-950">
+      <button
+        type="button"
+        onClick={process}
+        className="w-full rounded-xl bg-[#9ff3ea] px-6 py-3.5 font-black text-gray-950 shadow-[0_12px_30px_rgba(159,243,234,0.16)] transition-transform hover:-translate-y-0.5"
+      >
         {gifTools[tool].action}
       </button>
     </fieldset>
