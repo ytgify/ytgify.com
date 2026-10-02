@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}/video-to-gif`,
-      lastModified: new Date('2026-07-12'),
+      lastModified: new Date('2026-10-02'),
       changeFrequency: 'monthly',
       priority: 0.9,
     },

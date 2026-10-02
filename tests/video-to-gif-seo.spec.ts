@@ -34,6 +34,10 @@ test.describe('public video to GIF launch surface', () => {
     await expect(page.getByRole('heading', { name: 'Private by design' })).toBeVisible();
     await expect(page.getByText(/250 MB and 30 minute source limits/)).toBeVisible();
     await expect(page.getByText(/H.264 MP4 or WebM works best/)).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Get a usable GIF from your video file' })).toBeVisible();
+    await expect(
+      page.locator('section[aria-labelledby="file-and-output-help"] a[href="/gif-compressor"]'),
+    ).toBeVisible();
     await expect(page.getByText(/does not send your source media, filename, or captions/)).toBeVisible();
     await expect(page.getByRole('link', { name: 'How it works' })).toHaveAttribute('href', '#how-it-works');
     await expect(page.locator('article')).toHaveCount(1);
@@ -42,6 +46,9 @@ test.describe('public video to GIF launch surface', () => {
       '/#install',
     );
     await expect(page.getByRole('link', { name: 'View the extension' })).toHaveAttribute('href', '/#install');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   });
 
   test('is discoverable from the homepage, footer, and sitemap', async ({ page, request }) => {
@@ -51,6 +58,6 @@ test.describe('public video to GIF launch surface', () => {
 
     const sitemap = await (await request.get('/sitemap.xml')).text();
     expect(sitemap).toContain('<loc>https://ytgify.com/video-to-gif</loc>');
-    expect(sitemap).toContain('<lastmod>2026-07-12');
+    expect(sitemap).toContain('<lastmod>2026-10-02');
   });
 });

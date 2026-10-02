@@ -96,6 +96,34 @@ export function VideoToGifGuide() {
           </div>
         </section>
 
+        <section aria-labelledby="file-and-output-help">
+          <h2 id="file-and-output-help" className="text-2xl font-bold text-white sm:text-3xl">
+            Get a usable GIF from your video file
+          </h2>
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
+            <div className="rounded-2xl border border-gray-800 bg-gray-950/55 p-6">
+              <h3 className="text-lg font-bold text-white">If your video will not open</h3>
+              <p className="mt-3 text-sm leading-7 text-gray-400">
+                MP4, MOV, and WebM are file containers; the video inside still needs a codec your browser can decode.
+                Re-export the source as an H.264 MP4 or WebM file, then try it again. Keep the source under 250 MB and
+                30 minutes.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-gray-800 bg-gray-950/55 p-6">
+              <h3 className="text-lg font-bold text-white">If the GIF is too large</h3>
+              <p className="mt-3 text-sm leading-7 text-gray-400">
+                Trim the moment first, then try a lower resolution or frame rate. You can also choose a 5, 10, or 25 MB
+                size target before exporting. Check the finished file size after preview; the target is an estimate. If
+                you already have a GIF, use the{' '}
+                <Link href="/gif-compressor" className="text-[#4fd1c5] underline hover:text-white">
+                  GIF compressor
+                </Link>
+                .
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section aria-labelledby="video-gif-faq">
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#E91E8C]">Video to GIF FAQ</p>
           <h2 id="video-gif-faq" className="mt-3 text-3xl font-bold text-white">
