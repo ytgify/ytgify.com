@@ -32,12 +32,16 @@ test.describe('video to GIF accessibility', () => {
 
     const alert = page.getByRole('alert').filter({ hasText: 'The converter supports browser-decodable' });
     await expect(alert).toContainText('Choose a different local video file');
+    await expect(page.getByLabel('Upload video')).toHaveValue('');
+    const chooseAnother = page.getByRole('button', { name: 'Choose another video' });
+    await expect(chooseAnother).toBeInViewport({ ratio: 1 });
     const startOver = page.getByRole('button', { name: 'Start over' });
     await startOver.focus();
     await expect(startOver).toBeFocused();
-    await page.keyboard.press('Enter');
-    await expect(alert).toHaveCount(0);
-    await page.getByLabel('Upload video').setInputFiles('tests/fixtures/bob-ross-15s.webm');
+    const fileChooser = page.waitForEvent('filechooser');
+    await chooseAnother.click();
+    await (await fileChooser).setFiles('tests/fixtures/bob-ross-15s.webm');
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible();
+    await expect(alert).toHaveCount(0);
   });
 });

@@ -138,19 +138,22 @@ test.describe('Landing Page Smoke Tests', () => {
     expect(after!.y).toBeLessThanOrEqual(1);
   });
 
-  test('mobile hero keeps the primary install action above the fold without horizontal overflow', async ({ page }) => {
+  test('mobile hero leads to the usable file converter without horizontal overflow', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
 
-    const navInstall = page
+    const navConverter = page
       .getByRole('navigation', { name: /Page sections/i })
-      .getByRole('link', { name: 'Install', exact: true });
-    await expect(navInstall).toBeVisible();
+      .getByRole('link', { name: 'Make a GIF', exact: true });
+    await expect(navConverter).toBeVisible();
+    await expect(navConverter).toHaveAttribute('href', '/video-to-gif?entry=home_nav');
+    await expect(page.getByRole('heading', { name: 'Make a GIF from my video' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Use the desktop extension' })).toBeVisible();
+    await expect(page.locator('nav[aria-label="Page sections"] a[href="#install"]').last()).toBeHidden();
 
-    const heroInstall = page.getByRole('link', { name: /Install Chrome Extension/i }).first();
-    const heroInstallBox = await heroInstall.boundingBox();
-    expect(heroInstallBox).not.toBeNull();
-    expect(heroInstallBox!.y + heroInstallBox!.height).toBeLessThan(844);
+    const fileConverter = page.getByRole('link', { name: 'Open free converter' });
+    await expect(fileConverter).toBeInViewport({ ratio: 1 });
+    await expect(fileConverter).toHaveAttribute('href', '/video-to-gif?entry=home_hero');
 
     const widths = await page.evaluate(() => ({
       clientWidth: document.documentElement.clientWidth,

@@ -93,7 +93,7 @@ export function CaptionInput({
 
 export function ErrorNotice({ error, onReset }: { error: StudioError; onReset: () => void }) {
   return (
-    <div role="alert" className="mt-5 rounded-xl border border-red-500/30 bg-red-950/30 p-4">
+    <div role="alert" className="mt-4 w-full rounded-xl border border-red-500/30 bg-red-950/30 p-4 text-left">
       <div className="flex gap-3">
         <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-300" />
         <div>

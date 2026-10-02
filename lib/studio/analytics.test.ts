@@ -14,6 +14,7 @@ describe('Studio analytics privacy', () => {
   it('restricts new measurement fields to known categories at dispatch', () => {
     expect(sanitizeProperties('studio_page_view', { entry_point: 'private.mp4' })).toEqual({ entry_point: 'unknown' });
     expect(sanitizeProperties('studio_page_view', { entry_point: 'tutorial' })).toEqual({ entry_point: 'tutorial' });
+    expect(sanitizeProperties('studio_file_picker_opened', { filename: 'private.mp4' })).toEqual({});
     expect(
       sanitizeProperties('studio_export_succeeded', {
         size_target: 5,
