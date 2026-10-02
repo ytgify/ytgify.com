@@ -147,8 +147,8 @@ test.describe('Landing Page Smoke Tests', () => {
       .getByRole('link', { name: 'Make a GIF', exact: true });
     await expect(navConverter).toBeVisible();
     await expect(navConverter).toHaveAttribute('href', '/video-to-gif?entry=home_nav');
-    await expect(page.getByRole('heading', { name: 'Make a GIF from my video' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Use the desktop extension' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Turn your video into a GIF' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Clip from YouTube' })).toBeVisible();
     await expect(page.locator('nav[aria-label="Page sections"] a[href="#install"]').last()).toBeHidden();
 
     const fileConverter = page.getByRole('link', { name: 'Open free converter' });

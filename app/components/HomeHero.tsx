@@ -19,7 +19,7 @@ export default function HomeHero() {
       <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
         <div>
           <div className="mb-3 sm:hidden">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#4fd1c5]">Two ways to make a GIF</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#4fd1c5]">Make it a GIF</p>
           </div>
           <div className="mb-8 hidden items-center gap-4 sm:flex">
             <Logo />
@@ -35,8 +35,7 @@ export default function HomeHero() {
             YouTube to GIF Converter - Free, No Watermark
           </h1>
           <p className="mb-6 text-base leading-7 text-gray-300 sm:hidden">
-            Have a video on your phone? Make a GIF here. For a YouTube clip, use the extension in Chrome on your
-            computer.
+            Make a GIF from a video on this device. For YouTube clips, YTgify works in desktop Chrome.
           </p>
           <div className="mb-8 hidden max-w-2xl sm:block">
             <HeroDescription />
@@ -47,9 +46,11 @@ export default function HomeHero() {
               <div className="flex items-start gap-3">
                 <FileVideo2 className="mt-0.5 h-6 w-6 shrink-0 text-[#9ff3ea]" aria-hidden="true" />
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#9ff3ea]">Video on this device</p>
-                  <h2 className="mt-1 text-lg font-bold text-white">Make a GIF from my video</h2>
-                  <p className="mt-1 text-sm leading-5 text-gray-300">Choose an MP4, MOV, or WebM file. No install.</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#9ff3ea]">Your video</p>
+                  <h2 className="mt-1 text-lg font-bold text-white">Turn your video into a GIF</h2>
+                  <p className="mt-1 text-sm leading-5 text-gray-300">
+                    Pick a video file, trim it, and download. No install.
+                  </p>
                 </div>
               </div>
               <Link
@@ -68,10 +69,10 @@ export default function HomeHero() {
               <div className="flex items-start gap-3">
                 <Monitor className="mt-0.5 h-6 w-6 shrink-0 text-[#ff75bd]" aria-hidden="true" />
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#ff75bd]">YouTube clip</p>
-                  <h2 className="mt-1 text-lg font-bold text-white">Use the desktop extension</h2>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#ff75bd]">YouTube</p>
+                  <h2 className="mt-1 text-lg font-bold text-white">Clip from YouTube</h2>
                   <p className="mt-1 text-sm leading-5 text-gray-400">
-                    Clip directly from YouTube in Chrome on a computer.
+                    Use the extension inside Chrome on your computer.
                   </p>
                   <TrackedExtensionLink
                     href="#install"
