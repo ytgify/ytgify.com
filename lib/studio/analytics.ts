@@ -3,6 +3,7 @@ import { durationBucket, fileSizeBucket } from './file-validation';
 
 export type StudioEventName =
   | 'studio_page_view'
+  | 'studio_file_picker_opened'
   | 'studio_upload_started'
   | 'studio_upload_loaded'
   | 'studio_upload_failed'
@@ -32,6 +33,7 @@ declare global {
 const hasPostHogKey = Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN);
 const safeProperties: Record<StudioEventName, readonly string[]> = {
   studio_page_view: ['source_page', 'entry_point'],
+  studio_file_picker_opened: [],
   studio_upload_started: ['file_type', 'file_size_bucket'],
   studio_upload_loaded: ['file_type', 'source_duration_bucket'],
   studio_upload_failed: ['error_code', 'file_type'],

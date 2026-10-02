@@ -87,7 +87,7 @@ test('size target recalculates after trim and manual settings turn it off', asyn
 test('mobile homepage has a clear file entry and guide links are crawlable', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  await page.getByRole('link', { name: 'Convert video to GIF Free online tool · No installation' }).click();
+  await page.getByRole('link', { name: 'Open free converter' }).click();
   await expect(page.getByRole('button', { name: 'Choose video' })).toBeVisible();
   await expect
     .poll(() => events(page, 'studio_page_view'))
@@ -100,6 +100,29 @@ test('mobile homepage has a clear file entry and guide links are crawlable', asy
     await page.goto(`/blog/${slug}`);
     await expect(page.locator(`a[href="/video-to-gif?entry=${entry}"]`)).toBeVisible();
   }
+});
+
+test('mobile homepage path reaches a real GIF download', async ({ page }, testInfo) => {
+  test.setTimeout(60000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Open free converter' }).click();
+  const fileChooser = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose video' }).click();
+  await (await fileChooser).setFiles('tests/fixtures/bob-ross-15s.webm');
+  await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible();
+  await page.getByRole('button', { name: '3s', exact: true }).click();
+  await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'GIF ready', exact: true })).toBeVisible({ timeout: 45000 });
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('link', { name: 'Download GIF', exact: true }).click();
+  const download = await downloadPromise;
+  const output = testInfo.outputPath('mobile-home-path.gif');
+  await download.saveAs(output);
+  expect((await readFile(output)).subarray(0, 6).toString()).toMatch(/^GIF8[79]a$/);
+  expect(await events(page, 'studio_file_picker_opened')).toEqual([{}]);
+  expect(await events(page, 'studio_upload_loaded')).toHaveLength(1);
+  expect(await events(page, 'studio_download_clicked')).toHaveLength(1);
 });
 
 for (const viewport of [
@@ -121,6 +144,8 @@ for (const viewport of [
 
     const fileChooser = page.waitForEvent('filechooser');
     await choose.click();
+    await expect.poll(() => events(page, 'studio_file_picker_opened')).toEqual([{}]);
+    expect(await events(page, 'studio_upload_started')).toHaveLength(0);
     await (await fileChooser).setFiles('tests/fixtures/bob-ross-15s.webm');
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible();
     expect(await events(page, 'studio_upload_loaded')).toHaveLength(1);

@@ -1,18 +1,14 @@
 import Link from 'next/link';
-import Logo from './components/Logo';
-import HeroDescription from './components/HeroDescription';
 import FeatureChecklist from './components/FeatureChecklist';
 import DemoVideo from './components/DemoVideo';
-import ExampleGifsGallery from './components/ExampleGifsGallery';
 import SiteFooter from './components/SiteFooter';
 import { LegacyInstallSection } from './components/DiscontinuationNotice';
 import HomeFAQ, { homeFAQItems } from './components/HomeFAQ';
 import BrowserToolPromo from './components/BrowserToolPromo';
 import HomeNavLinks from './components/HomeNavLinks';
-import HeroConverterLink from './components/HeroConverterLink';
+import HomeHero from './components/HomeHero';
 import {
   BookOpen,
-  ChevronDown,
   Download,
   Github,
   MessageSquareText,
@@ -25,12 +21,6 @@ import { ExtensionFunnelView, TrackedExtensionLink } from './components/Extensio
 import { CHROME_EXTENSION_VERSION } from '@/lib/extensionAnalytics';
 import { GITHUB_REPO_URL } from '@/lib/constants';
 import { generateFAQSchema } from '@/lib/schema';
-
-const heroProofPoints = [
-  { label: 'No watermark', value: 'Clean GIF export' },
-  { label: 'In YouTube', value: 'Clip from the player' },
-  { label: 'Local install', value: 'Chrome ZIP, about 330 KB' },
-];
 
 const demoWorkflow = [
   {
@@ -98,11 +88,17 @@ export default function Home() {
                 <span className="font-bold tracking-tight">YTgify</span>
               </Link>
               <HomeNavLinks />
+              <Link
+                href="/video-to-gif?entry=home_nav"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-[#4fd1c5] px-3 text-xs font-bold text-gray-950 sm:hidden"
+              >
+                Make a GIF
+              </Link>
               <TrackedExtensionLink
                 href="#install"
                 surface="home_sticky_nav"
                 cta="jump_to_install_section"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#E91E8C] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#d51a80] sm:px-4"
+                className="hidden items-center justify-center gap-2 rounded-lg bg-[#E91E8C] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#d51a80] sm:inline-flex sm:px-4"
               >
                 <Download className="h-4 w-4" />
                 <span>Install</span>
@@ -110,81 +106,7 @@ export default function Home() {
             </div>
           </nav>
 
-          <section className="relative -mx-5 flex min-h-[calc(100svh-3.5rem)] flex-col justify-center border-b border-gray-800 bg-gray-950/75 px-5 py-12 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:-mx-8 sm:px-8 sm:py-14 lg:min-h-[calc(100svh-3.75rem)] lg:py-16">
-            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
-              <div>
-                <div className="mb-8 flex items-center gap-4">
-                  <Logo />
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E91E8C]">
-                      Open-source Chrome extension
-                    </p>
-                    <p className="text-4xl sm:text-5xl font-bold text-white leading-none mt-2">YTgify</p>
-                  </div>
-                </div>
-
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-[1.02] text-white tracking-tight">
-                  YouTube to GIF Converter - Free, No Watermark
-                </h1>
-
-                <div className="max-w-2xl mb-8">
-                  <HeroDescription />
-                </div>
-
-                <div className="mb-8 grid grid-cols-3 gap-2 sm:gap-3">
-                  {heroProofPoints.map((point) => (
-                    <div key={point.label} className="border border-gray-800 bg-gray-900/35 p-2.5 sm:p-3">
-                      <p className="text-xs font-semibold text-white sm:text-sm">{point.label}</p>
-                      <p className="mt-1 text-[11px] leading-relaxed text-gray-400 sm:text-xs">{point.value}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mb-5 flex flex-col gap-3 sm:flex-row">
-                  <TrackedExtensionLink
-                    href="#install"
-                    surface="home_hero"
-                    cta="jump_to_install_section"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#E91E8C] px-5 py-3 text-sm font-semibold text-white hover:bg-[#d51a80] transition-colors"
-                  >
-                    <Download className="w-4 h-4" />
-                    Install Chrome Extension
-                  </TrackedExtensionLink>
-                  <TrackedExtensionLink
-                    href="#install"
-                    surface="home_hero"
-                    cta="jump_to_install_section"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-950/70 px-5 py-3 text-sm font-semibold text-white hover:border-[#E91E8C]/70 hover:bg-gray-900 transition-colors"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    View install walkthrough
-                  </TrackedExtensionLink>
-                  <HeroConverterLink />
-                </div>
-
-                <p className="mt-3 text-xs text-gray-500">
-                  Download v{CHROME_EXTENSION_VERSION}. Manual installs update when you load a newer ZIP.
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900/80 to-gray-950/80 p-4 shadow-2xl sm:p-5">
-                <ExampleGifsGallery />
-                <div className="mt-5 border-t border-gray-800 pt-4">
-                  <p className="text-sm font-semibold text-white">Manual install, real YouTube workflow.</p>
-                  <p className="mt-1 text-sm text-gray-400">
-                    Download v{CHROME_EXTENSION_VERSION}, load it in Chrome, then clip GIFs without leaving the video.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <a
-              href="#demo"
-              className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-gray-500 transition-colors hover:text-white lg:inline-flex"
-            >
-              See it in action
-              <ChevronDown className="h-4 w-4" />
-            </a>
-          </section>
+          <HomeHero />
 
           <BrowserToolPromo />
 

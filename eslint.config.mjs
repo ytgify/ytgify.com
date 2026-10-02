@@ -28,12 +28,6 @@ const eslintConfig = [
   // Their effective-line ceilings match today's baseline, so they cannot grow.
   // Split them into focused modules before lowering/removing these overrides.
   {
-    files: ['app/page.tsx'],
-    rules: {
-      'max-lines': ['error', { max: 317, skipBlankLines: true, skipComments: true }],
-    },
-  },
-  {
     files: ['app/components/DiscontinuationNotice.tsx'],
     rules: {
       'max-lines': ['error', { max: 421, skipBlankLines: true, skipComments: true }],
