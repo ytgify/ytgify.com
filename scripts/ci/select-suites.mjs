@@ -24,7 +24,7 @@ export function selectSuites(paths) {
       tool = true;
     } else if (
       /^(content\/|app\/(blog|welcome|share|privacy-policy|terms-of-service)\/)/.test(path) ||
-      /^(app\/page\.tsx|lib\/(blog|formspree)\.ts|tests\/(smoke|blog-seo|welcome)\.spec\.ts)$/.test(path)
+      /^(app\/page\.tsx|lib\/blog\.ts|tests\/(smoke|blog-seo|welcome)\.spec\.ts)$/.test(path)
     ) {
       site = true;
     } else if (/^(docs|plans)\//.test(path) || /^[^/]+\.md$/.test(path)) {
