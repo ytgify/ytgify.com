@@ -5,9 +5,6 @@ export const GITHUB_REPO_URL = 'https://github.com/ytgify/ytgify';
 export const GITHUB_ISSUES_URL = `${GITHUB_REPO_URL}/issues`;
 export const DEMO_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/hBBr8SluoQ8';
 
-// Formspree email capture
-export const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnjqpkbv';
-
 // Mobile reminder content
 export const MOBILE_REMINDER = {
   title: 'Install YTgify on Desktop',

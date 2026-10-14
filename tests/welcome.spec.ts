@@ -71,3 +71,31 @@ test.describe('Welcome Page Tests', () => {
     await expect(page.getByText(/like\/dislike buttons/i)).toBeVisible();
   });
 });
+
+test('mobile welcome keeps the local reminder without collecting email', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/welcome');
+  await expect(page.getByRole('button', { name: 'Save Link for Later' })).toBeVisible();
+  await expect(page.locator('input[type="email"]')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Subscribe', exact: true })).toHaveCount(0);
+});
+
+for (const javaScriptEnabled of [true, false]) {
+  test(`legacy share page redirects to the converter with JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'}`, async ({
+    browser,
+    baseURL,
+  }) => {
+    const context = await browser.newContext({ javaScriptEnabled, baseURL });
+    const page = await context.newPage();
+    try {
+      await page.goto('/share');
+      await expect(page).toHaveURL(/\/video-to-gif\/?$/);
+      await expect(page.locator('input[type="email"]')).toHaveCount(0);
+      if (javaScriptEnabled) {
+        await expect(page.locator('input[type="file"]')).toHaveCount(1);
+      }
+    } finally {
+      await context.close();
+    }
+  });
+}

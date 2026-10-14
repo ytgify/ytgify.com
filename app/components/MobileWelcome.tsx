@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Logo from './Logo';
 import DemoVideo from './DemoVideo';
 import SiteFooter from './SiteFooter';
-import EmailCaptureForm from './EmailCaptureForm';
 import { MOBILE_REMINDER, MOBILE_REMINDER_EMAIL } from '@/lib/constants';
 import { ExtensionFunnelView } from './ExtensionAnalytics';
 import { trackExtensionEvent, trackExtensionException } from '@/lib/extensionAnalytics';
@@ -119,18 +118,6 @@ export default function MobileWelcome() {
                 Save Link for Later
               </button>
             )}
-          </div>
-
-          {/* Secondary CTA - Email Capture */}
-          <div className="mb-10 py-6 px-6 rounded-lg bg-gray-900/50 border border-gray-800">
-            <h2 className="text-lg font-semibold text-white mb-1 text-center">Want updates?</h2>
-            <p className="text-gray-500 text-sm text-center mb-4">Get notified about new features. No spam.</p>
-            <EmailCaptureForm
-              source="mobile_welcome"
-              buttonText="Subscribe"
-              successMessage="You're on the list!"
-              placeholder="your@email.com"
-            />
           </div>
 
           {/* Demo Video Section */}
