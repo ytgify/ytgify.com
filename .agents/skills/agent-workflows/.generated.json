@@ -1,0 +1,25 @@
+{
+  "schema": "workflow-skill-baseline/v1",
+  "pins": {
+    "packageName": "@lineagehq/workflows",
+    "packageVersion": "0.4.0",
+    "protocolVersion": "1.1"
+  },
+  "hashes": {
+    ".agents/skills/agent-workflows/SKILL.md": "d2c9b3ad30ff35a5e17bf73b457d4f621df082b9dad812ce025a5e650564b61d",
+    ".agents/skills/agent-workflows/agents/openai.yaml": "69aafefe5c6f942b581eeae27410f08ada2e333e18c87f207c56a790882ab50a",
+    ".agents/skills/agent-workflows/references/protocol.md": "8d3eb66bea72a39508201c54a9ec7c8dc39240cc5d9fa512940bde0c9e87fa1b",
+    ".agents/skills/agent-workflows/references/exploration.md": "d0b70b329ccb6c3f5b83dfd195e052c740cab60988a7083cc5276f63d66c944c",
+    ".agents/skills/agent-workflows/references/evidence.md": "0bdb169084438b60fd94775a9e46626e39ea16da445588b7c53fce7cfa5e9906",
+    ".agents/skills/agent-workflows/references/capability-gaps.md": "12541fd740a1fe187312791a41a75ce9f449262ed296c6a5afc50d7e7f83f70d",
+    ".agents/skills/agent-workflows/references/lifecycle.md": "38b39f4fc1e634bf834fa1273b1f7a810a0950215edd2960235ffcf6101bdc1f",
+    ".agents/skills/agent-workflows/references/readiness.md": "13e36d5b390eba27df46e40469d2695205a98e6465a20a89ee52ea2b5cbae373",
+    ".agents/skills/agent-workflows/references/discovery.md": "1f789ce820f7551da51ef5efa72be30c8a02aafa3faf4d73fae2b7f8284b6ed4",
+    ".agents/skills/agent-workflows/references/evaluation.md": "7ecdb0dd8c4b2f9cfcf5483a168e73f268d141a654d390bc7af26a2da5e61172",
+    ".agents/skills/agent-workflows/references/app-map.md": "3763ee74992c03824850b3c6894c3eca11783cac6b7e4675bbd83d1e232c5d9d",
+    ".agents/skills/agent-workflows/references/collaboration.md": "48b36d7edaeb2af6212a4cccfe41299e98ac0ce788dee4b5a9beaef5f23ed47e",
+    ".agents/skills/agent-workflows/references/authentication.md": "e4b30215734815f54fdf20628ef118e481886ec334793e73143327626a8c6503",
+    ".agents/skills/agent-workflows/references/operations.md": "ea35b7a688723a6c79fdceb57ca0376c51595588456c2ee61b324a5140e893b9",
+    ".agents/skills/agent-workflows/references/findings.md": "4ee2d425a1ea01e9a9f2f4e3197d0a8ab458e2eb4150a89774b7347772947c94"
+  }
+}

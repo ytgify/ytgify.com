@@ -1,0 +1,272 @@
+schema: agent-workflow/v1
+kind: Workflow
+metadata:
+  id: ytgify.edit-regenerate
+  name: Edit and regenerate GIF
+  description: 'Ytgify pilot: Edit and regenerate GIF. File intake and download
+    verification require explicit supported capabilities before execution.'
+  lifecycle: candidate
+  candidateRevision: 3
+  tags:
+    - ytgify
+    - pilot
+    - edit-regenerate
+promotion:
+  immutableAfterPromotion: true
+  requires:
+    - successful-supervised-replay
+    - human-approval
+evaluation:
+  resetStepId: establish-fresh-start
+  cleanupStepId: restore-fresh-start
+target:
+  app: ytgify
+  supportedPlatforms:
+    - id: desktop-web
+      adapterCapability: browser
+      viewport: default-desktop
+    - id: mobile-web
+      adapterCapability: browser
+      viewport:
+        width: 393
+        height: 852
+  identity:
+    requirement: anonymous
+    note: Anonymous converter with repository-owned or synthetic fixtures only.
+start:
+  isolation: fresh-page
+  route: /video-to-gif?entry=home_nav
+  expectedState: The converter Upload screen is visible.
+  preflightCapabilities:
+    - screenshot
+    - file-upload
+    - download-artifact
+execution:
+  approvalPolicy:
+    mode: risk-based
+  topology: linear-with-bounded-conditions
+  agentFreedom: goal-bounded
+  onUnexpectedState: recover-and-log
+  environmentChange: taint-run
+  failureContinuation: stop
+  recoveryBudget:
+    maxActionsPerStep: 1
+    maxDurationSecondsPerStep: 30
+evidencePolicy:
+  default:
+    - declared-checkpoint-screenshots
+  onFailure:
+    - screenshot
+    - video-or-trace
+  retainVerifiedDownloads: true
+optionalStateHandlers: []
+steps:
+  - id: establish-fresh-start
+    name: Establish a fresh start
+    action: Navigate to the declared starting route in a fresh local state.
+    routineActionBatches:
+      - id: navigate-fresh-start
+        actions:
+          - kind: navigate
+            description: Navigate to the declared starting route.
+            target: declared-start-url
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - Free Video to GIF Converter is visible.
+      - Choose video is available without signing in.
+    evidence:
+      - type: screenshot
+        checkpoint: fresh-start-before
+        required: true
+  - id: select-fixture
+    name: Select the repository-owned visual timeline video through the file chooser
+    action: Select the repository-owned visual timeline video through the file chooser
+    expected:
+      - The Select Your Perfect Moment editor is visible.
+      - The selected video is tests/fixtures/visual-timeline.webm.
+    evidence:
+      - type: screenshot
+        checkpoint: select-fixture
+        required: true
+    dependsOn:
+      - establish-fresh-start
+  - id: trim
+    name: Choose a three-second clip
+    action: Choose a three-second clip
+    expected:
+      - The selected duration is three seconds.
+    evidence:
+      - type: screenshot
+        checkpoint: trim
+        required: true
+    routineActionBatches:
+      - id: trim-batch
+        actions:
+          - kind: activate-control
+            description: Choose the 3s duration preset.
+            target: role:button:3s
+        requestedCapabilities:
+          - browser.control
+    dependsOn:
+      - select-fixture
+  - id: caption
+    name: Add a synthetic caption
+    action: Add a synthetic caption
+    expected:
+      - The caption preview contains dogfood-pilot.
+    evidence:
+      - type: screenshot
+        checkpoint: caption
+        required: true
+    routineActionBatches:
+      - id: caption-batch
+        actions:
+          - kind: activate-control
+            description: Expand Add a caption.
+            target: text:Add a caption
+          - kind: enter-text
+            description: Enter the synthetic pilot caption.
+            target: role:textbox:Top text
+            textInput:
+              kind: synthetic
+              value: dogfood-pilot
+        requestedCapabilities:
+          - browser.control
+    dependsOn:
+      - trim
+  - id: generate
+    name: Create the GIF and observe the result
+    action: Create the GIF and observe the result
+    expected:
+      - GIF ready is visible.
+      - The generated GIF preview is visible.
+    evidence:
+      - type: screenshot
+        checkpoint: generate
+        required: true
+    routineActionBatches:
+      - id: generate-batch
+        actions:
+          - kind: activate-control
+            description: Activate Create GIF.
+            target: role:button:Create GIF
+          - kind: wait
+            description: Wait for GIF ready, stopping if an error appears.
+            target: role:heading:GIF ready
+        requestedCapabilities:
+          - browser.control
+    dependsOn:
+      - caption
+  - id: return-to-edit
+    name: Return to the editor
+    action: Return to the editor
+    expected:
+      - Select Your Perfect Moment is visible.
+      - The existing caption is retained.
+    evidence:
+      - type: screenshot
+        checkpoint: return-to-edit
+        required: true
+    routineActionBatches:
+      - id: return-to-edit-batch
+        actions:
+          - kind: activate-control
+            description: Activate Edit clip.
+            target: role:button:Edit clip
+        requestedCapabilities:
+          - browser.control
+    dependsOn:
+      - generate
+  - id: change-duration
+    name: Choose a different duration
+    action: Choose a different duration
+    expected:
+      - The selected duration is five seconds.
+    evidence:
+      - type: screenshot
+        checkpoint: change-duration
+        required: true
+    routineActionBatches:
+      - id: change-duration-batch
+        actions:
+          - kind: activate-control
+            description: Choose the 5s duration preset.
+            target: role:button:5s
+        requestedCapabilities:
+          - browser.control
+    dependsOn:
+      - return-to-edit
+  - id: regenerate
+    name: Create the GIF and observe the result
+    action: Create the GIF and observe the result
+    expected:
+      - GIF ready is visible.
+      - The generated GIF preview is visible.
+    evidence:
+      - type: screenshot
+        checkpoint: regenerate
+        required: true
+    routineActionBatches:
+      - id: regenerate-batch
+        actions:
+          - kind: activate-control
+            description: Activate Create GIF.
+            target: role:button:Create GIF
+          - kind: wait
+            description: Wait for GIF ready, stopping if an error appears.
+            target: role:heading:GIF ready
+        requestedCapabilities:
+          - browser.control
+    dependsOn:
+      - change-duration
+  - id: download
+    name: Download and verify the generated GIF
+    action: Download and verify the generated GIF
+    expected:
+      - The downloaded artifact is a nonempty animated GIF.
+    evidence:
+      - type: screenshot
+        checkpoint: download
+        required: true
+      - type: download-artifact
+        checkpoint: generated-gif
+        required: true
+        verify:
+          filename: ytgify-video-to-gif.gif
+          mimeType: image/gif
+          minimumBytes: 100
+    dependsOn:
+      - regenerate
+  - id: restore-fresh-start
+    name: Restore the fresh start
+    action: Navigate back to the declared starting route without preserving
+      application data.
+    routineActionBatches:
+      - id: navigate-cleanup-start
+        actions:
+          - kind: navigate
+            description: Navigate back to the declared starting route.
+            target: declared-start-url
+        requestedCapabilities:
+          - browser.control
+    expected:
+      - The converter returns to Upload without retaining the previous media.
+    evidence:
+      - type: screenshot
+        checkpoint: fresh-start-after
+        required: true
+completion:
+  successRequires:
+    - every-step-passed
+    - required-evidence-verified
+  cleanup:
+    alwaysAttempt: true
+    actions:
+      - Reset the browser surface after the final screenshot.
+fixtureRequirement:
+  kind: repository-file
+  recipeId: visual-timeline
+  recipeRevision: v1
+  compatibilityVersion: v1
+  requiredState: ready

@@ -1,0 +1,30 @@
+schema: agent-workflow-fixture-recipe/v1
+kind: repository-file
+id: visual-timeline
+revision: v1
+purpose: Local conversion of the repository visual timeline video
+allowedJourneys:
+  - ytgify.basic-conversion
+target:
+  source: application-target
+  targetId: local
+  label: Local
+  environment: local
+  selection: product-language-match
+  provenance: configured-v1
+  route: /video-to-gif?entry=home_nav
+  canonicalUrl: http://localhost:3001/video-to-gif?entry=home_nav
+  effectiveUrl: http://localhost:3001/video-to-gif?entry=home_nav
+identity:
+  requirement: anonymous
+  note: Anonymous converter with repository-owned or synthetic fixtures only.
+requiredCapabilities:
+  - browser.control
+  - file-upload
+relativePath: tests/fixtures/visual-timeline.webm
+uploadTarget: label:Upload video
+filename: visual-timeline.webm
+sizeBytes: 5023
+mimeType: video/webm
+sha256: sha256:a31ffdc0c990483744326930bbecf3cadc16d88e4c640be82303ebeb976a4177
+retention: repository-owned

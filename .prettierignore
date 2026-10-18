@@ -8,3 +8,7 @@ test-results/
 public/downloads/
 docs/goals/
 .ytgify-runtime/
+
+# Workflows skill files are generated and hash-pinned by the installed package.
+.agents/skills/agent-workflows/
+.workflows/local/

@@ -1,0 +1,21 @@
+# Bounded local app exploration
+
+Use this flow only when the person asks to explore a configured anonymous local application without a predefined workflow. Read [protocol.md](protocol.md), [evidence.md](evidence.md), and [lifecycle.md](lifecycle.md) for the request envelope, screenshot staging, and uncertain lease recovery. Exploration is a distinct run phase; do not use workflow step assessments or create accepted App Map assignments from its proposals.
+
+## Launch from a configured target
+
+Use `workflow explore start --target WORDS --route /PATH --intent 'INTENT[;INTENT]' --platform desktop-web|mobile-web [--fixture 'NAME=RELATIVE_PATH=CONTROL_LABEL[;...]'] [--root PATH] [--config PATH] [--store PATH] --json`. Resolve the selected target from the CLI result. The runner accepts only an anonymous loopback local target, an origin-relative route, a web platform, and one to twelve explicit intents. Keep the returned `runId`, target origin, limits, and pinned fixture descriptors exact. Never substitute a similarly named target or guess a route.
+
+Fixtures are optional and default to no upload authority. Each `--fixture` item pins a Git-indexed regular project file, its exact bytes, filename, MIME type, and a `label:...` upload control target. Only the returned descriptors authorize an `upload-file` action with a matching `inputRef.kind: "project-file"`; verify the pinned file again immediately before using the browser. Do not upload arbitrary files or use an unlisted control. A fixture upload requires registered `browser.control` and `file-upload` capabilities.
+
+## Execute and record
+
+Use `workflow agent <command> --store PATH` with the returned run ID, stable host actor, fresh revision, and a unique request ID for each new mutation. `agent.claim`, then `agent.capabilities` must register the exact `browser.control` ID with the `browser.control` operation on the manifest platform and a usable screenshot capability. Inspect after preflight; stop and report a blocked run when required capabilities are absent.
+
+For each action, send `agent.propose` with one origin-bound, anonymous, reversible browser action and `requestedCapabilities` including `browser.control`. Mark a deliberate branch attempt with `branchAttempt: true`. Act only under an allowed, unexpired lease. The manifest limits exploration to 24 actions, 20 issued screenshots, four branch attempts, and 45 minutes. Stop new action and capture work at a budget boundary; reconcile any uncertain lease before finishing.
+
+For a verified visit, use `agent.evidence` to issue a `screenshot` slot at step `explore` and checkpoint `visit` under the lease, stage real PNG or JPEG bytes, and register the slot before commit. `agent.commit` uses the ordinary committed-result envelope plus an `exploration` observation with `state: "visited"`, one declared intent, the observed same-origin URL, a proposed label, `uncertainty`, and the registered `evidenceId`; include that ID in `result.evidence`. The declared action must match the leased description, and the actual action must report what happened. A blocked attempt uses `state: "blocked"`, the intent, URL, label, and uncertainty without an evidence ID. Do not send `assessment` or caller-authored artifacts in this phase. A visited capture can nominate a journey only with an earlier verified `fromVisitId` and an explicit `journey` entry condition, user outcome, and uncertainty; sub-journeys also need parent journey IDs and a relationship rationale. These are unaccepted proposals, not App Map changes.
+
+## Finish and review
+
+After the last lease is committed or reconciled, send `agent.exploration.finish` with `disposition: "complete"` or `"partial"`, a reason, and `coverage` entries giving `blocked` or `unvisited` reasons for every intent without a verified visit. If a budget or capability blocked coverage, preserve the partial result rather than inventing visits. Run `workflow explore review RUN_ID [--root PATH] [--config PATH] [--store PATH] --json` and report the durable coverage, evidence limits, and unaccepted screen, journey, and sub-journey proposals. The review verifies screenshot bytes and lease lineage. A host-reported URL or label is not independently proven by the screenshot, and no proposal is human acceptance.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Workflows"
+  short_description: "Run and review evidence-backed application workflows"
+  default_prompt: "Use $agent-workflows to resolve my product-language request, complete the requested application work, and hand off the exact evidence in Studio while keeping technical identities internal."

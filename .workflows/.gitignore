@@ -1,0 +1,5 @@
+local
+
+# Keep only the package pinned in package.json.
+packages/*
+!packages/a2a6433/
