@@ -75,3 +75,5 @@ Save this shape as `ASSESSMENT.json` and pass it to `workflow perspectives asses
   ]
 }
 ```
+
+A repository-file recipe may pin up to three `additionalFiles`, each with a unique `id`, `relativePath`, `uploadTarget`, `filename`, `sizeBytes`, `mimeType`, and `sha256`. All files are verified against Git index bytes at binding and before use. Propose one upload per lease using the selected file’s exact identity and metadata. `uploadFixtureForLease` selects that file from the allowed lease; the host cannot substitute a file. This supports invalid-file recovery followed by a valid upload on the same retained page. Older single-file recipes remain unchanged.

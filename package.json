@@ -44,7 +44,7 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "@lineagehq/workflows": "file:.workflows/packages/a2a6433/candidate.tgz",
+    "@lineagehq/workflows": "file:.workflows/packages/a6a16ad/candidate.tgz",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.13",

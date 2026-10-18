@@ -1,0 +1,38 @@
+schema: agent-workflow-fixture-recipe/v1
+kind: repository-file
+id: recovery-video
+revision: v1
+purpose: Reject unsupported text, reset, and recover with a valid local video
+allowedJourneys:
+  - ytgify.error-recovery
+target:
+  source: application-target
+  targetId: local
+  label: Local
+  environment: local
+  selection: product-language-match
+  provenance: configured-v1
+  route: /video-to-gif?entry=home_nav
+  canonicalUrl: http://localhost:3001/video-to-gif?entry=home_nav
+  effectiveUrl: http://localhost:3001/video-to-gif?entry=home_nav
+identity:
+  requirement: anonymous
+  note: Anonymous converter with repository-owned or synthetic fixtures only.
+requiredCapabilities:
+  - browser.control
+  - file-upload
+relativePath: tests/fixtures/visual-timeline.webm
+uploadTarget: label:Upload video
+filename: visual-timeline.webm
+sizeBytes: 5023
+mimeType: video/webm
+sha256: sha256:a31ffdc0c990483744326930bbecf3cadc16d88e4c640be82303ebeb976a4177
+retention: repository-owned
+additionalFiles:
+  - id: invalid-video
+    relativePath: tests/fixtures/not-a-video.txt
+    uploadTarget: label:Upload video
+    filename: not-a-video.txt
+    sizeBytes: 50
+    mimeType: text/plain
+    sha256: sha256:50927942a2e0abcd602fd1c03a4453a37dda8c35544f9ec58e5010be162499c8
