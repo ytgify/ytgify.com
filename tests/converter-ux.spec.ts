@@ -1,0 +1,50 @@
+import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+
+for (const viewport of [
+  { width: 1440, height: 900 },
+  { width: 393, height: 852 },
+]) {
+  test(`source identity and caption discovery at ${viewport.width}px`, async ({ page }, testInfo) => {
+    test.setTimeout(90000);
+    await page.setViewportSize(viewport);
+    await page.route(/googletagmanager.com|google-analytics.com|posthog.com/, (route) => route.abort());
+    await page.addInitScript(() => {
+      const observed = window as typeof window & { dataLayer: unknown[][]; gtag: (...args: unknown[]) => void };
+      observed.dataLayer = [];
+      observed.gtag = (...args) => observed.dataLayer.push(args);
+    });
+    await page.goto('/video-to-gif');
+    const filename = `PRIVATE-${'long-video-name-'.repeat(12)}.webm`;
+    await page.getByLabel('Upload video', { exact: true }).setInputFiles({
+      name: filename,
+      mimeType: 'video/webm',
+      buffer: await readFile('tests/fixtures/visual-timeline.webm'),
+    });
+    const source = page.getByLabel('Source video', { exact: true });
+    await expect(source).toContainText(filename);
+    await expect(source).toContainText('320 × 240');
+    const caption = page.locator('summary').filter({ hasText: 'Add a caption' });
+    await expect(caption).toBeInViewport({ ratio: 1 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(viewport.width);
+    await caption.click();
+    await page.getByLabel('Top text').fill('PRIVATE CAPTION');
+    const estimateExplanation = page.getByTestId('size-estimate-explanation');
+    await expect(estimateExplanation).toContainText('Simple clips can be much smaller');
+    await estimateExplanation.scrollIntoViewIfNeeded();
+    await expect(estimateExplanation).toBeInViewport({ ratio: 1 });
+    await page.screenshot({ path: testInfo.outputPath(`estimate-${viewport.width}.png`) });
+    await page.getByRole('button', { name: '3s', exact: true }).click();
+    await page.getByRole('button', { name: 'Create GIF', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'GIF ready', exact: true })).toBeVisible({ timeout: 60000 });
+    await page.getByRole('button', { name: 'Edit clip', exact: true }).click();
+    await expect(source).toContainText(filename);
+    await expect(page.getByLabel('Top text')).toHaveValue('PRIVATE CAPTION');
+    expect(
+      await page.evaluate(() => JSON.stringify((window as typeof window & { dataLayer: unknown[] }).dataLayer)),
+    ).not.toContain('PRIVATE');
+    await page.getByRole('button', { name: 'Start over', exact: true }).click();
+    await expect(source).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Choose video', exact: true })).toBeVisible();
+  });
+}

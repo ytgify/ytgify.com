@@ -44,6 +44,19 @@ export function CaptureScreen(props: CaptureScreenProps) {
       }}
     >
       <h1 className="text-xl font-bold sm:text-2xl">Select Your Perfect Moment</h1>
+      <div aria-label="Source video" className="min-w-0 text-xs text-gray-400">
+        <p className="truncate font-medium text-gray-200" title={metadata.name}>
+          {metadata.name || 'Selected video'}
+        </p>
+        <p>
+          {formatClock(metadata.duration)} · {metadata.width} × {metadata.height}
+        </p>
+      </div>
+      <CaptionEditor
+        captions={captions}
+        onCaptionChange={props.onCaptionChange}
+        onCaptionSettingChange={props.onCaptionSettingChange}
+      />
       <div
         className="relative mx-auto overflow-hidden rounded-xl border border-gray-800 bg-black"
         style={{
@@ -89,11 +102,10 @@ export function CaptureScreen(props: CaptureScreenProps) {
         </p>
       ) : null}
       <OutputSettings settings={settings} estimatedSize={estimatedSize} onChange={props.onSettingsChange} />
-      <CaptionEditor
-        captions={captions}
-        onCaptionChange={props.onCaptionChange}
-        onCaptionSettingChange={props.onCaptionSettingChange}
-      />
+      <p className="text-xs leading-5 text-gray-400" data-testid="size-estimate-explanation">
+        Conservative planning estimate, not a predicted file size. Simple clips can be much smaller; motion, detail, and
+        captions change compression. Check the actual size after export.
+      </p>
       {settings.sizeTarget !== 'auto' &&
       estimateGifSize(metadata, trim, settings).high > settings.sizeTarget * 1048576 ? (
         <p role="status" className="text-sm text-amber-200">
@@ -114,7 +126,7 @@ export function CaptureScreen(props: CaptureScreenProps) {
       >
         <div className="text-sm">
           <span className="font-semibold">~{estimatedSize} MB</span>
-          <span className="block text-xs text-gray-400">{trim.duration.toFixed(1)}s GIF · estimate</span>
+          <span className="block text-xs text-gray-400">{trim.duration.toFixed(1)}s GIF · planning estimate</span>
         </div>
         <button
           type="button"
