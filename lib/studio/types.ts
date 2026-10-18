@@ -10,6 +10,8 @@ export type StudioCaptionSize = 'standard' | 'large';
 export type StudioCaptionColor = 'white' | 'yellow';
 
 export interface StudioVideoMetadata {
+  /** Local display only; never include in telemetry. */
+  name?: string;
   duration: number;
   width: number;
   height: number;

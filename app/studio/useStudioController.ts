@@ -121,7 +121,7 @@ export function useStudioController() {
       setError(null);
       setResult(null);
       setProgress(null);
-      setMetadata({ duration: 0, width: 0, height: 0, type: file.type || 'unknown', size: file.size });
+      setMetadata({ name: file.name, duration: 0, width: 0, height: 0, type: file.type || 'unknown', size: file.size });
       setTrim(null);
       setStep('upload');
       setStatus('loading-video');

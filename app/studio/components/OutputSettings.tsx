@@ -32,7 +32,7 @@ export function OutputSettings({
         ))}
       </div>
       <p className="text-xs leading-5 text-gray-400" data-testid="effective-settings">
-        {mode} · {settings.resolution}p · {settings.fps} FPS · estimated {estimatedSize} MB
+        {mode} · {settings.resolution}p · {settings.fps} FPS · planning estimate {estimatedSize} MB
       </p>
       <Disclosure
         title="Set a size target"
