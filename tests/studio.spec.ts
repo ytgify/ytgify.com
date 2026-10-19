@@ -42,7 +42,9 @@ test.describe('public video-to-GIF converter', () => {
       timeout: 15000,
     });
     const uploadedVideoUrl = await page.locator('video').getAttribute('src');
-    await page.getByRole('button', { name: '3s' }).click();
+    // Browser-recorded fixture length varies; the duration input clamps to available media.
+    await page.getByLabel('Duration', { exact: true }).fill('3');
+    await page.getByLabel('Duration', { exact: true }).press('Enter');
     await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
     await page.getByRole('button', { name: '240p', exact: true }).click();
