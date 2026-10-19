@@ -1,20 +1,24 @@
 import { STUDIO_FPS_OPTIONS, STUDIO_RESOLUTION_OPTIONS, STUDIO_SIZE_TARGETS } from '@/lib/studio/constants';
+import { calculateOutputDimensions } from '@/lib/studio/resolution';
 import { qualityLabel, qualityPresets } from '@/lib/studio/quality-presets';
-import type { StudioOutputSettings } from '@/lib/studio/types';
+import type { StudioOutputSettings, StudioVideoMetadata } from '@/lib/studio/types';
 import { getSizeTargetLabel } from '../studio-controller-helpers';
 import { Disclosure } from './Disclosure';
 
 const choiceClass = 'min-h-11 rounded-lg border px-2 py-2 text-sm transition-colors';
 export function OutputSettings({
   settings,
+  metadata,
   estimatedSize,
   onChange,
 }: {
   settings: StudioOutputSettings;
+  metadata: StudioVideoMetadata;
   estimatedSize: string;
   onChange: (settings: StudioOutputSettings) => void;
 }) {
   const mode = qualityLabel(settings);
+  const { width, height } = calculateOutputDimensions(metadata.width, metadata.height, settings.resolution);
   return (
     <section className="space-y-3" aria-label="Output settings">
       <h2 className="text-base font-bold">Choose the result</h2>
@@ -32,8 +36,12 @@ export function OutputSettings({
         ))}
       </div>
       <p className="text-xs leading-5 text-gray-400" data-testid="effective-settings">
-        {mode} · {settings.resolution}p · {settings.fps} FPS · planning estimate {estimatedSize} MB
+        {mode} · {width} × {height} output · {settings.fps} FPS · {settings.resolution}p maximum · planning estimate{' '}
+        {estimatedSize} MB
       </p>
+      {metadata.height < settings.resolution ? (
+        <p className="text-xs text-gray-400">Resolution is limited by your source; we do not upscale it.</p>
+      ) : null}
       <Disclosure
         title="Set a size target"
         description={settings.sizeTarget === 'auto' ? 'Optional' : `${settings.sizeTarget} MB active`}
@@ -58,7 +66,7 @@ export function OutputSettings({
       </Disclosure>
       <Disclosure title="Advanced settings" description="Resolution & frame rate">
         <fieldset>
-          <legend className="mb-2 text-sm text-gray-300">Resolution</legend>
+          <legend className="mb-2 text-sm text-gray-300">Maximum resolution</legend>
           <div className="grid grid-cols-3 gap-2">
             {STUDIO_RESOLUTION_OPTIONS.map((resolution) => (
               <button

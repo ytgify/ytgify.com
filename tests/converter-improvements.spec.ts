@@ -75,7 +75,7 @@ test('size target recalculates after trim and manual settings turn it off', asyn
   await openDetails(page, 'Set a size target');
   await page.getByRole('button', { name: 'Aim for 5 MB' }).click();
   const before = await page.getByTestId('effective-settings').textContent();
-  await page.getByRole('button', { name: '10s', exact: true }).click();
+  await page.getByRole('button', { name: 'Full clip · 6.0s', exact: true }).click();
   expect(await page.getByTestId('effective-settings').textContent()).not.toEqual(before);
   await expect(page.getByRole('button', { name: 'Create GIF', exact: true })).toBeEnabled();
   await openDetails(page, 'Advanced settings');
@@ -187,6 +187,11 @@ test('long-source trim supports draft times, precise keys, and bounded navigatio
   await page.getByRole('button', { name: '30s later' }).click();
   await expect(page.getByRole('button', { name: '30s later' })).toBeDisabled();
   await expect(duration).toHaveValue('2.9');
+  await expect(page.getByRole('button', { name: '10s', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Remaining · 2.9s', exact: true }).click();
+  await expect(start).toHaveValue('06:07.1');
+  await start.fill('06:00.0');
+  await start.press('Enter');
   await page.getByRole('button', { name: '10s', exact: true }).click();
   await expect(start).toHaveValue('06:00.0');
   await expect(duration).toHaveValue('10.0');
@@ -259,7 +264,9 @@ test('progressive editor preserves hidden choices and keeps creation reachable o
   await page.locator('summary').filter({ hasText: 'Set a size target' }).click();
   await expect(page.getByTestId('effective-settings')).toContainText('Auto · aim for 5 MB');
   await page.getByRole('button', { name: 'Balanced', exact: true }).click();
-  await expect(page.getByTestId('effective-settings')).toContainText('Balanced · 360p · 10 FPS');
+  await expect(page.getByTestId('effective-settings')).toContainText(
+    'Balanced · 480 × 360 output · 10 FPS · 360p maximum',
+  );
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
@@ -281,7 +288,7 @@ test('make smaller preserves the previous download through failure and replaces 
   await page.getByRole('button', { name: 'Make smaller', exact: true }).click();
   await expect(page.getByLabel('Start time', { exact: true })).toHaveValue('00:02.0');
   await expect(page.getByLabel('Top text')).toHaveValue('Keep me');
-  await expect(page.getByTestId('effective-settings')).toContainText('360p · 5 FPS');
+  await expect(page.getByTestId('effective-settings')).toContainText('5 FPS · 360p maximum');
   await expect(page.getByRole('link', { name: 'Download previous GIF' })).toHaveAttribute('href', originalUrl);
   await page.evaluate(() => {
     const original = CanvasRenderingContext2D.prototype.getImageData;

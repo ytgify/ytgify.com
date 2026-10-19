@@ -9,6 +9,7 @@ import {
 } from '@/lib/studio/analytics';
 import { chooseSettingsForTarget, estimateGifSize } from '@/lib/studio/size-target';
 import { validateVideoDuration, validateVideoFile } from '@/lib/studio/file-validation';
+import { outputDescription } from './studio-output-description';
 import { calculateExportBudget } from '@/lib/studio/export-budget';
 import { exportStudioGif } from '@/lib/studio/gif-exporter';
 import { applyDurationPreset, makeTrimSelection } from '@/lib/studio/presets';
@@ -295,7 +296,7 @@ export function useStudioController() {
       if (next) updateSettings(next);
       setSmallerMessage(
         next
-          ? `Ready to try ${next.resolution}p at ${next.fps} FPS. Your previous GIF is still available; create a new GIF to check its size.`
+          ? `Ready to try ${outputDescription(metadata, next)}. Your previous GIF is still available; create a new GIF to check its size.`
           : 'Already at the smallest settings for this source. Shorten the clip to make a smaller GIF.',
       );
       setStatus('editing');

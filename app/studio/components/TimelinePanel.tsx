@@ -83,7 +83,7 @@ export function TimelinePanel({ metadata, trim, timeline, onTrimChange, onPreset
         <TimelineTrack timeline={timeline} trim={trim} metadata={metadata} onTrimChange={onTrimChange} />
       </Disclosure>
       <div className="flex flex-wrap gap-2" aria-label="Clip duration presets">
-        {STUDIO_PRESET_DURATIONS.map((duration) => (
+        {STUDIO_PRESET_DURATIONS.filter((duration) => duration <= maxDuration).map((duration) => (
           <button
             key={duration}
             type="button"
@@ -93,6 +93,15 @@ export function TimelinePanel({ metadata, trim, timeline, onTrimChange, onPreset
             {duration}s
           </button>
         ))}
+        {!STUDIO_PRESET_DURATIONS.some((duration) => Math.abs(duration - maxDuration) < 0.05) && (
+          <button
+            type="button"
+            onClick={() => onPreset(maxDuration)}
+            className="min-h-11 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-200"
+          >
+            {trim.startTime === 0 ? 'Full clip' : 'Remaining'} · {maxDuration.toFixed(1)}s
+          </button>
+        )}
       </div>
     </section>
   );

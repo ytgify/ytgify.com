@@ -17,6 +17,7 @@ export function TrimTimeInput({
   const id = useId();
   const [draft, setDraft] = useState<string | null>(null);
   const [error, setError] = useState(false);
+  const [notice, setNotice] = useState<{ message: string; value: number } | null>(null);
   const formatted = clock ? formatClock(value) : value.toFixed(1);
   return (
     <label className="block min-w-0 text-sm font-semibold text-gray-300">
@@ -31,12 +32,21 @@ export function TrimTimeInput({
         onChange={(event) => {
           setDraft(event.target.value);
           setError(false);
+          setNotice(null);
         }}
         onBlur={(event) => {
           const parsed = parseTimeInput(event.target.value);
           setDraft(null);
           setError(parsed === null);
-          if (parsed !== null) onChange(Math.max(clock ? 0 : 0.1, Math.min(parsed, max)));
+          if (parsed !== null) {
+            const bounded = Math.max(clock ? 0 : 0.1, Math.min(parsed, max));
+            setNotice(
+              bounded !== parsed
+                ? { message: `Adjusted to ${bounded.toFixed(1)}s to fit the available clip.`, value: bounded }
+                : null,
+            );
+            onChange(bounded);
+          }
         }}
         onKeyDown={(event) => {
           if (event.key === 'Enter') event.currentTarget.blur();
@@ -52,8 +62,13 @@ export function TrimTimeInput({
           ? 'Invalid time. Previous value restored.'
           : clock
             ? 'Minutes:seconds, or seconds'
-            : 'Seconds · up to 10'}
+            : `Seconds · up to ${max.toFixed(1)}`}
       </span>
+      {notice && Math.abs(value - notice.value) < 0.05 ? (
+        <span role="status" className="block text-xs font-normal text-amber-200">
+          {notice.message}
+        </span>
+      ) : null}
     </label>
   );
 }
