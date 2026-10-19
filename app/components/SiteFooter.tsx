@@ -73,6 +73,17 @@ export default function SiteFooter() {
           </Link>
         </div>
       </div>
+      <nav
+        aria-label="More from Jeremy Watt"
+        className="flex flex-wrap justify-center gap-5 px-4 py-6 text-sm text-gray-400"
+      >
+        <a href="https://neonwatty.com/projects/" className="underline underline-offset-4">
+          All projects
+        </a>
+        <a href="https://neonwatty.com/posts/" className="underline underline-offset-4">
+          Blog
+        </a>
+      </nav>
     </footer>
   );
 }
