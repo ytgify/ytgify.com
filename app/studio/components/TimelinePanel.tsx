@@ -93,7 +93,7 @@ export function TimelinePanel({ metadata, trim, timeline, onTrimChange, onPreset
             {duration}s
           </button>
         ))}
-        {!STUDIO_PRESET_DURATIONS.some((duration) => Math.abs(duration - maxDuration) < 0.05) && (
+        {!STUDIO_PRESET_DURATIONS.some((duration) => duration === maxDuration) && (
           <button
             type="button"
             onClick={() => onPreset(maxDuration)}

@@ -75,7 +75,10 @@ export function CaptionEditor({
           <button
             type="button"
             className="min-h-11 w-full rounded-lg border border-[#4fd1c5] px-3 py-2 text-sm"
-            onClick={(event) => onPreview(lastControl.current ?? event.currentTarget)}
+            onClick={(event) => {
+              const control = lastControl.current;
+              onPreview(control && !control.closest('details:not([open])') ? control : event.currentTarget);
+            }}
           >
             Preview caption
           </button>
