@@ -42,7 +42,9 @@ test.describe('public video-to-GIF converter', () => {
       timeout: 15000,
     });
     const uploadedVideoUrl = await page.locator('video').getAttribute('src');
-    await page.getByRole('button', { name: '3s' }).click();
+    // Browser-recorded fixture length varies; the duration input clamps to available media.
+    await page.getByLabel('Duration', { exact: true }).fill('3');
+    await page.getByLabel('Duration', { exact: true }).press('Enter');
     await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^5 fps/ }).click();
     await page.getByRole('button', { name: '240p', exact: true }).click();
@@ -347,7 +349,7 @@ test.describe('public video-to-GIF converter', () => {
     await page.getByLabel('Upload video').setInputFiles(bobRossFixture);
 
     await expect(page.getByRole('heading', { name: 'Select Your Perfect Moment' })).toBeVisible({ timeout: 15000 });
-    await page.getByRole('button', { name: '10s' }).click();
+    await page.getByRole('button', { name: 'Full clip · 6.0s' }).click();
     await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^15 fps/ }).click();
     await page.getByRole('button', { name: '480p', exact: true }).click();
@@ -366,7 +368,7 @@ test.describe('public video-to-GIF converter', () => {
     await openDetails(page, 'Advanced settings');
     await page.getByRole('button', { name: /^15 fps/ }).click();
     await page.getByRole('button', { name: '480p', exact: true }).click();
-    await expect(page.getByTestId('effective-settings')).toContainText('480p · 15 FPS');
+    await expect(page.getByTestId('effective-settings')).toContainText('15 FPS · 480p maximum');
     await openDetails(page, 'Add a caption');
 
     await page.getByRole('button', { name: 'Create GIF' }).evaluate((button) => {

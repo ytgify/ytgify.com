@@ -3,6 +3,7 @@ import type { StudioExportBudget } from '@/lib/studio/export-budget';
 import { formatClock } from '@/lib/studio/timeline';
 import { estimateGifSize } from '@/lib/studio/size-target';
 import type { StudioOutputSettings, StudioTrimSelection, StudioVideoMetadata } from '@/lib/studio/types';
+import { useCaptionPreview } from '../useCaptionPreview';
 import { useTimelineSelection } from '../useTimelineSelection';
 import { TimelinePanel } from './TimelinePanel';
 import { CaptionEditor, type CaptionEditorProps } from './CaptionEditor';
@@ -26,6 +27,13 @@ interface CaptureScreenProps extends CaptionEditorProps {
 
 export function CaptureScreen(props: CaptureScreenProps) {
   const { videoUrl, videoRef, metadata, trim, settings, estimatedSize, exportBudget, captions } = props;
+  const {
+    active: previewActive,
+    previewRef,
+    returnButtonRef,
+    show: showPreview,
+    back: returnToEditor,
+  } = useCaptionPreview();
   const [typing, setTyping] = useState(false);
   const timeline = useTimelineSelection(videoRef, metadata, trim, props.onTrimChange);
   const { previewStart, previewEnd, seekPreviewToSelection } = timeline;
@@ -53,38 +61,57 @@ export function CaptureScreen(props: CaptureScreenProps) {
         </p>
       </div>
       <CaptionEditor
+        onPreview={showPreview}
         captions={captions}
         onCaptionChange={props.onCaptionChange}
         onCaptionSettingChange={props.onCaptionSettingChange}
       />
       <div
-        className="relative mx-auto overflow-hidden rounded-xl border border-gray-800 bg-black"
-        style={{
-          aspectRatio: `${metadata.width} / ${metadata.height}`,
-          width: `min(100%, ${(300 * metadata.width) / metadata.height}px)`,
+        ref={previewRef}
+        className="space-y-2"
+        onKeyDown={(event) => {
+          if (previewActive && event.key === 'Escape') returnToEditor();
         }}
-        data-testid="caption-preview-frame"
       >
-        <video
-          ref={videoRef}
-          src={videoUrl}
-          controls
-          playsInline
-          className="h-full w-full object-contain"
-          onPlay={() => {
-            const video = videoRef.current;
-            if (video && (video.currentTime < previewStart || video.currentTime >= previewEnd))
-              seekPreviewToSelection();
+        {previewActive ? (
+          <button
+            ref={returnButtonRef}
+            type="button"
+            onClick={returnToEditor}
+            className="min-h-11 w-full rounded-lg border border-[#4fd1c5] px-3 py-2 text-sm"
+          >
+            Return to caption editing
+          </button>
+        ) : null}
+        <div
+          className="relative mx-auto overflow-hidden rounded-xl border border-gray-800 bg-black"
+          style={{
+            aspectRatio: `${metadata.width} / ${metadata.height}`,
+            width: `min(100%, ${(300 * metadata.width) / metadata.height}px)`,
           }}
-          onTimeUpdate={() => {
-            const video = videoRef.current;
-            if (video && video.currentTime >= previewEnd) {
-              video.pause();
-              seekPreviewToSelection();
-            }
-          }}
-        />
-        <CaptionCanvas metadata={metadata} resolution={settings.resolution} captions={captions} />
+          data-testid="caption-preview-frame"
+        >
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            controls
+            playsInline
+            className="h-full w-full object-contain"
+            onPlay={() => {
+              const video = videoRef.current;
+              if (video && (video.currentTime < previewStart || video.currentTime >= previewEnd))
+                seekPreviewToSelection();
+            }}
+            onTimeUpdate={() => {
+              const video = videoRef.current;
+              if (video && video.currentTime >= previewEnd) {
+                video.pause();
+                seekPreviewToSelection();
+              }
+            }}
+          />
+          <CaptionCanvas metadata={metadata} resolution={settings.resolution} captions={captions} />
+        </div>
       </div>
       <p className="text-xs leading-5 text-gray-400">
         Preview cued to {formatClock(trim.startTime)} - {formatClock(trim.endTime)}.
@@ -101,7 +128,12 @@ export function CaptureScreen(props: CaptureScreenProps) {
           {props.notice}
         </p>
       ) : null}
-      <OutputSettings settings={settings} estimatedSize={estimatedSize} onChange={props.onSettingsChange} />
+      <OutputSettings
+        metadata={metadata}
+        settings={settings}
+        estimatedSize={estimatedSize}
+        onChange={props.onSettingsChange}
+      />
       <p className="text-xs leading-5 text-gray-400" data-testid="size-estimate-explanation">
         Conservative planning estimate, not a predicted file size. Simple clips can be much smaller; motion, detail, and
         captions change compression. Check the actual size after export.
@@ -122,7 +154,7 @@ export function CaptureScreen(props: CaptureScreenProps) {
       ) : null}
       <div
         data-testid="create-bar"
-        className={`${typing ? 'static' : 'sticky bottom-0'} z-10 flex items-center justify-between gap-3 border-t border-gray-800 bg-gray-950 px-1 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]`}
+        className={`${typing || previewActive ? 'static' : 'sticky bottom-0'} z-10 flex items-center justify-between gap-3 border-t border-gray-800 bg-gray-950 px-1 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]`}
       >
         <div className="text-sm">
           <span className="font-semibold">~{estimatedSize} MB</span>
