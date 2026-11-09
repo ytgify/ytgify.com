@@ -13,7 +13,7 @@ interface PageProps {
 export async function generateStaticParams() {
   const tags = getAllTags();
   return tags.map((tag) => ({
-    tag: encodeURIComponent(tag.toLowerCase()),
+    tag: tag.toLowerCase(),
   }));
 }
 
@@ -21,18 +21,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { tag } = await params;
   const decodedTag = decodeURIComponent(tag);
   const formattedTag = decodedTag.charAt(0).toUpperCase() + decodedTag.slice(1);
+  const tagUrl = `${SITE_URL}/blog/tag/${encodeURIComponent(decodedTag)}`;
 
   return {
     title: `${formattedTag} Articles | ${SITE_NAME} Blog`,
     description: `Browse all articles about ${decodedTag}. GIF creation tips and tutorials from YTgify.`,
     alternates: {
-      canonical: `${SITE_URL}/blog/tag/${tag}`,
+      canonical: tagUrl,
     },
     openGraph: {
       type: 'website',
       title: `${formattedTag} Articles | ${SITE_NAME} Blog`,
       description: `Browse all articles about ${decodedTag}. GIF creation tips and tutorials.`,
-      url: `${SITE_URL}/blog/tag/${tag}`,
+      url: tagUrl,
       siteName: SITE_NAME,
     },
     robots: {
