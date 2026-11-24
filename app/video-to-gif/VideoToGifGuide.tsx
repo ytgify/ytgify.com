@@ -1,161 +1,114 @@
 import Link from 'next/link';
-import { CheckCircle2, FileVideo2, LockKeyhole, SlidersHorizontal } from 'lucide-react';
 import type { FAQItem } from '@/lib/schema';
 import { VideoToGifExample } from './VideoToGifExample';
 
-export const videoToGifFAQs: FAQItem[] = [
+type HelpItem = FAQItem & { link?: { href: string; label: string } };
+
+const helpItems: HelpItem[] = [
   {
-    question: 'How do I convert a video to a GIF?',
+    question: 'Why won’t my video open?',
+    answer: 'Browser codec support varies. Try an H.264 MP4 or WebM file.',
+  },
+  {
+    question: 'How can I make the GIF smaller?',
     answer:
-      'Choose a local video, select a clip up to 10 seconds, pick the resolution and frame rate, add optional top or bottom text, then create and download the GIF.',
+      'Trim the clip, lower the frame rate or resolution, or choose a 5, 10, or 25 MB size target. The target is an estimate. YTgify blocks exports that would use too much browser memory.',
+    link: { href: '/gif-compressor', label: 'Compress an existing GIF' },
   },
   {
     question: 'Does YTgify upload my video?',
     answer:
-      'No. The converter reads and processes the source video locally in your browser. YTgify analytics use coarse workflow details and do not include the video file name, caption text, object URL, or media bytes.',
+      'Your video and captions stay in your browser. Analytics excludes filenames, caption text, object URLs, and media bytes.',
   },
   {
-    question: 'Which video formats can I turn into a GIF?',
-    answer:
-      'YTgify accepts MP4, MOV, and WebM files that your browser can decode. Codec support differs by browser, so an H.264 MP4 or WebM export is the most practical fallback if a file will not open.',
-  },
-  {
-    question: 'What are the free converter limits?',
-    answer:
-      'Source files can be up to 250 MB and 30 minutes long. Each GIF can use up to 10 seconds at 5, 10, or 15 FPS and a maximum output height of 240p, 360p, or 480p. Size targets adjust resolution and FPS using a rough estimate; the final size is shown after export.',
-  },
-  {
-    question: 'Why are some large GIF settings unavailable?',
-    answer:
-      'Video frames require substantial browser memory. YTgify estimates the raw frame working set and asks you to reduce duration, frame rate, or resolution when a combination exceeds its reliability budget.',
-  },
-  {
-    question: 'Can I paste a YouTube URL into this converter?',
-    answer:
-      'No. This tool is for video files you own or have permission to edit. To create GIFs inside YouTube, use the YTgify browser extension instead.',
+    question: 'Can I paste a YouTube URL?',
+    answer: 'This converter takes video files from your device. To clip directly inside YouTube,',
+    link: { href: '/#install', label: 'use the desktop Chrome extension' },
   },
 ];
 
-const steps = [
-  { icon: FileVideo2, title: '1. Choose your video', detail: 'Select a browser-decodable MP4, MOV, or WebM file.' },
-  {
-    icon: SlidersHorizontal,
-    title: '2. Edit the moment',
-    detail: 'Trim up to 10 seconds, tune FPS and size, and add text.',
-  },
-  {
-    icon: CheckCircle2,
-    title: '3. Export the GIF',
-    detail: 'Preview the animated result and download it with no watermark.',
-  },
-];
+export const videoToGifFAQs: FAQItem[] = helpItems.map(({ question, answer, link }) => ({
+  question,
+  answer: link ? `${answer} ${link.label}.` : answer,
+}));
 
 export function VideoToGifGuide() {
   return (
     <article className="border-t border-gray-800 bg-[#0d1117]/92 text-gray-300">
-      <div className="mx-auto max-w-[920px] space-y-16 px-5 py-16 sm:px-8 sm:py-20">
+      <div className="mx-auto max-w-[920px] space-y-8 px-5 py-10 sm:space-y-10 sm:px-8 sm:py-14">
         <section aria-labelledby="how-it-works">
-          <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#E91E8C]">How it works</p>
-          <h2 id="how-it-works" className="mt-3 text-3xl font-bold text-white sm:text-4xl">
-            Convert video to GIF in three steps
+          <h2 id="how-it-works" className="text-2xl font-bold text-white sm:text-3xl">
+            How to make a GIF
           </h2>
-          <p className="mt-4 max-w-3xl leading-7 text-gray-400">
-            YTgify is a focused, free converter for short reactions, product demos, tutorials, and clips you are allowed
-            to edit. The source stays in the browser from selection through download.
-          </p>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {steps.map(({ icon: Icon, title, detail }) => (
-              <div key={title} className="rounded-xl border border-gray-800 bg-gray-950/55 p-5">
-                <Icon className="h-6 w-6 text-[#4fd1c5]" />
-                <h3 className="mt-4 font-bold text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-gray-400">{detail}</p>
-              </div>
-            ))}
-          </div>
+          <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm leading-6 text-gray-300 marker:text-gray-400">
+            <li>Choose a video from your device.</li>
+            <li>Trim the moment you want. Add a caption if you like.</li>
+            <li>
+              Select <strong className="font-semibold text-white">Create GIF</strong>, then preview and download.
+            </li>
+          </ol>
+          <nav
+            aria-label="Converter guide"
+            className="mt-2 flex flex-wrap gap-x-5 text-sm font-semibold text-[#4fd1c5]"
+          >
+            <a href="#mp4-to-gif-example" className="inline-flex min-h-11 items-center underline hover:text-white">
+              Example
+            </a>
+            <a href="#formats-and-limits" className="inline-flex min-h-11 items-center underline hover:text-white">
+              Formats &amp; limits
+            </a>
+            <a href="#video-gif-faq" className="inline-flex min-h-11 items-center underline hover:text-white">
+              Help
+            </a>
+          </nav>
         </section>
 
         <VideoToGifExample />
 
-        <section aria-labelledby="privacy-and-support" className="grid gap-8 lg:grid-cols-2">
-          <div className="rounded-2xl border border-[#4fd1c5]/25 bg-[#4fd1c5]/5 p-6 sm:p-8">
-            <LockKeyhole className="h-7 w-7 text-[#4fd1c5]" />
-            <h2 id="privacy-and-support" className="mt-4 text-2xl font-bold text-white">
-              Private by design
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
+          <section aria-labelledby="formats-and-limits">
+            <h2 id="formats-and-limits" className="text-xl font-bold text-white sm:text-2xl">
+              Formats &amp; limits
             </h2>
-            <p className="mt-3 leading-7 text-gray-400">
-              The browser creates a local object URL, reads frames into canvas, encodes the GIF, and gives you a local
-              download. YTgify does not send your source media, filename, or captions to a media-processing server.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-gray-800 bg-gray-950/55 p-6 sm:p-8">
-            <h2 className="text-2xl font-bold text-white">Formats and practical limits</h2>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-gray-400">
-              <li>MP4, MOV, or WebM that the current browser can decode</li>
-              <li>250 MB and 30 minute source limits</li>
-              <li>10 second GIFs at 5, 10, or 15 FPS</li>
-              <li>240p, 360p, or 480p maximum output height</li>
-              <li>Automatic memory guard for large combinations</li>
-            </ul>
-          </div>
-        </section>
+            <dl className="mt-3 divide-y divide-gray-800 border-y border-gray-800 text-sm leading-6">
+              <div className="grid grid-cols-[3rem_1fr] gap-2 py-2">
+                <dt className="font-semibold text-white">Video</dt>
+                <dd>MP4, MOV, or WebM. Up to 250 MB and 30 minutes.</dd>
+              </div>
+              <div className="grid grid-cols-[3rem_1fr] gap-2 py-2">
+                <dt className="font-semibold text-white">GIF</dt>
+                <dd>Up to 10 seconds. 5, 10, or 15 FPS at 240p, 360p, or 480p.</dd>
+              </div>
+            </dl>
+          </section>
 
-        <section aria-labelledby="file-and-output-help">
-          <h2 id="file-and-output-help" className="text-2xl font-bold text-white sm:text-3xl">
-            Get a usable GIF from your video file
-          </h2>
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <div className="rounded-2xl border border-gray-800 bg-gray-950/55 p-6">
-              <h3 className="text-lg font-bold text-white">If your video will not open</h3>
-              <p className="mt-3 text-sm leading-7 text-gray-400">
-                MP4, MOV, and WebM are file containers; the video inside still needs a codec your browser can decode.
-                Re-export the source as an H.264 MP4 or WebM file, then try it again. Keep the source under 250 MB and
-                30 minutes.
-              </p>
+          <section aria-labelledby="video-gif-faq">
+            <h2 id="video-gif-faq" className="text-xl font-bold text-white sm:text-2xl">
+              Help
+            </h2>
+            <div className="mt-3 divide-y divide-gray-800 border-y border-gray-800">
+              {helpItems.map(({ question, answer, link }) => (
+                <details key={question}>
+                  <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold leading-5 text-gray-200 marker:text-[#4fd1c5] focus-visible:outline-2 focus-visible:outline-[#4fd1c5]">
+                    {question}
+                  </summary>
+                  <p className="pb-3 pl-4 text-sm leading-6 text-gray-400">
+                    {answer}
+                    {link ? (
+                      <>
+                        {' '}
+                        <Link href={link.href} className="text-[#4fd1c5] underline hover:text-white">
+                          {link.label}
+                        </Link>
+                        .
+                      </>
+                    ) : null}
+                  </p>
+                </details>
+              ))}
             </div>
-            <div className="rounded-2xl border border-gray-800 bg-gray-950/55 p-6">
-              <h3 className="text-lg font-bold text-white">If the GIF is too large</h3>
-              <p className="mt-3 text-sm leading-7 text-gray-400">
-                Trim the moment first, then try a lower resolution or frame rate. You can also choose a 5, 10, or 25 MB
-                size target before exporting. Check the finished file size after preview; the target is an estimate. If
-                you already have a GIF, use the{' '}
-                <Link href="/gif-compressor" className="text-[#4fd1c5] underline hover:text-white">
-                  GIF compressor
-                </Link>
-                .
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="video-gif-faq">
-          <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#E91E8C]">Video to GIF FAQ</p>
-          <h2 id="video-gif-faq" className="mt-3 text-3xl font-bold text-white">
-            Common questions, clear answers
-          </h2>
-          <div className="mt-8 divide-y divide-gray-800 rounded-2xl border border-gray-800 bg-gray-950/45 px-5 sm:px-7">
-            {videoToGifFAQs.map((item) => (
-              <section key={item.question} className="py-6">
-                <h3 className="font-bold text-white">{item.question}</h3>
-                <p className="mt-2 text-sm leading-7 text-gray-400">{item.answer}</p>
-              </section>
-            ))}
-          </div>
-        </section>
-
-        <aside className="rounded-2xl border border-[#E91E8C]/30 bg-[#E91E8C]/8 p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8">
-          <div>
-            <h2 className="text-2xl font-bold text-white">Making a GIF from YouTube?</h2>
-            <p className="mt-2 max-w-2xl leading-7 text-gray-400">
-              Use the YTgify Chrome extension to choose the moment directly inside the YouTube player.
-            </p>
-          </div>
-          <Link
-            href="/#install"
-            className="mt-5 inline-flex flex-shrink-0 items-center justify-center rounded-xl bg-[#E91E8C] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#d51a80] sm:mt-0"
-          >
-            View the extension
-          </Link>
-        </aside>
+          </section>
+        </div>
       </div>
     </article>
   );
