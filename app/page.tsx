@@ -6,6 +6,7 @@ import { LegacyInstallSection } from './components/DiscontinuationNotice';
 import HomeFAQ, { homeFAQItems } from './components/HomeFAQ';
 import BrowserToolPromo from './components/BrowserToolPromo';
 import HomeNavLinks from './components/HomeNavLinks';
+import ConverterLink from './components/ConverterLink';
 import HomeHero from './components/HomeHero';
 import {
   BookOpen,
@@ -88,12 +89,12 @@ export default function Home() {
                 <span className="font-bold tracking-tight">YTgify</span>
               </Link>
               <HomeNavLinks />
-              <Link
-                href="/video-to-gif?entry=home_nav"
+              <ConverterLink
+                entryPoint="home_nav"
                 className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-[#4fd1c5] px-3 text-xs font-bold text-gray-950 sm:hidden"
               >
                 Make a GIF
-              </Link>
+              </ConverterLink>
               <TrackedExtensionLink
                 href="#install"
                 surface="home_sticky_nav"

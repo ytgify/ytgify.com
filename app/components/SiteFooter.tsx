@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Github, BookOpen } from 'lucide-react';
 import { GITHUB_ORG_URL } from '@/lib/constants';
+import ConverterLink from './ConverterLink';
 
 export default function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -56,9 +57,9 @@ export default function SiteFooter() {
           <Link href="/blog" className="text-[#a0a0a0] hover:text-white transition-colors">
             Blog
           </Link>
-          <Link href="/video-to-gif?entry=footer" className="text-[#a0a0a0] hover:text-white transition-colors">
+          <ConverterLink entryPoint="footer" className="text-[#a0a0a0] hover:text-white transition-colors">
             Video to GIF Converter
-          </Link>
+          </ConverterLink>
           <Link href="/about" className="text-[#a0a0a0] hover:text-white transition-colors">
             About
           </Link>

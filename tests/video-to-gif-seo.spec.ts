@@ -51,13 +51,39 @@ test.describe('public video to GIF launch surface', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   });
 
-  test('is discoverable from the homepage, footer, and sitemap', async ({ page, request }) => {
-    await page.goto('/');
-    await expect(page.getByRole('link', { name: /Open video to GIF converter/i })).toBeVisible();
-    await expect(page.locator('footer').getByRole('link', { name: 'Video to GIF Converter' })).toBeVisible();
+  test('clean and legacy tagged URLs serve the only converter URL listed in the sitemap', async ({ page, request }) => {
+    const canonical = 'https://ytgify.com/video-to-gif';
+    for (const url of ['/video-to-gif', '/video-to-gif?entry=footer']) {
+      const response = await page.goto(url);
+      expect(response?.status()).toBe(200);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonical);
+      await expect(page.getByRole('heading', { level: 1, name: 'Free Video to GIF Converter' })).toBeVisible();
+    }
 
     const sitemap = await (await request.get('/sitemap.xml')).text();
-    expect(sitemap).toContain('<loc>https://ytgify.com/video-to-gif</loc>');
+    const converterLocations = sitemap.match(/<loc>https:\/\/ytgify\.com\/video-to-gif[^<]*<\/loc>/g);
+    expect(converterLocations).toEqual([`<loc>${canonical}</loc>`]);
     expect(sitemap).toContain('<lastmod>2026-10-02');
+  });
+
+  test.describe('server-rendered converter links', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('homepage, shared footer, and guides expose clean anchors before hydration', async ({ page }) => {
+      const taggedLinks = page.locator('a[href^="/video-to-gif?"]');
+      await page.goto('/');
+      await expect(page.locator('a[href="/video-to-gif"]')).toHaveCount(6);
+      await expect(taggedLinks).toHaveCount(0);
+
+      for (const slug of ['how-to-create-gif-from-youtube-video', 'best-gif-settings-for-social-media']) {
+        await page.goto(`/blog/${slug}`);
+        await expect(page.locator('article a[href="/video-to-gif"]')).toBeVisible();
+        await expect(page.locator('footer a[href="/video-to-gif"]')).toBeVisible();
+        await expect(taggedLinks).toHaveCount(0);
+      }
+
+      await page.goto('/blog');
+      await expect(page.locator('footer a[href="/video-to-gif"]')).toBeVisible();
+    });
   });
 });
