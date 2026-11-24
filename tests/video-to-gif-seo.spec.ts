@@ -25,27 +25,101 @@ test.describe('public video to GIF launch surface', () => {
 
     const faq = JSON.parse((await page.locator('script[data-schema="video-to-gif-faq"]').textContent()) || '{}');
     expect(faq['@type']).toBe('FAQPage');
-    expect(faq.mainEntity).toHaveLength(6);
+    const questions = await page.getByRole('region', { name: 'Help' }).locator('summary').allTextContents();
+    expect(questions).toHaveLength(4);
+    expect(faq.mainEntity.map((entry: { name: string }) => entry.name)).toEqual(questions);
   });
 
-  test('renders crawlable privacy, compatibility, limits, and workflow answers', async ({ page }) => {
+  test('publishes the worked example without automatically fetching either download', async ({ page, request }) => {
+    const mediaRequests: string[] = [];
+    page.on('request', (entry) => {
+      if (/\/samples\/video-to-gif\/[^/]+\.(gif|mp4)$/.test(entry.url())) mediaRequests.push(entry.url());
+    });
+
     await page.goto('/video-to-gif');
-    await expect(page.getByRole('heading', { name: 'Convert video to GIF in three steps' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Private by design' })).toBeVisible();
-    await expect(page.getByText(/250 MB and 30 minute source limits/)).toBeVisible();
+    const example = page.getByRole('region', { name: 'MP4 to GIF example' });
+    await example.scrollIntoViewIfNeeded();
+    const before = example.getByRole('region', { name: 'Before' });
+    const after = example.getByRole('region', { name: 'After' });
+    await expect(before).toContainText('15-second MP4');
+    await expect(after).toContainText('4-second GIF');
+    await expect(before.getByRole('img')).toHaveJSProperty('naturalWidth', 640);
+    await expect(after.getByRole('img')).toHaveJSProperty('naturalWidth', 640);
+    await expect(example).toContainText('00:08–00:12');
+    await expect(example.getByRole('link', { name: 'CC BY 3.0' })).toHaveAttribute(
+      'href',
+      'https://creativecommons.org/licenses/by/3.0/',
+    );
+    expect(mediaRequests).toEqual([]);
+
+    const gifLink = after.getByRole('link', { name: /View GIF/ });
+    const mp4Link = before.getByRole('link', { name: 'Download MP4' });
+    await expect(mp4Link).toHaveAttribute('download', '');
+    const [gif, mp4] = await Promise.all([
+      request.get((await gifLink.getAttribute('href'))!),
+      request.get((await mp4Link.getAttribute('href'))!),
+    ]);
+    await expect(gif).toBeOK();
+    await expect(mp4).toBeOK();
+    const gifBytes = await gif.body();
+    expect(gifBytes.subarray(0, 3).toString('ascii')).toBe('GIF');
+    expect((await mp4.body()).subarray(4, 8).toString('ascii')).toBe('ftyp');
+    await expect(gifLink).toContainText(`${(gifBytes.length / 1_000_000).toFixed(2)} MB`);
+  });
+
+  test('renders a scannable guide with direct links and accessible help', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/video-to-gif');
+    await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
+    const guide = page.locator('article');
+    await expect(guide.getByRole('heading', { level: 2 })).toHaveText([
+      'How to make a GIF',
+      'MP4 to GIF example',
+      'Formats & limits',
+      'Help',
+    ]);
+    await expect(guide.getByRole('listitem')).toHaveCount(3);
     await expect(page.getByText(/H.264 MP4 or WebM works best/)).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Get a usable GIF from your video file' })).toBeVisible();
-    await expect(
-      page.locator('section[aria-labelledby="file-and-output-help"] a[href="/gif-compressor"]'),
-    ).toBeVisible();
-    await expect(page.getByText(/does not send your source media, filename, or captions/)).toBeVisible();
+    const limits = guide.getByRole('region', { name: 'Formats & limits' });
+    await expect(limits).toContainText('250 MB and 30 minutes');
+    await expect(limits).toContainText('Up to 10 seconds');
     await expect(page.getByRole('link', { name: 'How it works' })).toHaveAttribute('href', '#how-it-works');
-    await expect(page.locator('article')).toHaveCount(1);
     await expect(page.getByRole('link', { name: 'Install the YTgify Chrome extension' })).toHaveAttribute(
       'href',
       '/#install',
     );
-    await expect(page.getByRole('link', { name: 'View the extension' })).toHaveAttribute('href', '/#install');
+
+    const navigation = guide.getByRole('navigation', { name: 'Converter guide' });
+    await expect(navigation.getByRole('link', { name: 'Example' })).toHaveAttribute('href', '#mp4-to-gif-example');
+    await expect(navigation.getByRole('link', { name: 'Formats & limits' })).toHaveAttribute(
+      'href',
+      '#formats-and-limits',
+    );
+    await navigation.getByRole('link', { name: 'Help' }).click();
+    await expect(page).toHaveURL(/#video-gif-faq$/);
+
+    const help = guide.getByRole('region', { name: 'Help' });
+    await expect(guide.locator('section:target')).toHaveAttribute('id', 'video-gif-faq');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
+    await expect(help.locator('details[open]')).toHaveCount(0);
+    const size = help.locator('summary').filter({ hasText: 'How can I make the GIF smaller?' });
+    await size.focus();
+    await size.press('Enter');
+    await expect(help.getByRole('link', { name: 'Compress an existing GIF' })).toBeVisible();
+    await expect(help.getByRole('link', { name: 'Compress an existing GIF' })).toHaveAttribute(
+      'href',
+      '/gif-compressor',
+    );
+    await size.press('Enter');
+    await expect(help.getByRole('link', { name: 'Compress an existing GIF' })).toBeHidden();
+    await help.getByText('Does YTgify upload my video?', { exact: true }).click();
+    await expect(help.getByText(/Your video and captions stay in your browser/)).toBeVisible();
+    await help.getByText('Can I paste a YouTube URL?', { exact: true }).click();
+    await expect(help.getByRole('link', { name: 'use the desktop Chrome extension' })).toHaveAttribute(
+      'href',
+      '/#install',
+    );
 
     await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
