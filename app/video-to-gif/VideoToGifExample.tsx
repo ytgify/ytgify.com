@@ -5,10 +5,11 @@ const sampleDirectory = '/samples/video-to-gif';
 export function VideoToGifExample() {
   return (
     <section
-      aria-labelledby="mp4-to-gif-example"
-      className="rounded-2xl border border-gray-800 bg-gray-950/55 p-5 sm:p-8"
+      id="mp4-to-gif-example"
+      aria-labelledby="mp4-to-gif-example-title"
+      className="scroll-mt-4 rounded-2xl border border-gray-700 bg-gray-950/80 p-5 target:border-[#4fd1c5]/75 sm:p-6"
     >
-      <h2 id="mp4-to-gif-example" className="text-2xl font-bold text-white sm:text-3xl">
+      <h2 id="mp4-to-gif-example-title" className="text-2xl font-bold text-white sm:text-3xl">
         MP4 to GIF example
       </h2>
       <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-6">

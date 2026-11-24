@@ -122,9 +122,10 @@ body {
   }
 }
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* GitHub-style scrollbar */

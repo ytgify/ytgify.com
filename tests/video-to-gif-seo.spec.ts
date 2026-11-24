@@ -68,7 +68,9 @@ test.describe('public video to GIF launch surface', () => {
   });
 
   test('renders a scannable guide with direct links and accessible help', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/video-to-gif');
+    await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
     const guide = page.locator('article');
     await expect(guide.getByRole('heading', { level: 2 })).toHaveText([
       'How to make a GIF',
@@ -97,6 +99,9 @@ test.describe('public video to GIF launch surface', () => {
     await expect(page).toHaveURL(/#video-gif-faq$/);
 
     const help = guide.getByRole('region', { name: 'Help' });
+    await expect(guide.locator('section:target')).toHaveAttribute('id', 'video-gif-faq');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
     await expect(help.locator('details[open]')).toHaveCount(0);
     const size = help.locator('summary').filter({ hasText: 'How can I make the GIF smaller?' });
     await size.focus();

@@ -35,9 +35,13 @@ export const videoToGifFAQs: FAQItem[] = helpItems.map(({ question, answer, link
 export function VideoToGifGuide() {
   return (
     <article className="border-t border-gray-800 bg-[#0d1117]/92 text-gray-300">
-      <div className="mx-auto max-w-[920px] space-y-8 px-5 py-10 sm:space-y-10 sm:px-8 sm:py-14">
-        <section aria-labelledby="how-it-works">
-          <h2 id="how-it-works" className="text-2xl font-bold text-white sm:text-3xl">
+      <div className="mx-auto max-w-[920px] space-y-5 px-5 py-10 sm:space-y-6 sm:px-8 sm:py-14">
+        <section
+          id="how-it-works"
+          aria-labelledby="how-it-works-title"
+          className="scroll-mt-4 rounded-2xl border border-[#4fd1c5]/30 bg-[#4fd1c5]/8 p-4 target:border-[#4fd1c5]/75 sm:p-6"
+        >
+          <h2 id="how-it-works-title" className="text-2xl font-bold text-white sm:text-3xl">
             How to make a GIF
           </h2>
           <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm leading-6 text-gray-300 marker:text-gray-400">
@@ -65,12 +69,16 @@ export function VideoToGifGuide() {
 
         <VideoToGifExample />
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
-          <section aria-labelledby="formats-and-limits">
-            <h2 id="formats-and-limits" className="text-xl font-bold text-white sm:text-2xl">
+        <div className="grid gap-5 sm:gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
+          <section
+            id="formats-and-limits"
+            aria-labelledby="formats-and-limits-title"
+            className="scroll-mt-4 rounded-2xl border border-gray-700 bg-gray-800/45 p-4 target:border-[#4fd1c5]/75 sm:p-6"
+          >
+            <h2 id="formats-and-limits-title" className="text-xl font-bold text-white sm:text-2xl">
               Formats &amp; limits
             </h2>
-            <dl className="mt-3 divide-y divide-gray-800 border-y border-gray-800 text-sm leading-6">
+            <dl className="mt-3 divide-y divide-gray-700 border-t border-gray-700 text-sm leading-6">
               <div className="grid grid-cols-[3rem_1fr] gap-2 py-2">
                 <dt className="font-semibold text-white">Video</dt>
                 <dd>MP4, MOV, or WebM. Up to 250 MB and 30 minutes.</dd>
@@ -82,14 +90,18 @@ export function VideoToGifGuide() {
             </dl>
           </section>
 
-          <section aria-labelledby="video-gif-faq">
-            <h2 id="video-gif-faq" className="text-xl font-bold text-white sm:text-2xl">
+          <section
+            id="video-gif-faq"
+            aria-labelledby="video-gif-faq-title"
+            className="scroll-mt-4 rounded-2xl border border-[#E91E8C]/25 bg-[#E91E8C]/7 p-4 target:border-[#E91E8C]/75 sm:p-6"
+          >
+            <h2 id="video-gif-faq-title" className="text-xl font-bold text-white sm:text-2xl">
               Help
             </h2>
-            <div className="mt-3 divide-y divide-gray-800 border-y border-gray-800">
+            <div className="mt-3 divide-y divide-[#E91E8C]/20 border-t border-[#E91E8C]/20">
               {helpItems.map(({ question, answer, link }) => (
                 <details key={question}>
-                  <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold leading-5 text-gray-200 marker:text-[#4fd1c5] focus-visible:outline-2 focus-visible:outline-[#4fd1c5]">
+                  <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold leading-5 text-gray-200 marker:text-[#ff5fb2] focus-visible:outline-2 focus-visible:outline-[#ff5fb2]">
                     {question}
                   </summary>
                   <p className="pb-3 pl-4 text-sm leading-6 text-gray-400">
