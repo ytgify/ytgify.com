@@ -28,6 +28,38 @@ test.describe('public video to GIF launch surface', () => {
     expect(faq.mainEntity).toHaveLength(6);
   });
 
+  test('publishes the worked example without automatically fetching either download', async ({ page, request }) => {
+    const mediaRequests: string[] = [];
+    page.on('request', (entry) => {
+      if (/\/samples\/video-to-gif\/[^/]+\.(gif|mp4)$/.test(entry.url())) mediaRequests.push(entry.url());
+    });
+
+    await page.goto('/video-to-gif');
+    const example = page.getByRole('region', { name: 'MP4 to GIF example' });
+    await example.scrollIntoViewIfNeeded();
+    await expect(example.getByRole('img')).toHaveJSProperty('naturalWidth', 640);
+    await expect(example).toContainText('00:08–00:12');
+    await expect(example.getByRole('link', { name: 'CC BY 3.0' })).toHaveAttribute(
+      'href',
+      'https://creativecommons.org/licenses/by/3.0/',
+    );
+    expect(mediaRequests).toEqual([]);
+
+    const gifLink = example.getByRole('link', { name: /View GIF/ });
+    const mp4Link = example.getByRole('link', { name: 'Download sample MP4' });
+    await expect(mp4Link).toHaveAttribute('download', '');
+    const [gif, mp4] = await Promise.all([
+      request.get((await gifLink.getAttribute('href'))!),
+      request.get((await mp4Link.getAttribute('href'))!),
+    ]);
+    await expect(gif).toBeOK();
+    await expect(mp4).toBeOK();
+    const gifBytes = await gif.body();
+    expect(gifBytes.subarray(0, 3).toString('ascii')).toBe('GIF');
+    expect((await mp4.body()).subarray(4, 8).toString('ascii')).toBe('ftyp');
+    await expect(gifLink).toContainText(`${(gifBytes.length / 1_000_000).toFixed(2)} MB`);
+  });
+
   test('renders crawlable privacy, compatibility, limits, and workflow answers', async ({ page }) => {
     await page.goto('/video-to-gif');
     await expect(page.getByRole('heading', { name: 'Convert video to GIF in three steps' })).toBeVisible();

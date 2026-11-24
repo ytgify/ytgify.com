@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { CheckCircle2, FileVideo2, LockKeyhole, SlidersHorizontal } from 'lucide-react';
 import type { FAQItem } from '@/lib/schema';
+import { VideoToGifExample } from './VideoToGifExample';
 
 export const videoToGifFAQs: FAQItem[] = [
   {
@@ -72,6 +73,8 @@ export function VideoToGifGuide() {
             ))}
           </div>
         </section>
+
+        <VideoToGifExample />
 
         <section aria-labelledby="privacy-and-support" className="grid gap-8 lg:grid-cols-2">
           <div className="rounded-2xl border border-[#4fd1c5]/25 bg-[#4fd1c5]/5 p-6 sm:p-8">
