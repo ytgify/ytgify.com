@@ -137,7 +137,8 @@ test.describe('public video to GIF launch surface', () => {
     const sitemap = await (await request.get('/sitemap.xml')).text();
     const converterLocations = sitemap.match(/<loc>https:\/\/ytgify\.com\/video-to-gif[^<]*<\/loc>/g);
     expect(converterLocations).toEqual([`<loc>${canonical}</loc>`]);
-    expect(sitemap).toContain('<lastmod>2026-10-02');
+    const converterEntry = sitemap.split('<url>').find((entry) => entry.includes(`<loc>${canonical}</loc>`));
+    expect(converterEntry).toContain('<lastmod>2026-11-24T00:00:00.000Z</lastmod>');
   });
 
   test.describe('server-rendered converter links', () => {
