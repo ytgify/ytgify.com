@@ -108,7 +108,8 @@ jobs:
 
   site-browser-tests:
     name: Site Browser Tests
-    runs-on: ubuntu-latest
+    # Playwright 1.56 supports Ubuntu 24.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     needs: [detect-changes, build-test-app]
     if: >-
@@ -145,7 +146,7 @@ jobs:
 
   video-to-gif-browser-tests:
     name: Video-to-GIF Browser Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     needs: [detect-changes, build-test-app]
     if: >-
@@ -182,7 +183,7 @@ jobs:
 
   gif-compressor-browser-tests:
     name: GIF Compressor Browser Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     needs: [detect-changes, build-test-app]
     if: >-
