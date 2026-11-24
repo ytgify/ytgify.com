@@ -11,52 +11,52 @@ export function VideoToGifExample() {
       <h2 id="mp4-to-gif-example" className="text-2xl font-bold text-white sm:text-3xl">
         MP4 to GIF example
       </h2>
-      <p className="mt-3 max-w-2xl leading-7 text-gray-400">
-        Turn four seconds of a 15-second MP4 into a looping GIF. YTgify made this export in the browser.
-      </p>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start">
-        <Image
-          src={`${sampleDirectory}/tears-of-steel-preview.jpg`}
-          alt="First frame of the GIF, showing two people talking on a bridge"
-          width={640}
-          height={266}
-          loading="lazy"
-          className="h-auto w-full rounded-xl border border-gray-800"
-        />
-        <div>
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-            <div>
-              <dt className="text-gray-400">Trim</dt>
-              <dd className="mt-1 font-medium text-white">00:08–00:12</dd>
-            </div>
-            <div>
-              <dt className="text-gray-400">Export settings</dt>
-              <dd className="mt-1 font-medium text-white">360p · 10 FPS</dd>
-            </div>
-            <div>
-              <dt className="text-gray-400">GIF dimensions</dt>
-              <dd className="mt-1 font-medium text-white">854 × 356 px</dd>
-            </div>
-          </dl>
-          <div className="mt-4 flex flex-wrap gap-x-5">
-            <a
-              href={`${sampleDirectory}/tears-of-steel-example.gif`}
-              className="inline-flex min-h-11 items-center text-sm font-semibold text-[#4fd1c5] underline hover:text-white"
-            >
-              View GIF · 8.24 MB
-            </a>
-            <a
-              href={`${sampleDirectory}/tears-of-steel-sample.mp4`}
-              download
-              className="inline-flex min-h-11 items-center text-sm font-semibold text-[#4fd1c5] underline hover:text-white"
-            >
-              Download sample MP4
-            </a>
-          </div>
-        </div>
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-6">
+        <section aria-labelledby="example-before">
+          <h3 id="example-before" className="text-sm font-medium text-gray-400">
+            Before
+          </h3>
+          <p className="mt-1 font-semibold text-white">15-second MP4</p>
+          <Image
+            src={`${sampleDirectory}/tears-of-steel-source-preview.jpg`}
+            alt="Two people standing on a bridge earlier in the source video"
+            width={640}
+            height={266}
+            loading="lazy"
+            className="mt-3 h-auto w-full rounded-xl border border-gray-800"
+          />
+          <a
+            href={`${sampleDirectory}/tears-of-steel-sample.mp4`}
+            download
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-[#4fd1c5] underline hover:text-white"
+          >
+            Download MP4
+          </a>
+        </section>
+        <section aria-labelledby="example-after">
+          <h3 id="example-after" className="text-sm font-medium text-gray-400">
+            After
+          </h3>
+          <p className="mt-1 font-semibold text-white">4-second GIF</p>
+          <Image
+            src={`${sampleDirectory}/tears-of-steel-preview.jpg`}
+            alt="First frame of the GIF, with one person gesturing with a robotic hand"
+            width={640}
+            height={266}
+            loading="lazy"
+            className="mt-3 h-auto w-full rounded-xl border border-gray-800"
+          />
+          <a
+            href={`${sampleDirectory}/tears-of-steel-example.gif`}
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-[#4fd1c5] underline hover:text-white"
+          >
+            View GIF · 8.24 MB
+          </a>
+        </section>
       </div>
-      <p className="mt-4 text-sm leading-6 text-gray-400">
+      <p className="text-sm leading-6 text-gray-300">Trimmed 00:08–00:12 · 360p · 10 FPS</p>
+      <p className="mt-3 text-sm leading-6 text-gray-400">
+        Excerpt from{' '}
         <a
           href="https://commons.wikimedia.org/wiki/File:Tears_of_Steel_1080p.webm"
           className="underline hover:text-white"
@@ -67,7 +67,7 @@ export function VideoToGifExample() {
         <a href="https://creativecommons.org/licenses/by/3.0/" className="underline hover:text-white">
           CC BY 3.0
         </a>
-        . Shortened for the sample and converted to GIF.
+        .
       </p>
     </section>
   );

@@ -37,7 +37,12 @@ test.describe('public video to GIF launch surface', () => {
     await page.goto('/video-to-gif');
     const example = page.getByRole('region', { name: 'MP4 to GIF example' });
     await example.scrollIntoViewIfNeeded();
-    await expect(example.getByRole('img')).toHaveJSProperty('naturalWidth', 640);
+    const before = example.getByRole('region', { name: 'Before' });
+    const after = example.getByRole('region', { name: 'After' });
+    await expect(before).toContainText('15-second MP4');
+    await expect(after).toContainText('4-second GIF');
+    await expect(before.getByRole('img')).toHaveJSProperty('naturalWidth', 640);
+    await expect(after.getByRole('img')).toHaveJSProperty('naturalWidth', 640);
     await expect(example).toContainText('00:08–00:12');
     await expect(example.getByRole('link', { name: 'CC BY 3.0' })).toHaveAttribute(
       'href',
@@ -45,8 +50,8 @@ test.describe('public video to GIF launch surface', () => {
     );
     expect(mediaRequests).toEqual([]);
 
-    const gifLink = example.getByRole('link', { name: /View GIF/ });
-    const mp4Link = example.getByRole('link', { name: 'Download sample MP4' });
+    const gifLink = after.getByRole('link', { name: /View GIF/ });
+    const mp4Link = before.getByRole('link', { name: 'Download MP4' });
     await expect(mp4Link).toHaveAttribute('download', '');
     const [gif, mp4] = await Promise.all([
       request.get((await gifLink.getAttribute('href'))!),
