@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import ConverterLink from './ConverterLink';
 import { ArrowRight, BookOpen, ChevronDown, Download, FileVideo2, ShieldCheck } from 'lucide-react';
 import Logo from './Logo';
 import HeroDescription from './HeroDescription';
@@ -54,12 +54,12 @@ export default function HomeHero() {
                   </p>
                 </div>
               </div>
-              <Link
-                href="/video-to-gif?entry=home_hero"
+              <ConverterLink
+                entryPoint="home_hero"
                 className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#4fd1c5] px-4 py-3 text-sm font-bold text-gray-950 transition-colors hover:bg-[#9ff3ea] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 Open free converter <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
+              </ConverterLink>
               <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-[#9ff3ea]">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
                 Private · Free · No watermark

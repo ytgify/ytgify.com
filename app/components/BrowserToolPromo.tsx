@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ConverterLink from './ConverterLink';
 import { ArrowRight, FileImage, FileVideo2, ShieldCheck } from 'lucide-react';
 
 export default function BrowserToolPromo() {
@@ -29,12 +30,12 @@ export default function BrowserToolPromo() {
               </p>
             </div>
           </div>
-          <Link
-            href="/video-to-gif?entry=browser_tool_promo"
+          <ConverterLink
+            entryPoint="browser_tool_promo"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-gray-950 transition-colors hover:bg-gray-200"
           >
             Open video to GIF converter <ArrowRight className="h-4 w-4" />
-          </Link>
+          </ConverterLink>
         </article>
         <article className="flex flex-col justify-between gap-6 rounded-2xl border border-gray-800 bg-gray-950/65 p-6 sm:p-8">
           <div className="flex gap-4">

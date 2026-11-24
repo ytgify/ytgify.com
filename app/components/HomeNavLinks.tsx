@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ConverterLink from './ConverterLink';
 
 export default function HomeNavLinks() {
   return (
@@ -12,9 +13,9 @@ export default function HomeNavLinks() {
       <Link href="/blog" className="hidden transition-colors hover:text-white md:block">
         Guides
       </Link>
-      <Link href="/video-to-gif?entry=home_nav" className="hidden transition-colors hover:text-white md:block">
+      <ConverterLink entryPoint="home_nav" className="hidden transition-colors hover:text-white md:block">
         Video file to GIF
-      </Link>
+      </ConverterLink>
       <Link href="/about" className="transition-colors hover:text-white">
         About
       </Link>
