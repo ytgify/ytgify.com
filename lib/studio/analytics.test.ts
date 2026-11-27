@@ -77,6 +77,23 @@ describe('Studio analytics privacy', () => {
     expect(JSON.stringify(ga.mock.calls)).not.toMatch(/PRIVATE|SECRET/);
   });
 
+  it('sends only the allowlisted converter placement to both analytics sinks', () => {
+    const posthog = vi.fn();
+    const ga = vi.fn();
+    const safe = dispatchStudioEvent(
+      'studio_entry_clicked',
+      { entry_point: 'footer', href: 'https://ytgify.com/video-to-gif?private=secret' },
+      { posthog, ga },
+    );
+
+    expect(safe).toEqual({ entry_point: 'footer' });
+    expect(posthog).toHaveBeenCalledExactlyOnceWith('studio_entry_clicked', safe);
+    expect(ga).toHaveBeenCalledExactlyOnceWith('studio_entry_clicked', safe);
+    expect(sanitizeProperties('studio_entry_clicked', { entry_point: 'private.mov' })).toEqual({
+      entry_point: 'unknown',
+    });
+  });
+
   it('coarsens source, media type, duration, and size values', () => {
     expect(studioSourceBucket('', 'ytgify.com')).toBe('direct');
     expect(studioSourceBucket('https://ytgify.com/blog?private=yes', 'ytgify.com')).toBe('internal');

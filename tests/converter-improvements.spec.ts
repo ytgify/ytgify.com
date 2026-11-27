@@ -84,21 +84,67 @@ test('size target recalculates after trim and manual settings turn it off', asyn
   expect(await events(page, 'studio_size_target_selected')).toEqual([{ size_target: 5 }, { size_target: 'auto' }]);
 });
 
-test('mobile homepage has a clear file entry and guide links are crawlable', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
-  await page.getByRole('link', { name: 'Open free converter' }).click();
+test('legacy tagged visits retain allowlisted page-view placement', async ({ page }) => {
+  await page.goto('/video-to-gif?entry=footer');
   await expect(page.getByRole('button', { name: 'Choose video' })).toBeVisible();
   await expect
     .poll(() => events(page, 'studio_page_view'))
-    .toEqual([{ source_page: 'internal', entry_point: 'home_hero' }]);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  for (const [slug, entry] of [
-    ['how-to-create-gif-from-youtube-video', 'tutorial'],
-    ['best-gif-settings-for-social-media', 'settings_guide'],
+    .toEqual([{ source_page: 'internal', entry_point: 'footer' }]);
+  expect(await events(page, 'studio_entry_clicked')).toEqual([]);
+
+  await page.goto('/video-to-gif?entry=private.mp4');
+  await expect
+    .poll(() => events(page, 'studio_page_view'))
+    .toEqual([{ source_page: 'direct', entry_point: 'unknown' }]);
+});
+
+test('desktop converter links record the clicked placement and open the clean URL', async ({ page }) => {
+  for (const [name, entry] of [
+    ['Video file to GIF', 'home_nav'],
+    [/^Convert video to GIF/, 'home_hero'],
+    ['Open video to GIF converter', 'browser_tool_promo'],
+    ['Video to GIF Converter', 'footer'],
+  ] as const) {
+    await page.goto('/');
+    const link = page.getByRole('link', { name, exact: true });
+    await expect(link).toHaveAttribute('href', '/video-to-gif');
+    await link.click();
+    await expect(page).toHaveURL('/video-to-gif');
+    await expect(page.getByRole('button', { name: 'Choose video' })).toBeVisible();
+    await expect.poll(() => events(page, 'studio_entry_clicked')).toEqual([{ entry_point: entry }]);
+  }
+});
+
+test('mobile navigation and hero record placement on the clean converter link', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const [name, entry] of [
+    ['Make a GIF', 'home_nav'],
+    ['Open free converter', 'home_hero'],
+  ]) {
+    await page.goto('/');
+    const link = page.getByRole('link', { name, exact: true });
+    await expect(link).toHaveAttribute('href', '/video-to-gif');
+    await link.press('Enter');
+    await expect(page).toHaveURL('/video-to-gif');
+    await expect(page.getByRole('button', { name: 'Choose video' })).toBeVisible();
+    await expect.poll(() => events(page, 'studio_entry_clicked')).toEqual([{ entry_point: entry }]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
+
+test('guide links open the clean converter in a new tab and record the guide placement', async ({ page }) => {
+  for (const [slug, name, entry] of [
+    ['how-to-create-gif-from-youtube-video', 'free video-file-to-GIF converter', 'tutorial'],
+    ['best-gif-settings-for-social-media', 'browser video-to-GIF converter', 'settings_guide'],
   ]) {
     await page.goto(`/blog/${slug}`);
-    await expect(page.locator(`a[href="/video-to-gif?entry=${entry}"]`)).toBeVisible();
+    const link = page.getByRole('link', { name, exact: true });
+    await expect(link).toHaveAttribute('href', '/video-to-gif');
+    const [converter] = await Promise.all([page.context().waitForEvent('page'), link.click({ button: 'middle' })]);
+    await expect(converter).toHaveURL('/video-to-gif');
+    await expect(converter.getByRole('button', { name: 'Choose video' })).toBeVisible();
+    await expect.poll(() => events(page, 'studio_entry_clicked')).toEqual([{ entry_point: entry }]);
+    await converter.close();
   }
 });
 

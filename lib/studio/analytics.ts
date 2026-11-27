@@ -3,6 +3,7 @@ import { durationBucket, fileSizeBucket } from './file-validation';
 
 export type StudioEventName =
   | 'studio_page_view'
+  | 'studio_entry_clicked'
   | 'studio_file_picker_opened'
   | 'studio_upload_started'
   | 'studio_upload_loaded'
@@ -15,6 +16,16 @@ export type StudioEventName =
   | 'studio_export_failed'
   | 'studio_download_clicked'
   | 'studio_next_tool_selected';
+
+const studioEntryPoints = [
+  'home_hero',
+  'home_nav',
+  'browser_tool_promo',
+  'footer',
+  'tutorial',
+  'settings_guide',
+] as const;
+export type StudioEntryPoint = (typeof studioEntryPoints)[number];
 
 type StudioEventValue = string | number | boolean | undefined;
 export type StudioEventProperties = Record<string, StudioEventValue>;
@@ -33,6 +44,7 @@ declare global {
 const hasPostHogKey = Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN);
 const safeProperties: Record<StudioEventName, readonly string[]> = {
   studio_page_view: ['source_page', 'entry_point'],
+  studio_entry_clicked: ['entry_point'],
   studio_file_picker_opened: [],
   studio_upload_started: ['file_type', 'file_size_bucket'],
   studio_upload_loaded: ['file_type', 'source_duration_bucket'],
@@ -129,11 +141,8 @@ export function studioEntryPoint(search: string): string {
   return knownEntryPoint(entry);
 }
 
-function knownEntryPoint(entry: unknown): string {
-  return typeof entry === 'string' &&
-    ['home_hero', 'home_nav', 'browser_tool_promo', 'footer', 'tutorial', 'settings_guide'].includes(entry)
-    ? entry
-    : 'unknown';
+function knownEntryPoint(entry: unknown): StudioEntryPoint | 'unknown' {
+  return studioEntryPoints.find((point) => point === entry) ?? 'unknown';
 }
 
 export function studioFileTypeBucket(type: string): string {

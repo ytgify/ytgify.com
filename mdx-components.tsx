@@ -2,11 +2,18 @@ import type { MDXComponents } from 'mdx/types';
 import Image from 'next/image';
 import ImageCarousel from '@/app/components/blog/ImageCarousel';
 import DemoVideo from '@/app/components/DemoVideo';
+import ConverterLink from '@/app/components/ConverterLink';
+import type { ComponentProps } from 'react';
+
+const linkClassName = 'text-ytg-pink hover:text-ytg-red transition-colors underline';
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ImageCarousel,
     DemoVideo,
+    ConverterLink: (props: Pick<ComponentProps<typeof ConverterLink>, 'entryPoint' | 'children'>) => (
+      <ConverterLink {...props} className={linkClassName} />
+    ),
     h1: ({ children }) => <h1 className="text-3xl font-bold mb-6 text-white">{children}</h1>,
     h2: ({ children }) => <h2 className="text-2xl font-bold mb-4 mt-10 text-white">{children}</h2>,
     h3: ({ children }) => <h3 className="text-xl font-semibold mb-3 mt-8 text-white">{children}</h3>,
@@ -14,7 +21,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     a: ({ href, children }) => (
       <a
         href={href}
-        className="text-ytg-pink hover:text-ytg-red transition-colors underline"
+        className={linkClassName}
         target={href?.startsWith('http') ? '_blank' : undefined}
         rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
       >
