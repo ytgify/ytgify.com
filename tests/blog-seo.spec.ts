@@ -93,6 +93,34 @@ test.describe('evidence-backed guide cluster', () => {
     );
   });
 
+  for (const tag of ['gif compressor', 'reduce gif size']) {
+    test(`${tag} tag works through navigation and a direct load`, async ({ page }) => {
+      const tagPath = `/blog/tag/${encodeURIComponent(tag)}`;
+      await page.goto('/blog/how-to-compress-a-gif');
+      const tagLink = page.getByRole('link', { name: tag, exact: true }).first();
+      await expect(tagLink).toHaveAttribute('href', tagPath);
+      await tagLink.click();
+      await expect(page).toHaveURL(new RegExp(`${tagPath}$`));
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        `${tag.charAt(0).toUpperCase() + tag.slice(1)} Articles`,
+      );
+
+      const response = await page.reload();
+      expect(response?.status()).toBe(200);
+      await expect(page.getByRole('heading', { level: 2, name: guides[3].heading, exact: true })).toBeVisible();
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://ytgify.com${tagPath}`);
+      await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', `https://ytgify.com${tagPath}`);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
+    });
+  }
+
+  test('single-word tag still serves matching articles', async ({ page }) => {
+    const response = await page.goto('/blog/tag/tutorial');
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tutorial Articles');
+    await expect(page.getByRole('heading', { level: 2, name: guides[0].heading, exact: true })).toBeVisible();
+  });
+
   test('compressor discovery links remain usable on a phone viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
